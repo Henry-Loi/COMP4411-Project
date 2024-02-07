@@ -15,7 +15,7 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
-
+#include <sys/stat.h>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -52,6 +52,11 @@ public:
 
   int getSize();
   void setSize(int size);
+  void brush_dialog_value_init();
+
+  bool isEdgeClipping;
+  bool isAnotherGradient;
+  bool isSizeRand;
 
 private:
   ImpressionistDoc
@@ -59,10 +64,16 @@ private:
 
   // All attributes here
   int m_nSize;
+  int m_lineWidth;
+  int m_lineAngle;
+  float m_alpha;
+  int m_spacing;
+  int m_edgeThreshold;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
   static Fl_Menu_Item brushTypeMenu[NUM_BRUSH_TYPE + 1];
+  static Fl_Menu_Item strokeDirectionMenu[NUM_STROKE_DIRECTION + 1];
 
   static ImpressionistUI *whoami(Fl_Menu_ *o);
 
@@ -76,7 +87,21 @@ private:
   static void cb_about(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
+  static void cb_paint_button(Fl_Widget *o, void *v);
+  static void cb_do_it_button(Fl_Widget *o, void *v);
+
+  static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
+
   static void cb_sizeSlides(Fl_Widget *o, void *v);
+  static void cb_lineWidth(Fl_Widget *o, void *v);
+  static void cb_lineAngle(Fl_Widget *o, void *v);
+  static void cb_alpha(Fl_Widget *o, void *v);
+  static void cb_spacing(Fl_Widget *o, void *v);
+  static void cb_edgeThreshold(Fl_Widget *o, void *v);
+
+  static void cb_EdgeClippingLightButton(Fl_Widget *o, void *v);
+  static void cb_AnotherGradientLightButton(Fl_Widget *o, void *v);
+  static void cb_sizeRandLightButton(Fl_Widget *o, void *v);
 };
 
 #endif

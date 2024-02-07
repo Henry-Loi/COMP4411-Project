@@ -10,6 +10,13 @@
 #include "bitmap.h"
 #include "impressionist.h"
 
+// Each stroke direction type has an associated constant.
+typedef enum {
+  SLIDER_RIGHT_MOUSE = 0,
+  GRADIENT,
+  BRUSH_DIRECTION,
+  NUM_STROKE_DIRECTION
+} StrokeDirection;
 
 class ImpressionistUI;
 
@@ -24,9 +31,11 @@ public:
 
   int clearCanvas();           // called by the UI to clear the drawing canvas
   void setBrushType(int type); // called by the UI to set the brushType
-  int getSize();               // get the UI size
-  void setSize(int size);      // set the UI size
-  char *getImageName();        // get the current image name
+  // called by the UI to set the Stroke Direction
+  void setStokeDirection(int type);
+  int getSize();          // get the UI size
+  void setSize(int size); // set the UI size
+  char *getImageName();   // get the current image name
 
   // Attributes
 public:
@@ -40,8 +49,19 @@ public:
 
   // The current active brush.
   ImpBrush *m_pCurrentBrush;
+  StrokeDirection m_pCurrentDirection;
+
   // Size of the brush.
   int m_nSize;
+  int m_lineWidth;
+  int m_lineAngle;
+  float m_alpha;
+  int m_spacing;
+  int m_edgeThreshold;
+
+  bool isEdgeClipping;
+  bool isAnotherGradient;
+  bool isSizeRand;
 
   ImpressionistUI *m_pUI;
 
