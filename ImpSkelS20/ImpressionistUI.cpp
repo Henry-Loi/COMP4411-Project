@@ -456,6 +456,7 @@ void ImpressionistUI::brush_dialog_value_init() {
   m_spacing = 4;
   m_edgeThreshold = 200;
 
+  // MY TODO: fix the light btn init problem
   isEdgeClipping = true;
   isAnotherGradient = false;
   isSizeRand = true;
@@ -508,7 +509,7 @@ ImpressionistUI::ImpressionistUI() {
   m_ClearCanvasButton->user_data((void *)(this));
   m_ClearCanvasButton->callback(cb_clear_canvas_button);
 
-  m_BrushTypeChoice = new Fl_Choice(120, 45, 150, 25, "&Stroke Direction");
+  m_BrushTypeChoice = new Fl_Choice(114, 45, 150, 25, "&Stroke Direction");
   m_BrushTypeChoice->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_BrushTypeChoice->menu(strokeDirectionMenu);
@@ -571,7 +572,7 @@ ImpressionistUI::ImpressionistUI() {
   m_BrushSizeSlider->callback(cb_alpha);
 
   Fl_Light_Button *EdgeClippingLightButton =
-      new Fl_Light_Button(10, 200, 150, 25, "&Edge Clipping");
+      new Fl_Light_Button(10, 200, 130, 25, "&Edge Clipping");
   EdgeClippingLightButton->user_data(
       (void *)(this)); // record self to be used by
   EdgeClippingLightButton->callback(cb_EdgeClippingLightButton);
