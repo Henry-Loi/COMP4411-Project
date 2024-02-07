@@ -385,6 +385,12 @@ void ImpressionistUI::setDocument(ImpressionistDoc *doc) {
 //------------------------------------------------
 int ImpressionistUI::getSize() { return m_nSize; }
 
+int ImpressionistUI::getLineWidth() { return m_lineWidth; }
+int ImpressionistUI::getLineAngle() { return m_lineAngle; }
+float ImpressionistUI::getAlpha() { return m_alpha; }
+int ImpressionistUI::getSpacing() { return m_spacing; }
+int ImpressionistUI::getEdgeThreshold() { return m_edgeThreshold; }
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------

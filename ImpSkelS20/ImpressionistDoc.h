@@ -33,7 +33,13 @@ public:
   void setBrushType(int type); // called by the UI to set the brushType
   // called by the UI to set the Stroke Direction
   void setStokeDirection(int type);
-  int getSize();          // get the UI size
+  int getSize(); // get the UI size
+  int getLineWidth();
+  int getLineAngle();
+  float getAlpha();
+  int getSpacing();
+  int getEdgeThreshold();
+
   void setSize(int size); // set the UI size
   char *getImageName();   // get the current image name
 

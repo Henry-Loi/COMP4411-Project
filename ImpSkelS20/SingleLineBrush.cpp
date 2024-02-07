@@ -7,6 +7,7 @@
 //
 
 #include "singlelinebrush.h"
+#include "fastmath.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include <gl/gl.h>
@@ -20,9 +21,12 @@ void SingleLineBrush::BrushBegin(const Point source, const Point target) {
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
 
-  // int size = pDoc->getWidth();
+  int width = pDoc->getLineWidth();
 
-  glLineWidth((float)1);
+  glLineWidth((float)width);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   BrushMove(source, target);
 }
@@ -36,10 +40,15 @@ void SingleLineBrush::BrushMove(const Point source, const Point target) {
     return;
   }
 
-  glBegin(GL_LINE);
-  SetColor(source);
+  SetAlpha(source, pDoc->getAlpha());
+  glBegin(GL_LINES);
 
-  glVertex2f(target.x, target.y);
+  float size = pDoc->getSize();
+  float angle = pDoc->getLineAngle();
+  glVertex2f(target.x - (cos(DEG2RAD(angle)) * size / 2),
+             target.y - (sin(DEG2RAD(angle)) * size / 2));
+  glVertex2f(target.x + (cos(DEG2RAD(angle)) * size / 2),
+             target.y + (sin(DEG2RAD(angle)) * size / 2));
 
   glEnd();
 }

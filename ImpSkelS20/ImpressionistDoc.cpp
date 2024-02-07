@@ -83,6 +83,11 @@ void ImpressionistDoc::setStokeDirection(int type) {
 // Returns the size of the brush.
 //---------------------------------------------------------
 int ImpressionistDoc::getSize() { return m_pUI->getSize(); }
+int ImpressionistDoc::getLineWidth() { return m_pUI->getLineWidth(); }
+int ImpressionistDoc::getLineAngle() { return m_pUI->getLineAngle(); }
+float ImpressionistDoc::getAlpha() { return m_pUI->getAlpha(); }
+int ImpressionistDoc::getSpacing() { return m_pUI->getSpacing(); }
+int ImpressionistDoc::getEdgeThreshold() { return m_pUI->getEdgeThreshold(); }
 
 //---------------------------------------------------------
 // Load the specified image

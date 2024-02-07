@@ -50,7 +50,13 @@ public:
 
   // Interface to get attribute
 
-  int getSize();
+  int getSize(); // get the UI size
+  int getLineWidth();
+  int getLineAngle();
+  float getAlpha();
+  int getSpacing();
+  int getEdgeThreshold();
+
   void setSize(int size);
   void brush_dialog_value_init();
 
