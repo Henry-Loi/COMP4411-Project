@@ -103,13 +103,14 @@ void PaintView::draw() {
       RestoreContent();
       break;
     case RIGHT_MOUSE_DOWN:
-
+      // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
-
+      // MY TODO: Implement line real time update
       break;
     case RIGHT_MOUSE_UP:
-
+      // MY TODO: Calculate the line angle and set it in the document
+      m_pDoc->setLineAngle(m_pDoc->m_tarLineAngle);
       break;
 
     default:

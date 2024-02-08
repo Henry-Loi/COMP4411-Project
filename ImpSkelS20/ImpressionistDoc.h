@@ -40,6 +40,7 @@ public:
   int getSpacing();
   int getEdgeThreshold();
 
+  void setLineAngle(int angle);
   void setSize(int size); // set the UI size
   char *getImageName();   // get the current image name
 
@@ -68,6 +69,8 @@ public:
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
+
+  int m_tarLineAngle; // for right click
 
   ImpressionistUI *m_pUI;
 

@@ -415,6 +415,12 @@ void ImpressionistUI::setSize(int size) {
     m_BrushSizeSlider->value(m_nSize);
 }
 
+void ImpressionistUI::setLineAngle(int angle) {
+  m_lineAngle = angle;
+  if (angle <= 359)
+    m_LineAngleSlider->value(m_lineAngle);
+}
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
@@ -475,8 +481,8 @@ void ImpressionistUI::brush_dialog_value_init() {
   m_alpha = 1.0;
   m_spacing = 4;
   m_edgeThreshold = 200;
+  m_pDoc->m_tarLineAngle = 0;
 
-  // MY TODO: fix the light btn init problem
   isEdgeClipping = true;
   isAnotherGradient = false;
   isSizeRand = true;
