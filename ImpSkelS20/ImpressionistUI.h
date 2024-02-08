@@ -36,10 +36,24 @@ public:
 
   // for brush dialog
   Fl_Window *m_brushDialog;
+
   Fl_Choice *m_BrushTypeChoice;
+  Fl_Choice *m_StrokeDirectionChoice;
 
   Fl_Slider *m_BrushSizeSlider;
+  Fl_Slider *m_LineWidthSlider;
+  Fl_Slider *m_LineAngleSlider;
+  Fl_Slider *m_AlphaSlider;
+  Fl_Slider *m_SpacingSlider;
+  Fl_Slider *m_EdgeThresholdSlider;
+
   Fl_Button *m_ClearCanvasButton;
+  Fl_Button *m_PaintButton;
+  Fl_Button *m_DoItButton;
+
+  Fl_Light_Button *m_EdgeClippingLightButton;
+  Fl_Light_Button *m_AnotherGradientLightButton;
+  Fl_Light_Button *m_SizeRandLightButton;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
