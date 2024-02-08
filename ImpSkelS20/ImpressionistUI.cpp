@@ -598,13 +598,14 @@ ImpressionistUI::ImpressionistUI() {
   m_EdgeClippingLightButton->user_data(
       (void *)(this)); // record self to be used by
   m_EdgeClippingLightButton->callback(cb_EdgeClippingLightButton);
-  // m_EdgeClippingLightButton->light_on();
+  m_EdgeClippingLightButton->value(true);
 
   m_AnotherGradientLightButton =
       new Fl_Light_Button(240, 200, 150, 25, "&Another Gradient");
   m_AnotherGradientLightButton->user_data(
       (void *)(this)); // record self to be used by
   m_AnotherGradientLightButton->callback(cb_AnotherGradientLightButton);
+  m_AnotherGradientLightButton->value(false);
 
   // Add Spacing slide bar
   m_SpacingSlider = new Fl_Value_Slider(10, 240, 150, 20, "Spacing");
@@ -623,7 +624,7 @@ ImpressionistUI::ImpressionistUI() {
   m_SizeRandLightButton = new Fl_Light_Button(230, 240, 90, 20, "&Size Rand.");
   m_SizeRandLightButton->user_data((void *)(this)); // record self to be used by
   m_SizeRandLightButton->callback(cb_sizeRandLightButton);
-  // m_SizeRandLightButton->light_on();
+  m_SizeRandLightButton->value(true);
 
   m_PaintButton = new Fl_Button(340, 240, 50, 20, "&Paint");
   m_PaintButton->user_data((void *)(this));
