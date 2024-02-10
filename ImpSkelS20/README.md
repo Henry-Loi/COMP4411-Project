@@ -16,9 +16,9 @@ Due : Mar 2
 ### Progress
 #### Task 1 - Brush Type
 - [X] single line 
+- [ ] (filled) circles
 - [ ] scattered lines brush
 - [ ] scattered points brush
-- [ ] (filled) circles
 - [ ] scattered (filled) circles
 
 #### Task 2 - Brush Attributes

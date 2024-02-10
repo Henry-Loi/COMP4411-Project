@@ -7,6 +7,7 @@
 #ifndef PAINTVIEW_H
 #define PAINTVIEW_H
 
+#include "ImpBrush.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
@@ -28,6 +29,8 @@ public:
   void SaveCurrentContent();
 
   void RestoreContent();
+
+  Point last_target;
 
   ImpressionistDoc *m_pDoc;
 

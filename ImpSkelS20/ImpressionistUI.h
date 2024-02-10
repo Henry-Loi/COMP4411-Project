@@ -72,11 +72,14 @@ public:
   int getEdgeThreshold();
 
   void setSize(int size);
+  void setLineAngle(int angle);
   void brush_dialog_value_init();
 
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
+
+  int m_tarLineAngle; // for right click
 
 private:
   ImpressionistDoc

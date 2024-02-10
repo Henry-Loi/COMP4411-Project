@@ -70,8 +70,6 @@ public:
   bool isAnotherGradient;
   bool isSizeRand;
 
-  int m_tarLineAngle; // for right click
-
   ImpressionistUI *m_pUI;
 
   // Operations

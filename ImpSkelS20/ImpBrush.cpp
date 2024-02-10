@@ -47,5 +47,8 @@ void ImpBrush::SetAlpha(const Point source, float alpha) {
 
   memcpy(color, pDoc->GetOriginalPixel(source), 3);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   glColor4f(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, alpha);
 }

@@ -481,7 +481,8 @@ void ImpressionistUI::brush_dialog_value_init() {
   m_alpha = 1.0;
   m_spacing = 4;
   m_edgeThreshold = 200;
-  m_pDoc->m_tarLineAngle = 0;
+
+  m_tarLineAngle = 0;
 
   isEdgeClipping = true;
   isAnotherGradient = false;

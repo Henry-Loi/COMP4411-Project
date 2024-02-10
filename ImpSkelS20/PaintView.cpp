@@ -6,9 +6,11 @@
 
 #include "paintview.h"
 #include "ImpBrush.h"
+#include "fastmath.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <stdexcept>
 
 #define LEFT_MOUSE_DOWN 1
 #define LEFT_MOUSE_DRAG 2
@@ -88,6 +90,17 @@ void PaintView::draw() {
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
 
+    if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+      if (target.x - target.y != 0) {
+        m_pDoc->m_pUI->setLineAngle(
+            atan((target.y - last_target.x) / (target.x - target.y)));
+      } else {
+        m_pDoc->m_pUI->setLineAngle(0);
+      }
+    }
+
+    last_target = target;
+
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
@@ -110,7 +123,7 @@ void PaintView::draw() {
       break;
     case RIGHT_MOUSE_UP:
       // MY TODO: Calculate the line angle and set it in the document
-      m_pDoc->setLineAngle(m_pDoc->m_tarLineAngle);
+      m_pDoc->m_pUI->setLineAngle(m_pDoc->m_pUI->m_tarLineAngle);
       break;
 
     default:
