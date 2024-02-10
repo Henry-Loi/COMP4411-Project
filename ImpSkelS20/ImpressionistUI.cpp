@@ -256,11 +256,18 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_LineAngleSlider->deactivate();
     pUI->m_EdgeClippingLightButton->deactivate();
     pUI->m_AnotherGradientLightButton->deactivate();
+
+    // reset the stroke direction
+    pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
+    pUI->m_StrokeDirectionChoice->deactivate();
+
   } else {
     pUI->m_LineWidthSlider->activate();
     pUI->m_LineAngleSlider->activate();
     pUI->m_EdgeClippingLightButton->activate();
     pUI->m_AnotherGradientLightButton->activate();
+
+    pUI->m_StrokeDirectionChoice->activate();
   }
 }
 
@@ -661,6 +668,7 @@ ImpressionistUI::ImpressionistUI() {
   m_LineAngleSlider->deactivate();
   m_EdgeClippingLightButton->deactivate();
   m_AnotherGradientLightButton->deactivate();
+  m_StrokeDirectionChoice->deactivate();
 
   m_brushDialog->end();
 }

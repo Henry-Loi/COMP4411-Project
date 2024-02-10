@@ -32,6 +32,22 @@ void drawFilledCircle(GLfloat x, GLfloat y, GLuint radius) {
   glEnd();
 }
 
+// Further Development: we may need it for a new brush
+void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius) {
+  int i;
+  int lineAmount = 100; // # of triangles used to draw circle
+
+  // GLfloat radius = 0.8f; //radius
+  GLfloat twicePi = 2.0f * PI;
+
+  glBegin(GL_LINE_LOOP);
+  for (i = 0; i <= lineAmount; i++) {
+    glVertex2f(x + (radius * cos(i * twicePi / lineAmount)),
+               y + (radius * sin(i * twicePi / lineAmount)));
+  }
+  glEnd();
+}
+
 void CircleBrush::BrushBegin(const Point source, const Point target) {
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
