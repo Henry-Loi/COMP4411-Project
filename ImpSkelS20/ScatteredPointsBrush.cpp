@@ -36,20 +36,21 @@ void ScatteredPointsBrush::BrushMove(const Point source, Point target) {
     return;
   }
 
-  SetAlpha(source, pDoc->getAlpha());
-
-  int num_of_points = irand(50) + 50;
+  //SetAlpha(source, pDoc->getAlpha());
+  int size = pDoc->getSize();
+  int num_of_points = size*3;
   // float spacing = 20.0f;
 
-  SetAlpha(source, pDoc->getAlpha());
+ // SetAlpha(source, pDoc->getAlpha());
 
+  
   for (int i = 0; i < num_of_points; i++) {
     glBegin(GL_POINTS);
 
-    Point ran_target = target.scattered(pDoc->getSize());
+    Point ran_target = target.scattered(size);
+    SetAlpha(ran_target, pDoc->getAlpha());
 
     glVertex2d(ran_target.x, ran_target.y);
-
     glEnd();
   }
 }
