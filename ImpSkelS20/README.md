@@ -16,10 +16,10 @@ Due : Mar 2
 ### Progress
 #### Task 1 - Brush Type
 - [X] single line 
-- [ ] (filled) circles
-- [ ] scattered lines brush
-- [ ] scattered points brush
-- [ ] scattered (filled) circles
+- [X] (filled) circles
+- [X] scattered lines brush
+- [X] scattered points brush
+- [X] scattered (filled) circles
 
 #### Task 2 - Brush Attributes
 - [X] line thickness
@@ -36,5 +36,30 @@ Due : Mar 2
 - [X] brush alpha value control
 
 ## Bells and Whistles
-TODO
+> 1 Bell = 1 mark, 1 whistle = 0.5 mark\
+> I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
+- [ ] [0.5] More Brushes
+- [ ] [0.5] Clip brush strokes to the painted region
+- [ ] [0.5] Add a marker cursor to the original image
+- [ ] [0.5] swap contents of painting window and original image window
+- [ ] [1] independent image RGB scaling
+- [ ] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
+- [ ] [1] Undo feature for brush and filtering effects
+- [ ] [1] Dissolve one image into another
+- [ ] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas.
+
+- [ ] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
+- [ ] [1.5] Add "alpha-mapped" brush strokes
+- [ ] [1.5] Auto paint image (with randomness)
+- [ ] [1.5] Brush direction by gradient from user-specified image
+- [ ] [1.5] Edge Clipping
+
+- [ ] [2] user-specified kernel
+- [ ] [2] Edge detection + user-specified edge clipping
+- [ ] [2] Multiresolution automatic painting
+- [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
+- [ ] [2] Design curved brush following image gradient
+- [ ] [<=4] Construct Mosaic
+- [ ] [4] Impressionist video with temporal coherency
+- [ ] [8] Implement Bayesian matting
