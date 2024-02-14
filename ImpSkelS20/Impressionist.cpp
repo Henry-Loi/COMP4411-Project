@@ -13,10 +13,8 @@
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Window.H>
 
-
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
-
 
 ImpressionistUI *impUI;
 ImpressionistDoc *impDoc;

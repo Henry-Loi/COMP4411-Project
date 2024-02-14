@@ -13,12 +13,15 @@
 #include "ImpBrush.h"
 
 // Include individual brush headers here.
+#include "CircleBrush.h"
 #include "PointBrush.h"
 #include "SingleLineBrush.h"
+// scattered brushes
+#include "ScatteredCirclesBrush.h"
+#include "ScatteredLinesBrush.h"
+#include "ScatteredPointsBrush.h"
+
 // MY TODO: add other brushes
-#include "CircleBrush.h"
-// #include "PointBrush.h"
-// #include "PointBrush.h"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -47,11 +50,11 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_LINES] = new SingleLineBrush(this, "Lines");
   ImpBrush::c_pBrushes[BRUSH_CIRCLES] = new CircleBrush(this, "Circles");
   ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS] =
-      new PointBrush(this, "Scattered Points");
+      new ScatteredPointsBrush(this, "Scattered Points");
   ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES] =
-      new PointBrush(this, "Scattered Lines");
+      new ScatteredLinesBrush(this, "Scattered Lines");
   ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES] =
-      new PointBrush(this, "Scattered Circles");
+      new ScatteredCirclesBrush(this, "Scattered Circles");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

@@ -1,17 +1,17 @@
 //
-// SingleLineBrush.h
+// ScatteredLinesBrush.h
 //
-// The header file for Single Line Brush.
+// The header file for Scattered Lines Brush.
 //
 
-#ifndef SINGLELINEBRUSH_H
-#define SINGLELINEBRUSH_H
+#ifndef SCATTEREDLINESBRUSH_H
+#define SCATTEREDLINESBRUSH_H
 
 #include "ImpBrush.h"
 
-class SingleLineBrush : public ImpBrush {
+class ScatteredLinesBrush : public ImpBrush {
 public:
-  SingleLineBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL);
+  ScatteredLinesBrush(ImpressionistDoc *pDoc = NULL, char *name = NULL);
 
   void BrushBegin(const Point source, const Point target);
   void BrushMove(const Point source, const Point target);

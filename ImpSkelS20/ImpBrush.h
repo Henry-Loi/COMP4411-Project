@@ -21,6 +21,7 @@ enum {
 };
 
 class ImpressionistDoc; // Pre-declaring class
+extern float frand();
 
 class Point {
 public:
@@ -31,6 +32,11 @@ public:
   };
 
   int x, y;
+
+  Point scattered(float range) {
+    return Point(this->x + frand() * range - range / 2,
+                 this->y + frand() * range - range / 2);
+  }
 };
 
 class ImpBrush {

@@ -1,8 +1,8 @@
 //
 // SingleLineBrush.cpp
 //
-// The implementation of Point Brush. It is a kind of ImpBrush. All your brush
-// implementations will look like the file with the different GL primitive
+// The implementation of SingleLine Brush. It is a kind of ImpBrush. All your
+// brush implementations will look like the file with the different GL primitive
 // calls.
 //
 
@@ -11,8 +11,6 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include <gl/gl.h>
-
-extern float frand();
 
 SingleLineBrush::SingleLineBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {}

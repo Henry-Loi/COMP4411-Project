@@ -149,6 +149,9 @@
     <ClCompile Include="PointBrush.cpp" />
     <ClCompile Include="SingleLineBrush.cpp" />
     <ClCompile Include="CircleBrush.cpp" />
+    <ClCompile Include="ScatteredPointsBrush.cpp" />
+    <ClCompile Include="ScatteredLinesBrush.cpp" />
+    <ClCompile Include="ScatteredCirclesBrush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h" />
@@ -162,6 +165,9 @@
     <ClInclude Include="SingleLineBrush.h" />
     <ClInclude Include="CircleBrush.h" />
     <ClInclude Include="fastmath.h" />
+    <ClInclude Include="ScatteredPointsBrush.h" />
+    <ClInclude Include="ScatteredCirclesBrush.h" />
+    <ClInclude Include="ScatteredLinesBrush.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
