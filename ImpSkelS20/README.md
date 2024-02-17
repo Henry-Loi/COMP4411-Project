@@ -1,6 +1,6 @@
 # Project 1 : Impressionist
-> **Assigned : Feb 3** \
-> **Due : Mar 2**   
+> Assigned : Feb 3 \
+Due : Mar 2   
 
 ## Basic Requirement
 
@@ -36,7 +36,6 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 1.5/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
@@ -52,7 +51,7 @@
 
 - [ ] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
 - [ ] [1.5] Add "alpha-mapped" brush strokes
-- [X] [1.5] Auto paint image (with randomness)
+- [ ] [1.5] Auto paint image (with randomness)
 - [ ] [1.5] Brush direction by gradient from user-specified image
 - [ ] [1.5] Edge Clipping
 
