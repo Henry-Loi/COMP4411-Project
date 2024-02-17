@@ -291,9 +291,8 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget *o, void *v) {
 }
 
 void ImpressionistUI::cb_paint_button(Fl_Widget *o, void *v) {
-  ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
-
-  pDoc->clearCanvas();
+  PaintView *pView = ((ImpressionistUI *)(o->user_data()))->getPaintView();
+  pView->autoPaint();
 }
 
 void ImpressionistUI::cb_do_it_button(Fl_Widget *o, void *v) {
@@ -371,6 +370,8 @@ void ImpressionistUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
 // Return the ImpressionistDoc used
 //------------------------------------------------
 ImpressionistDoc *ImpressionistUI::getDocument() { return m_pDoc; }
+
+PaintView *ImpressionistUI::getPaintView() { return m_paintView; };
 
 //------------------------------------------------
 // Draw the main window

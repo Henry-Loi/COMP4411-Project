@@ -32,6 +32,8 @@ public:
 
   Point last_target;
 
+  int autoPaint(void);
+
   ImpressionistDoc *m_pDoc;
 
 private:
