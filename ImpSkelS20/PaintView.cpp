@@ -10,7 +10,11 @@
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+
+#include <algorithm>
+#include <random>
 #include <stdexcept>
+#include <vector>
 
 #define LEFT_MOUSE_DOWN 1
 #define LEFT_MOUSE_DRAG 2
@@ -256,20 +260,36 @@ int PaintView::autoPaint(void) {
 
   float original_size = m_pDoc->m_pUI->getSize();
   float spacing = m_pDoc->m_pUI->getSpacing();
+
+  // Create a vector of pairs for all possible (i, j) values
+  std::vector<std::pair<float, float>> ij_pairs;
   for (float i = original_size / 4; i < m_nDrawWidth + spacing; i += spacing) {
     for (float j = original_size / 4; j < m_nDrawHeight + spacing;
          j += spacing) {
-      if (m_pDoc->m_pUI->isSizeRand) {
-        m_pDoc->m_pUI->setSize(original_size * (0.8 + irand(20) / 100.0));
-      }
-
-      Point source((i + m_nStartCol), ((float)m_nEndRow - j));
-      Point target(i, (float)m_nWindowHeight - j);
-
-      m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
-      m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-      m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+      ij_pairs.push_back(std::make_pair(i, j));
     }
+  }
+
+  // Shuffle the vector to get a random order
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(ij_pairs.begin(), ij_pairs.end(), g);
+
+  // Iterate over the shuffled vector
+  for (const auto &ij : ij_pairs) {
+    float i = ij.first;
+    float j = ij.second;
+
+    if (m_pDoc->m_pUI->isSizeRand) {
+      m_pDoc->m_pUI->setSize(original_size * (0.8 + irand(20) / 100.0));
+    }
+
+    Point source((i + m_nStartCol), ((float)m_nEndRow - j));
+    Point target(i, (float)m_nWindowHeight - j);
+
+    m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+    m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+    m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
   }
 
   SaveCurrentContent();
