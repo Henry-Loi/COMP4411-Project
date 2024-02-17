@@ -292,15 +292,6 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget *o, void *v) {
 
 void ImpressionistUI::cb_paint_button(Fl_Widget *o, void *v) {
   PaintView *pView = ((ImpressionistUI *)(o->user_data()))->getPaintView();
-
-  // Point source(0, 0);
-  // Point target(0, 0);
-  // m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
-  // m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-  // m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
-
-  // pView->SaveCurrentContent();
-  // pView->RestoreContent();
   pView->autoPaint();
 }
 

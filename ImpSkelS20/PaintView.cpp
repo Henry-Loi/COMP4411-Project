@@ -106,8 +106,7 @@ void PaintView::draw() {
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
-      // m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
-      autoPaint();
+      m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG:
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
@@ -224,6 +223,11 @@ void PaintView::RestoreContent() {
 
 int irand(int);
 int PaintView::autoPaint(void) {
+#ifndef MESA
+  // To avoid flicker on some machines.
+  glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
+
   Point scrollpos; // = GetScrollPosition();
   scrollpos.x = 0;
   scrollpos.y = 0;
@@ -256,7 +260,7 @@ int PaintView::autoPaint(void) {
     for (float j = original_size / 4; j < m_nDrawHeight + spacing;
          j += spacing) {
       if (m_pDoc->m_pUI->isSizeRand) {
-        m_pDoc->m_pUI->setSize(irand(original_size));
+        m_pDoc->m_pUI->setSize(original_size * (0.8 + irand(20) / 100.0));
       }
 
       Point source((i + m_nStartCol), ((float)m_nEndRow - j));
@@ -276,5 +280,10 @@ int PaintView::autoPaint(void) {
 
   glFlush();
 
-  return 1;
+#ifndef MESA
+  // To avoid flicker on some machines.
+  glDrawBuffer(GL_BACK);
+#endif // !MESA
+
+  return 0;
 }
