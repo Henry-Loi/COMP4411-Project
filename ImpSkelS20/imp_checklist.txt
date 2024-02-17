@@ -16,7 +16,7 @@ B dissolve						yes/no
 BW fade in/out input on output canvas			yes/no
 BW mural (blending)					yes/no
 BW alpha brush						yes/no
-BW automatic paint whole image				yes/no
+BW automatic paint whole image				yes
 BW gradient from user-specified image			yes/no
 BW edge clipping					yes/no
 2B user-specified kernel				yes/no

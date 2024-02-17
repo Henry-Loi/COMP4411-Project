@@ -58,6 +58,7 @@ public:
   // Member functions
   void setDocument(ImpressionistDoc *doc);
   ImpressionistDoc *getDocument();
+  PaintView *getPaintView();
 
   void show();
   void resize_windows(int w, int h);

@@ -58,14 +58,6 @@ public:
   ImpBrush *m_pCurrentBrush;
   StrokeDirection m_pCurrentDirection;
 
-  // Size of the brush.
-  int m_nSize;
-  int m_lineWidth;
-  int m_lineAngle;
-  float m_alpha;
-  int m_spacing;
-  int m_edgeThreshold;
-
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
