@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "SingleLineBrush.h"
+#include "ScatteredLinesBrush.h"
 #include <iostream>
 #define LEFT_MOUSE_DOWN 1
 #define LEFT_MOUSE_DRAG 2
@@ -394,7 +395,9 @@ void PaintView::PointerMove(const Point source, const Point target, const Point 
 void PaintView::RightClickBrushEnd(const Point source, const Point target) {
 
     ImpressionistUI* dlg = m_pDoc->m_pUI;
-    dlg->setLineAngle(RAD2DEG(right_angle));
-    dlg->setSize(right_size);
-
+    if (typeid(*(m_pDoc->m_pCurrentBrush)) == typeid(SingleLineBrush) || typeid(*(m_pDoc->m_pCurrentBrush)) == typeid(ScatteredLinesBrush)) {
+        dlg->setLineAngle(RAD2DEG(right_angle));
+        dlg->setSize(right_size);
+    }
+    rightCLick = false;
 }
