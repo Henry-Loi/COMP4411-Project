@@ -256,6 +256,13 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
 
   int type = (int)v;
 
+  // add brush init & its checking
+  if (!ImpBrush::c_pBrushes[type]->BrushInit()) {
+    fl_alert("Brush failed to initialize!");
+    redraw();
+    return;
+  }
+
   pDoc->setBrushType(type);
 
   // add activate and deactivate handler
@@ -477,6 +484,9 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Scattered Circles", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_CIRCLES},
+    {"Alpha Mapped", FL_ALT + 'a',
+     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_ALPHA_MAPPED},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {

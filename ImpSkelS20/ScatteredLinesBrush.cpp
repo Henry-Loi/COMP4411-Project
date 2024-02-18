@@ -38,7 +38,7 @@ void ScatteredLinesBrush::BrushMove(const Point source, Point target) {
     return;
   }
 
-  SetAlpha(source, pDoc->getAlpha());
+  SetColorAlpha(source, pDoc->getAlpha());
 
   int num_of_lines = irand(2) + 3;
   float size = pDoc->getSize();

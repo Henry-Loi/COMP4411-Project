@@ -40,7 +40,7 @@ void ScatteredCirclesBrush::BrushMove(const Point source, Point target) {
     return;
   }
 
-  SetAlpha(source, pDoc->getAlpha());
+  SetColorAlpha(source, pDoc->getAlpha());
 
   int num_of_circles = irand(2) + 3;
   float spacing = 20.0f;

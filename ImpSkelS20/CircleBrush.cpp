@@ -68,7 +68,7 @@ void CircleBrush::BrushMove(const Point source, const Point target) {
     return;
   }
 
-  SetAlpha(source, pDoc->getAlpha());
+  SetColorAlpha(source, pDoc->getAlpha());
 
   drawFilledCircle(target.x, target.y, pDoc->getSize() / 2);
 }
