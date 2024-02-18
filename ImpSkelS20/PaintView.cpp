@@ -193,6 +193,7 @@ int PaintView::handle(int event) {
       eventToDo = LEFT_MOUSE_DRAG;
     isAnEvent = 1;
     redraw();
+    m_pDoc->m_pUI->m_origView->updateCursor(coord);
     break;
   case FL_RELEASE:
     coord.x = Fl::event_x();
@@ -207,6 +208,7 @@ int PaintView::handle(int event) {
   case FL_MOVE:
     coord.x = Fl::event_x();
     coord.y = Fl::event_y();
+    m_pDoc->m_pUI->m_origView->updateCursor(coord);
     break;
   default:
     return 0;
