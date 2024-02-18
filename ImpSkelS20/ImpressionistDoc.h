@@ -26,7 +26,9 @@ public:
 
   void setUI(ImpressionistUI *ui); // Assign the UI to use
 
-  int loadImage(char *iname); // called by the UI to load image
+  int loadImage(char *iname);      // called by the UI to load image
+  int loadMuralImage(char *iname); // called by the UI to load mural image
+
   int saveImage(char *iname); // called by the UI to save image
 
   int clearCanvas();           // called by the UI to clear the drawing canvas
@@ -51,6 +53,7 @@ public:
   // Dimensions of the paint window.
   int m_nPaintWidth, m_nPaintHeight;
   // Bitmaps for original image and painting.
+  unsigned char *m_ucOriginal;
   unsigned char *m_ucBitmap;
   unsigned char *m_ucPainting;
 

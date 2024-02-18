@@ -37,6 +37,7 @@ ImpressionistDoc::ImpressionistDoc() {
 
   m_nWidth = -1;
   m_ucBitmap = NULL;
+  m_ucOriginal = NULL;
   m_ucPainting = NULL;
 
   // create one instance of each brush
@@ -114,12 +115,15 @@ int ImpressionistDoc::loadImage(char *iname) {
   m_nPaintHeight = height;
 
   // release old storage
+  if (m_ucOriginal)
+    delete[] m_ucOriginal;
   if (m_ucBitmap)
     delete[] m_ucBitmap;
   if (m_ucPainting)
     delete[] m_ucPainting;
 
-  m_ucBitmap = data;
+  m_ucOriginal = data;
+  m_ucBitmap = m_ucOriginal;
 
   // allocate space for draw view
   m_ucPainting = new unsigned char[width * height * 3];
@@ -135,6 +139,42 @@ int ImpressionistDoc::loadImage(char *iname) {
   // refresh paint view as well
   m_pUI->m_paintView->resizeWindow(width, height);
   m_pUI->m_paintView->refresh();
+
+  return 1;
+}
+
+//---------------------------------------------------------
+// Load the mural image
+// This is called by the UI when the load image button is
+// pressed.
+//---------------------------------------------------------
+int ImpressionistDoc::loadMuralImage(char *iname) {
+  // empty image prevention
+  if (!m_ucOriginal) {
+    return loadImage(iname);
+  }
+
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
+
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    fl_alert("Can't load bitmap file");
+    return 0;
+  }
+
+  // in theory no need update window size
+  if (width != m_nWidth || height != m_nHeight || m_nPaintHeight != m_nHeight ||
+      m_nPaintWidth != m_nWidth) {
+    fl_alert("The mural image should have the same size as the original image");
+    return 0;
+  }
+
+  // release old storage
+  delete[] m_ucOriginal;
+
+  m_ucOriginal = data;
+  m_ucBitmap = m_ucOriginal;
 
   return 1;
 }
