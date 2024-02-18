@@ -29,9 +29,13 @@ public:
 
   void resizeWindow(int width, int height);
 
+  void updateCursor(Point);
+  void showCursor();
+
   ImpressionistDoc *m_pDoc;
 
 private:
+  Point cursor;
   int m_nWindowWidth, m_nWindowHeight;
 };
 
