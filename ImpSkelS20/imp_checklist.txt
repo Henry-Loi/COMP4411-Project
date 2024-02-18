@@ -7,7 +7,7 @@ Delete yes/no when appropriate
 
 W per new brush						yes/no
 W border clipping					yes/no
-W (red) marker						yes/no
+W (red) marker						yes
 W swap							yes/no
 B RGB scale						yes/no
 B blur/sharp brush					yes/no

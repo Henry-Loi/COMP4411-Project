@@ -42,7 +42,7 @@
 
 - [ ] [0.5] More Brushes
 - [ ] [0.5] Clip brush strokes to the painted region
-- [ ] [0.5] Add a marker cursor to the original image
+- [X] [0.5] Add a marker cursor to the original image
 - [ ] [0.5] swap contents of painting window and original image window
 - [ ] [1] independent image RGB scaling
 - [ ] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
