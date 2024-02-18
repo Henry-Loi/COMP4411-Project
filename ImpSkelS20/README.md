@@ -36,7 +36,7 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 2.0/41** \
+> **Total marks: 4.5/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
@@ -50,7 +50,7 @@
 - [ ] [1] Dissolve one image into another
 - [ ] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas.
 
-- [ ] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
+- [X] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
 - [ ] [1.5] Add "alpha-mapped" brush strokes
 - [X] [1.5] Auto paint image (with randomness)
 - [ ] [1.5] Brush direction by gradient from user-specified image

@@ -149,6 +149,11 @@ int ImpressionistDoc::loadImage(char *iname) {
 // pressed.
 //---------------------------------------------------------
 int ImpressionistDoc::loadMuralImage(char *iname) {
+  // empty image prevention
+  if (!m_ucOriginal) {
+    return loadImage(iname);
+  }
+
   // try to open the image to read
   unsigned char *data;
   int width, height;
@@ -159,9 +164,8 @@ int ImpressionistDoc::loadMuralImage(char *iname) {
   }
 
   // in theory no need update window size
-  if (m_ucOriginal &&
-      (width != m_nWidth || height != m_nHeight ||
-       m_nPaintHeight != m_nHeight || m_nPaintWidth != m_nWidth)) {
+  if (width != m_nWidth || height != m_nHeight || m_nPaintHeight != m_nHeight ||
+      m_nPaintWidth != m_nWidth) {
     fl_alert("The mural image should have the same size as the original image");
     return 0;
   }
