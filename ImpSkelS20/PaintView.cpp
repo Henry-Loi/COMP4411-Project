@@ -138,53 +138,21 @@ void PaintView::draw() {
       RestoreContent();
       break;
     case RIGHT_MOUSE_DOWN:
-        if (!rightCLick) {
-            start.x =coord.x;
-            start.y = coord.y;
-            rightCLick = true;
-        }
-        m_pDoc->setBrushType(BRUSH_LINES);
-        ((SingleLineBrush*)(m_pDoc->m_pCurrentBrush))->RightClickBrushBegin(source, target);
+
       // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
 
-            cur.x = coord.x;
-            cur.y = coord.y;
-            angle = RAD2DEG(atan((double)(((double)cur.y - (double)start.y)*(-1) / ((double)cur.x - (double)start.x))));
-            std::cout << "enter: angle" << angle << std::endl;
-            std::cout << "x:" << cur.x << "y:" << cur.y << std::endl;
-            std::cout << "st_x:" << start.x << "st_y:" << start.y << std::endl;
-            if (rightCLick)
-                std::cout << "rightCLicked" << std::endl;
-            if (angle < 0)
-                angle = 360 + angle;
 
-            ////set angle
-            m_pDoc->m_pUI->setLineAngle(angle);
-            ////set size
-            size = sqrt(pow((cur.y - start.y), 2) + pow((cur.x - start.x), 2));
-            m_pDoc->m_pUI->setSize(size);
-            std::cout << "size:" <<size <<std::endl;
-            //m_pDoc->m_pUI->setSize(15);
-            ////set midpoint
-            cur.x = (cur.x + start.x) / 2;
-            cur.y = (cur.y + start.y) / 2;
-            source.x = cur.x + m_nStartCol;
-            source.y = m_nEndRow - cur.y;
-            target.x = cur.x;
-            target.y = m_nWindowHeight - cur.y;
-            ((SingleLineBrush*)(m_pDoc->m_pCurrentBrush))->PointerMove(source, target);
             //glColor3f(0, 0, 0);
             //m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-            glFlush();
+
 
       // MY TODO: Implement line real time update
       break;
     case RIGHT_MOUSE_UP:
       // MY TODO: Calculate the line angle and set it in the document
-        m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
-        rightCLick = false;
+
       break;
 
     default:
