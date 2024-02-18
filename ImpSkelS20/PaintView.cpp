@@ -124,14 +124,26 @@ void PaintView::draw() {
 
 
     last_target = target;
-    int angle = 0;
+    float angle = 0;
     int size = 0;
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
-      m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+      if(m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION){
+          right_start.x = coord.x;
+          right_start.y = coord.y;
+      }
+        m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG:
+        if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+            cur.x = coord.x;
+            cur.y = coord.y;
+            angle = atan(((double)right_start.y - (double)cur.y) / ((double)cur.x - (double)right_start.x));
+            m_pDoc->m_pUI->setLineAngle(RAD2DEG(angle));
+            right_start.x = cur.x;
+            right_start.y = cur.y;
+        }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
       break;
     case LEFT_MOUSE_UP:
