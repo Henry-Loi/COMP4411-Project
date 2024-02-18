@@ -138,12 +138,13 @@ void PaintView::draw() {
       RestoreContent();
       break;
     case RIGHT_MOUSE_DOWN:
-
+        ((SingleLineBrush*)(m_pDoc->m_pCurrentBrush))->RightClickBrushBegin(source, target);
       // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
 
-
+        m_pDoc->m_pUI->setLineAngle(15);
+        ((SingleLineBrush*)(m_pDoc->m_pCurrentBrush))->PointerMove(source, target);
             //glColor3f(0, 0, 0);
             //m_pDoc->m_pCurrentBrush->BrushMove(source, target);
 
@@ -329,4 +330,13 @@ int PaintView::autoPaint(void) {
 #endif // !MESA
 
   return 0;
+}
+
+void PaintView::RightClickBrushBegin(const Point source, const Point target) {
+ 
+    ImpressionistUI* dlg = m_pDoc->m_pUI;
+
+    int width = m_pDoc->getLineWidth();
+
+    glLineWidth((float)width);
 }

@@ -29,6 +29,7 @@ public:
   void SaveCurrentContent();
 
   void RestoreContent();
+  void RightClickBrushBegin(const Point source, const Point target);
 
   Point last_target;
 
