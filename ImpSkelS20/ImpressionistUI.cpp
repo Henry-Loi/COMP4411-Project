@@ -259,7 +259,6 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   // add brush init & its checking
   if (!ImpBrush::c_pBrushes[type]->BrushInit()) {
     fl_alert("Brush failed to initialize!");
-    redraw();
     return;
   }
 

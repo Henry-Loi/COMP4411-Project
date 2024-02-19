@@ -70,8 +70,8 @@ void AlphaMappedBrush::BrushMove(const Point source, Point target) {
   glBegin(GL_POINTS);
   for (int i = 0; i < mapWidth; i++) {
     for (int j = 0; j < mapHeight; j++) {
-      SetColorAlpha(source, int(m_alphaMap[i * mapWidth + j]) / 255.0);
-      glVertex2d(target.x + i, target.y + j);
+      SetColorAlpha(source, int(GetMapPixel(i, j)));
+      glVertex2d(i, j);
     }
   }
 }
@@ -87,6 +87,7 @@ void AlphaMappedBrush::convertToAlphaMap(unsigned char *data) {
   for (int i = 0; i < mapWidth * mapHeight; i++) {
     m_alphaMap[i] = (data[i * 3] + data[i * 3 + 1] + data[i * 3 + 2]) / 3;
   }
+  // mapRescale(m_pDoc->m_nWidth, m_pDoc->m_nHeight);
 }
 
 void AlphaMappedBrush::mapRescale(int width, int height) {
@@ -101,4 +102,28 @@ void AlphaMappedBrush::mapRescale(int width, int height) {
   }
   delete[] m_alphaMap;
   m_alphaMap = rescaledMap;
+}
+
+//------------------------------------------------------------------
+// Get the color of the pixel in the alpha map at coord x and y
+//------------------------------------------------------------------
+unsigned char *AlphaMappedBrush::GetMapPixel(int x, int y) {
+  if (x < 0)
+    x = 0;
+  else if (x >= mapWidth)
+    x = mapWidth - 1;
+
+  if (y < 0)
+    y = 0;
+  else if (y >= mapHeight)
+    y = mapHeight - 1;
+
+  return (unsigned char *)(m_alphaMap + 3 * (y * mapWidth + x));
+}
+
+//----------------------------------------------------------------
+// Get the color of the pixel in the alpha map at point p
+//----------------------------------------------------------------
+unsigned char *AlphaMappedBrush::GetMapPixel(const Point p) {
+  return GetMapPixel(p.x, p.y);
 }

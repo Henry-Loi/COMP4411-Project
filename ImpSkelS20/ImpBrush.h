@@ -65,9 +65,10 @@ public:
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
 
-private:
+protected:
   ImpressionistDoc *m_pDoc;
 
+private:
   // Brush's name (not used in this version).
   char *m_pBrushName;
 };

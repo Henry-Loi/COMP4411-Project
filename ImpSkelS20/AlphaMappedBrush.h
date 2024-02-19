@@ -1,5 +1,5 @@
 //
-// AlphaMappingBrush.h
+// AlphaMappedBrush.h
 //
 // The header file for Scattered Circles Brush.
 //
@@ -23,6 +23,9 @@ public:
 private:
   unsigned char *m_alphaMap; // imported alpha map
   int mapWidth, mapHeight;
+
+  unsigned char *GetMapPixel(int x, int y);
+  unsigned char *GetMapPixel(const Point p);
 
   void convertToAlphaMap(unsigned char *data);
   void mapRescale(int width, int height);
