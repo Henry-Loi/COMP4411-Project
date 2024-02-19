@@ -35,7 +35,11 @@ public:
 
   Point last_target;
 
+  // auto painting
   int autoPaint(void);
+
+  // custom kernal
+  void applyKernel(void);
 
   ImpressionistDoc *m_pDoc;
 

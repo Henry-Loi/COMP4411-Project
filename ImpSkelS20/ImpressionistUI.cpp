@@ -7,6 +7,9 @@
 #include <FL/fl_ask.h>
 
 #include <math.h>
+#include <sstream>
+#include <stdio.h>
+#include <string>
 
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
@@ -243,6 +246,59 @@ void ImpressionistUI::cb_about(Fl_Menu_ *o, void *v) {
   fl_message("Impressionist FLTK version for CS341, Spring 2002");
 }
 
+/* *************************
+ * Custom Kernel
+ ************************** */
+bool ImpressionistUI::parseKernel() {
+  matrix_kernal.clear();
+  std::string input(m_KernelStr);
+  if (input.empty())
+    return false;
+  std::stringstream ss(input);
+
+  int size;
+  while (ss.rdbuf()->in_avail()) {
+    size++;
+  }
+
+  if (sqrt(size) != (int)sqrt(size)) {
+    fl_alert("Invalid kernel size!");
+    return false;
+  }
+
+  for (int i = 0; i < size; i++) {
+    std::vector<float> row;
+    for (int j = 0; j < size; j++) {
+      float tmp;
+      if (!ss.rdbuf()->in_avail())
+        return false;
+      ss >> tmp;
+      row.push_back(tmp);
+    }
+    matrix_kernal.push_back(row);
+  }
+  return true;
+}
+
+void ImpressionistUI::cb_KernelInput(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+
+  const char *str = ((Fl_Input *)o)->value();
+  strcpy(pUI->m_KernelStr, str);
+}
+
+void ImpressionistUI::cb_KernelApplyButton(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+  if (pUI->parseKernel()) {
+    pUI->m_paintView->applyKernel();
+  }
+}
+
+void ImpressionistUI::cb_KernelNormalizeButton(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+  pUI->m_IsNormalizedKernel = !pUI->m_IsNormalizedKernel;
+}
+
 //------- UI should keep track of the current for all the controls for answering
 // the query from Doc ---------
 //-------------------------------------------------------------
@@ -444,6 +500,8 @@ float ImpressionistUI::getAlpha() { return m_alpha; }
 int ImpressionistUI::getSpacing() { return m_spacing; }
 int ImpressionistUI::getEdgeThreshold() { return m_edgeThreshold; }
 
+bool ImpressionistUI::get_IsNormalizedKernel() { return m_IsNormalizedKernel; }
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -540,6 +598,9 @@ void ImpressionistUI::brush_dialog_value_init() {
 // Add new widgets here
 //----------------------------------------------------
 ImpressionistUI::ImpressionistUI() {
+  m_KernelStr = new char[1000];
+  memset(m_KernelStr, 0, 1000);
+
   // Create the main window
   m_mainWindow = new Fl_Window(600, 300, "Impressionist");
   m_mainWindow->user_data(
@@ -570,7 +631,7 @@ ImpressionistUI::ImpressionistUI() {
   brush_dialog_value_init();
 
   // brush dialog definition
-  m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+  m_brushDialog = new Fl_Window(400, 380, "Brush Dialog");
   // Add a brush type choice to the dialog
   m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
   m_BrushTypeChoice->user_data(
@@ -701,6 +762,20 @@ ImpressionistUI::ImpressionistUI() {
   m_DoItButton = new Fl_Button(340, 280, 50, 20, "&Do it");
   m_DoItButton->user_data((void *)(this));
   m_DoItButton->callback(cb_do_it_button);
+
+  m_KernelInput = new Fl_Input(50, 310, 300, 35, "Kernel");
+  m_KernelInput->value(m_KernelStr);
+  m_KernelInput->user_data((void *)(this));
+  m_KernelInput->callback(cb_KernelInput);
+
+  m_KernelApplyButton = new Fl_Button(60, 350, 150, 20, "Apply");
+  m_KernelApplyButton->user_data((void *)(this));
+  m_KernelApplyButton->callback(cb_KernelApplyButton);
+
+  m_KernelNormalizeButton = new Fl_Check_Button(240, 348, 150, 25, "Normalize");
+  m_KernelNormalizeButton->user_data((void *)(this));
+  m_KernelNormalizeButton->value(m_IsNormalizedKernel);
+  m_KernelNormalizeButton->callback(cb_KernelNormalizeButton);
 
   // deactivation init
   m_LineWidthSlider->deactivate();

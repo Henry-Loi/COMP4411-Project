@@ -404,3 +404,5 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
   }
   rightCLick = false;
 }
+
+void PaintView::applyKernel() {}
