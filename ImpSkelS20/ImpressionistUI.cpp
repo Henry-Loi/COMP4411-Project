@@ -276,7 +276,23 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
     pUI->m_StrokeDirectionChoice->deactivate();
 
+  } else if (type == BRUSH_ALPHA_MAPPED) {
+    pUI->m_AlphaSlider->deactivate();
+    pUI->m_LineWidthSlider->deactivate();
+    pUI->m_LineAngleSlider->deactivate();
+    pUI->m_EdgeClippingLightButton->deactivate();
+    pUI->m_AnotherGradientLightButton->deactivate();
+
+    // reset the stroke direction
+    pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
+    pUI->m_StrokeDirectionChoice->deactivate();
+
+    pUI->m_SizeRandLightButton->deactivate();
+    pUI->m_SizeRandLightButton->value(false);
+    pUI->isSizeRand = false;
   } else {
+    pUI->m_SizeRandLightButton->activate();
+    pUI->m_AlphaSlider->activate();
     pUI->m_LineWidthSlider->activate();
     pUI->m_LineAngleSlider->activate();
     pUI->m_EdgeClippingLightButton->activate();

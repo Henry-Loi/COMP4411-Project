@@ -87,11 +87,10 @@ void AlphaMappedBrush::convertToAlphaMap(unsigned char *data) {
   for (int i = 0; i < mapWidth * mapHeight; i++) {
     m_alphaMap[i] = (data[i * 3] + data[i * 3 + 1] + data[i * 3 + 2]) / 3;
   }
-  // mapRescale(m_pDoc->m_nWidth, m_pDoc->m_nHeight);
 }
 
 void AlphaMappedBrush::mapRescale(int width, int height) {
-  // rescale the grayscale alpha map
+  // rescale the grayscale alpha map without losing information
   unsigned char *newMap = new unsigned char[width * height];
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
