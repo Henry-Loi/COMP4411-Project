@@ -70,10 +70,20 @@ void AlphaMappedBrush::BrushMove(const Point source, Point target) {
   glBegin(GL_POINTS);
   for (int i = 0; i < mapWidth; i++) {
     for (int j = 0; j < mapHeight; j++) {
-      SetColorAlpha(source, int(GetMapPixel(i, j)));
-      glVertex2d(i, j);
+      SetColorAlpha(source, (*GetMapPixel(i, j)) / 255.0);
+
+      // unsigned char color;
+      // memcpy(&color, GetMapPixel(i, j), 1);
+
+      // glEnable(GL_BLEND);
+      // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      // glColor4f(color / 255.0, color / 255.0, color / 255.0, color / 255.0);
+
+      glVertex2d(target.x - mapWidth / 2 + i, target.y - mapHeight / 2 + j);
     }
   }
+  glEnd();
 }
 
 void AlphaMappedBrush::BrushEnd(const Point source, const Point target) {
@@ -118,7 +128,7 @@ unsigned char *AlphaMappedBrush::GetMapPixel(int x, int y) {
   else if (y >= mapHeight)
     y = mapHeight - 1;
 
-  return (unsigned char *)(m_alphaMap + 3 * (y * mapWidth + x));
+  return (unsigned char *)(m_alphaMap + (y * mapWidth + x));
 }
 
 //----------------------------------------------------------------
