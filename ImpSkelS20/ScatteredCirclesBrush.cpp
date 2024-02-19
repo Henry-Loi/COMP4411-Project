@@ -48,7 +48,7 @@ void ScatteredCirclesBrush::BrushMove(const Point source, Point target) {
   for (int i = 0; i < num_of_circles; i++) {
 
     Point ran_target = target.scattered(spacing);
-    SetAlpha(ran_target, pDoc->getAlpha());
+    SetColorAlpha(ran_target, pDoc->getAlpha());
     drawFilledCircle(ran_target.x, ran_target.y, pDoc->getSize() / 2);
   }
 }
