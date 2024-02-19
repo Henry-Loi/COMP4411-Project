@@ -49,6 +49,7 @@ void ScatteredLinesBrush::BrushMove(const Point source, Point target) {
     glBegin(GL_LINES);
 
     Point ran_target = target.scattered(spacing);
+    SetAlpha(ran_target, pDoc->getAlpha());
 
     glVertex2f(ran_target.x - (cos(DEG2RAD(angle)) * size / 2),
                ran_target.y - (sin(DEG2RAD(angle)) * size / 2));

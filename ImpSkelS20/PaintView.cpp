@@ -4,6 +4,14 @@
 // The code maintaining the painting view of the input images
 //
 
+//  Paint_coordinates
+//
+//  Y-
+//  |
+//  |
+//  |
+//  |_______X+
+
 #include "paintview.h"
 #include "ImpBrush.h"
 #include "fastmath.h"
@@ -16,6 +24,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "SingleLineBrush.h"
+#include "ScatteredLinesBrush.h"
+#include <iostream>
 #define LEFT_MOUSE_DOWN 1
 #define LEFT_MOUSE_DRAG 2
 #define LEFT_MOUSE_UP 3
@@ -31,6 +42,11 @@
 static int eventToDo;
 static int isAnEvent = 0;
 static Point coord;
+Point right_start(0,0);//start of right click
+boolean rightCLick = false;
+float right_size = 0;
+float right_angle = 0;
+
 
 int irand(int);
 
@@ -95,24 +111,40 @@ void PaintView::draw() {
 
     Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
     Point target(coord.x, m_nWindowHeight - coord.y);
+  
+    Point cur;//current position of cursor after rite click
 
-    if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
-      if (target.x - target.y != 0) {
-        m_pDoc->m_pUI->setLineAngle(
-            atan((target.y - last_target.x) / (target.x - target.y)));
-      } else {
-        m_pDoc->m_pUI->setLineAngle(0);
-      }
-    }
+    //if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+    //  if (target.x - target.y != 0) {
+    //    m_pDoc->m_pUI->setLineAngle(
+    //        atan((target.y - last_target.x) / (target.x - target.y)));
+    //  } else {
+    //    m_pDoc->m_pUI->setLineAngle(0);
+    //  }
+    //}
+
 
     last_target = target;
-
+    float angle = 0;
+    int size = 0;
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
-      m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+      if(m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION){
+          right_start.x = coord.x;
+          right_start.y = coord.y;
+      }
+        m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG:
+        if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+            cur.x = coord.x;
+            cur.y = coord.y;
+            angle = atan(((double)right_start.y - (double)cur.y) / ((double)cur.x - (double)right_start.x));
+            m_pDoc->m_pUI->setLineAngle(RAD2DEG(angle));
+            right_start.x = cur.x;
+            right_start.y = cur.y;
+        }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
       break;
     case LEFT_MOUSE_UP:
@@ -122,20 +154,25 @@ void PaintView::draw() {
       RestoreContent();
       break;
     case RIGHT_MOUSE_DOWN:
+        RightClickBrushBegin(source, target);
       // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
+
+        PointerMove(source, target,right_start);
+        RestoreContent();
       // MY TODO: Implement line real time update
       break;
     case RIGHT_MOUSE_UP:
       // MY TODO: Calculate the line angle and set it in the document
-      m_pDoc->m_pUI->setLineAngle(m_pDoc->m_pUI->m_tarLineAngle);
+        RightClickBrushEnd( source, target);
+       
       break;
 
     default:
       printf("Unknown event!!\n");
       break;
-    }
+    } 
   }
 
   glFlush();
@@ -308,4 +345,59 @@ int PaintView::autoPaint(void) {
 #endif // !MESA
 
   return 0;
+}
+
+void PaintView::RightClickBrushBegin(const Point source, const Point target) {
+ 
+    ImpressionistUI* dlg = m_pDoc->m_pUI;
+
+    int width = m_pDoc->getLineWidth();
+
+    glLineWidth((float)width);
+    if (!rightCLick) {
+        right_start.x = coord.x;
+        right_start.y = coord.y;
+        rightCLick = true;
+    }
+}
+
+void PaintView::PointerMove(const Point source, const Point target, const Point start) {
+ 
+    ImpressionistUI* dlg = m_pDoc->m_pUI;
+
+    if (m_pDoc == NULL) {
+        printf(":PaintView  document is NULL\n");
+        return;
+    }
+    Point cur(coord.x, coord.y);
+
+
+    Point new_source((cur.x+start.x)/2 + m_nStartCol, m_nEndRow - (cur.y + start.y) / 2);
+    Point new_target((cur.x + start.x) / 2, m_nWindowHeight - (cur.y + start.y) / 2);
+
+    glColor3f(1, 0, 0);
+    glBegin(GL_LINES);
+
+    right_size = sqrt(pow(cur.x - start.x, 2) + pow(cur.y - start.y, 2));
+    right_angle = atan(((double)start.y - (double)cur.y) / ((double)cur.x - (double)start.x));
+    std::cout << "angle:" << right_angle << std::endl;
+    std::cout << "start.x:" << start.x << "start.y" << start.y << std::endl;
+    std::cout << "cur.x:" << cur.x << "cur.y" << cur.y << std::endl;
+    glVertex2f(new_target.x - (cos(right_angle) * right_size / 2),
+        new_target.y - (sin(right_angle) * right_size / 2));
+    glVertex2f(new_target.x + (cos(right_angle) * right_size / 2),
+        new_target.y + (sin(right_angle) * right_size / 2));
+
+
+    glEnd();
+}
+
+void PaintView::RightClickBrushEnd(const Point source, const Point target) {
+
+    ImpressionistUI* dlg = m_pDoc->m_pUI;
+    if (typeid(*(m_pDoc->m_pCurrentBrush)) == typeid(SingleLineBrush) || typeid(*(m_pDoc->m_pCurrentBrush)) == typeid(ScatteredLinesBrush)) {
+        dlg->setLineAngle(RAD2DEG(right_angle));
+        dlg->setSize(right_size);
+    }
+    rightCLick = false;
 }

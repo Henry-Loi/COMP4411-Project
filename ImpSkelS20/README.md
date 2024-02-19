@@ -1,6 +1,6 @@
 # Project 1 : Impressionist
-> **Assigned : Feb 3** \
-> **Due : Mar 2**   
+> Assigned : Feb 3 \
+Due : Mar 2   
 
 ## Basic Requirement
 

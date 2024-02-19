@@ -453,7 +453,9 @@ void ImpressionistUI::setSize(int size) {
   if (size <= 40)
     m_BrushSizeSlider->value(m_nSize);
 }
-
+//-------------------------------------------------
+// Set the brush angle in degree
+//-------------------------------------------------
 void ImpressionistUI::setLineAngle(int angle) {
   m_lineAngle = angle;
   if (angle <= 359)

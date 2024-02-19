@@ -19,6 +19,8 @@ public:
   char *BrushName(void);
 
   int BrushInit(void) { return 1; }
+  void RightClickBrushBegin(const Point source, const Point target);
+  void PointerMove(const Point source, const Point target);
 };
 
 #endif

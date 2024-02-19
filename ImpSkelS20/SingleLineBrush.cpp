@@ -25,6 +25,15 @@ void SingleLineBrush::BrushBegin(const Point source, const Point target) {
 
   BrushMove(source, target);
 }
+void SingleLineBrush::RightClickBrushBegin(const Point source, const Point target) {
+    ImpressionistDoc* pDoc = GetDocument();
+    ImpressionistUI* dlg = pDoc->m_pUI;
+
+    int width = pDoc->getLineWidth();
+
+    glLineWidth((float)width);
+}
+
 
 void SingleLineBrush::BrushMove(const Point source, const Point target) {
   ImpressionistDoc *pDoc = GetDocument();
@@ -46,6 +55,29 @@ void SingleLineBrush::BrushMove(const Point source, const Point target) {
              target.y + (sin(DEG2RAD(angle)) * size / 2));
 
   glEnd();
+}
+
+void SingleLineBrush::PointerMove(const Point source, const Point target) {
+    ImpressionistDoc* pDoc = GetDocument();
+    ImpressionistUI* dlg = pDoc->m_pUI;
+
+    if (pDoc == NULL) {
+        printf("SingleLineBrush::BrushMove  document is NULL\n");
+        return;
+    }
+
+    glColor3f(1, 0, 0);
+    glBegin(GL_LINES);
+
+    float size = pDoc->getSize();
+    float angle = pDoc->getLineAngle();
+    glVertex2f(target.x - (cos(DEG2RAD(angle)) * size / 2),
+        target.y - (sin(DEG2RAD(angle)) * size / 2));
+    glVertex2f(target.x + (cos(DEG2RAD(angle)) * size / 2),
+        target.y + (sin(DEG2RAD(angle)) * size / 2));
+
+
+    glEnd();
 }
 
 void SingleLineBrush::BrushEnd(const Point source, const Point target) {
