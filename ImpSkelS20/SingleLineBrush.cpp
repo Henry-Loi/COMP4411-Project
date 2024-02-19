@@ -44,7 +44,7 @@ void SingleLineBrush::BrushMove(const Point source, const Point target) {
     return;
   }
 
-  SetAlpha(source, pDoc->getAlpha());
+  SetColorAlpha(source, pDoc->getAlpha());
   glBegin(GL_LINES);
 
   float size = pDoc->getSize();

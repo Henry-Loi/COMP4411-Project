@@ -21,6 +21,9 @@
 #include "ScatteredLinesBrush.h"
 #include "ScatteredPointsBrush.h"
 
+// alpha mapped brush
+#include "AlphaMappedBrush.h"
+
 // MY TODO: add other brushes
 
 #define DESTROY(p)                                                             \
@@ -56,6 +59,8 @@ ImpressionistDoc::ImpressionistDoc() {
       new ScatteredLinesBrush(this, "Scattered Lines");
   ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES] =
       new ScatteredCirclesBrush(this, "Scattered Circles");
+  ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPED] =
+      new AlphaMappedBrush(this, "Alpha Mapped");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -115,12 +120,15 @@ int ImpressionistDoc::loadImage(char *iname) {
   m_nPaintHeight = height;
 
   // release old storage
-  if (m_ucOriginal)
+  if (m_ucOriginal != nullptr) {
     delete[] m_ucOriginal;
-  if (m_ucBitmap)
-    delete[] m_ucBitmap;
-  if (m_ucPainting)
+    m_ucOriginal = nullptr;
+    m_ucBitmap = nullptr;
+  }
+  if (m_ucPainting != nullptr) {
     delete[] m_ucPainting;
+    m_ucPainting = nullptr;
+  }
 
   m_ucOriginal = data;
   m_ucBitmap = m_ucOriginal;
@@ -227,7 +235,7 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(int x, int y) {
   else if (y >= m_nHeight)
     y = m_nHeight - 1;
 
-  return (GLubyte *)(m_ucBitmap + 3 * (y * m_nWidth + x));
+  return (GLubyte *)(m_ucOriginal + 3 * (y * m_nWidth + x));
 }
 
 //----------------------------------------------------------------

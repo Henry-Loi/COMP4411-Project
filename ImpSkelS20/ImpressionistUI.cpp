@@ -256,6 +256,12 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
 
   int type = (int)v;
 
+  // add brush init & its checking
+  if (!ImpBrush::c_pBrushes[type]->BrushInit()) {
+    fl_alert("Brush failed to initialize!");
+    return;
+  }
+
   pDoc->setBrushType(type);
 
   // add activate and deactivate handler
@@ -270,7 +276,23 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
     pUI->m_StrokeDirectionChoice->deactivate();
 
+  } else if (type == BRUSH_ALPHA_MAPPED) {
+    pUI->m_AlphaSlider->deactivate();
+    pUI->m_LineWidthSlider->deactivate();
+    pUI->m_LineAngleSlider->deactivate();
+    pUI->m_EdgeClippingLightButton->deactivate();
+    pUI->m_AnotherGradientLightButton->deactivate();
+
+    // reset the stroke direction
+    pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
+    pUI->m_StrokeDirectionChoice->deactivate();
+
+    pUI->m_SizeRandLightButton->deactivate();
+    pUI->m_SizeRandLightButton->value(false);
+    pUI->isSizeRand = false;
   } else {
+    pUI->m_SizeRandLightButton->activate();
+    pUI->m_AlphaSlider->activate();
     pUI->m_LineWidthSlider->activate();
     pUI->m_LineAngleSlider->activate();
     pUI->m_EdgeClippingLightButton->activate();
@@ -479,6 +501,9 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Scattered Circles", FL_ALT + 'd',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_SCATTERED_CIRCLES},
+    {"Alpha Mapped", FL_ALT + 'a',
+     (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_ALPHA_MAPPED},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {

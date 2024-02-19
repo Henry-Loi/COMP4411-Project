@@ -17,6 +17,7 @@ enum {
   BRUSH_SCATTERED_POINTS,
   BRUSH_SCATTERED_LINES,
   BRUSH_SCATTERED_CIRCLES,
+  BRUSH_ALPHA_MAPPED,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
@@ -49,9 +50,11 @@ public:
   virtual void BrushMove(const Point source, const Point target) = 0;
   virtual void BrushEnd(const Point source, const Point target) = 0;
 
+  virtual int BrushInit() = 0;
+
   // according to the source image and the position, determine the draw color
   void SetColor(const Point source);
-  void SetAlpha(const Point source, float alpha);
+  void SetColorAlpha(const Point source, float alpha);
 
   // get Doc to communicate with it
   ImpressionistDoc *GetDocument(void);
@@ -62,9 +65,10 @@ public:
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
 
-private:
+protected:
   ImpressionistDoc *m_pDoc;
 
+private:
   // Brush's name (not used in this version).
   char *m_pBrushName;
 };
