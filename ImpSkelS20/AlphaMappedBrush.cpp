@@ -49,9 +49,8 @@ void AlphaMappedBrush::BrushBegin(const Point source, const Point target) {
   ImpressionistDoc *pDoc = GetDocument();
   ImpressionistUI *dlg = pDoc->m_pUI;
 
-  // int size = pDoc->getSize();
-
-  // mapRescale(size, size);
+  int size = pDoc->getSize();
+  mapRescale(size, size);
 
   BrushMove(source, target);
 }
@@ -71,15 +70,6 @@ void AlphaMappedBrush::BrushMove(const Point source, Point target) {
   for (int i = 0; i < mapWidth; i++) {
     for (int j = 0; j < mapHeight; j++) {
       SetColorAlpha(source, (*GetMapPixel(i, j)) / 255.0);
-
-      // unsigned char color;
-      // memcpy(&color, GetMapPixel(i, j), 1);
-
-      // glEnable(GL_BLEND);
-      // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-      // glColor4f(color / 255.0, color / 255.0, color / 255.0, color / 255.0);
-
       glVertex2d(target.x - mapWidth / 2 + i, target.y - mapHeight / 2 + j);
     }
   }
@@ -101,17 +91,18 @@ void AlphaMappedBrush::convertToAlphaMap(unsigned char *data) {
 }
 
 void AlphaMappedBrush::mapRescale(int width, int height) {
-  // rescale the alpha map
-  unsigned char *rescaledMap = new unsigned char[width * height];
+  // rescale the grayscale alpha map
+  unsigned char *newMap = new unsigned char[width * height];
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
-      rescaledMap[i * width + j] =
-          m_alphaMap[i * mapWidth / width * mapHeight / height +
-                     j * mapHeight / height];
+      newMap[j * width + i] =
+          *GetMapPixel(i * mapWidth / width, j * mapHeight / height);
     }
   }
   delete[] m_alphaMap;
-  m_alphaMap = rescaledMap;
+  m_alphaMap = newMap;
+  mapWidth = width;
+  mapHeight = height;
 }
 
 //------------------------------------------------------------------
