@@ -155,16 +155,13 @@ void PaintView::draw() {
       break;
     case RIGHT_MOUSE_DOWN:
       RightClickBrushBegin(source, target);
-      // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
 
       PointerMove(source, target, right_start);
       RestoreContent();
-      // MY TODO: Implement line real time update
       break;
     case RIGHT_MOUSE_UP:
-      // MY TODO: Calculate the line angle and set it in the document
       RightClickBrushEnd(source, target);
 
       break;

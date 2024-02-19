@@ -38,7 +38,7 @@ public:
   // auto painting
   int autoPaint(void);
 
-  // custom kernal
+  // custom kernel
   void applyKernel(void);
 
   ImpressionistDoc *m_pDoc;

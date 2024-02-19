@@ -24,6 +24,9 @@
 // alpha mapped brush
 #include "AlphaMappedBrush.h"
 
+// kernel brush
+#include "KernelBrush.h"
+
 // MY TODO: add other brushes
 
 #define DESTROY(p)                                                             \
@@ -61,6 +64,7 @@ ImpressionistDoc::ImpressionistDoc() {
       new ScatteredCirclesBrush(this, "Scattered Circles");
   ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPED] =
       new AlphaMappedBrush(this, "Alpha Mapped");
+  ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

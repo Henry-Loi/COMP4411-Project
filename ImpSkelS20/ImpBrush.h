@@ -18,6 +18,7 @@ enum {
   BRUSH_SCATTERED_LINES,
   BRUSH_SCATTERED_CIRCLES,
   BRUSH_ALPHA_MAPPED,
+  BRUSH_CUSTOM_KERNEL,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 

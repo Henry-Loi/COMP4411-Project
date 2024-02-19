@@ -88,7 +88,7 @@ public:
 
   // custom kernel
   char *m_KernelStr;
-  std::vector<std::vector<float>> matrix_kernal;
+  std::vector<std::vector<float>> matrix_kernel;
   bool get_IsNormalizedKernel();
 
   int m_tarLineAngle; // for right click

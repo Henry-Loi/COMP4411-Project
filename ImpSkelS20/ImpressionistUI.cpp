@@ -250,19 +250,26 @@ void ImpressionistUI::cb_about(Fl_Menu_ *o, void *v) {
  * Custom Kernel
  ************************** */
 bool ImpressionistUI::parseKernel() {
-  matrix_kernal.clear();
+  matrix_kernel.clear();
   std::string input(m_KernelStr);
   if (input.empty())
     return false;
   std::stringstream ss(input);
 
-  int size;
+  int size = 0;
+  float dummy = 0.0f;
   while (ss.rdbuf()->in_avail()) {
+    // check if the input is all number
+    if (!isdigit(ss.peek()) && ss.peek() != ' ') {
+      fl_alert("Invalid kernel input! Input must be all numbers!");
+      return false;
+    }
+    ss >> dummy;
     size++;
   }
 
   if (sqrt(size) != (int)sqrt(size)) {
-    fl_alert("Invalid kernel size!");
+    fl_alert("Invalid kernel size! Detected Size: %d", size);
     return false;
   }
 
@@ -275,7 +282,7 @@ bool ImpressionistUI::parseKernel() {
       ss >> tmp;
       row.push_back(tmp);
     }
-    matrix_kernal.push_back(row);
+    matrix_kernel.push_back(row);
   }
   return true;
 }
@@ -321,8 +328,11 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   pDoc->setBrushType(type);
 
   // add activate and deactivate handler
-  if (type == BRUSH_POINTS || type == BRUSH_SCATTERED_POINTS ||
-      type == BRUSH_CIRCLES || type == BRUSH_SCATTERED_CIRCLES) {
+  switch (type) {
+  case BRUSH_POINTS:
+  case BRUSH_SCATTERED_POINTS:
+  case BRUSH_CIRCLES:
+  case BRUSH_SCATTERED_CIRCLES: {
     pUI->m_LineWidthSlider->deactivate();
     pUI->m_LineAngleSlider->deactivate();
     pUI->m_EdgeClippingLightButton->deactivate();
@@ -331,9 +341,12 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     // reset the stroke direction
     pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
     pUI->m_StrokeDirectionChoice->deactivate();
-
-  } else if (type == BRUSH_ALPHA_MAPPED) {
+    break;
+  }
+  case BRUSH_ALPHA_MAPPED: {
+    // no alpha slider
     pUI->m_AlphaSlider->deactivate();
+
     pUI->m_LineWidthSlider->deactivate();
     pUI->m_LineAngleSlider->deactivate();
     pUI->m_EdgeClippingLightButton->deactivate();
@@ -346,7 +359,29 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_SizeRandLightButton->deactivate();
     pUI->m_SizeRandLightButton->value(false);
     pUI->isSizeRand = false;
-  } else {
+    break;
+  }
+  case BRUSH_CUSTOM_KERNEL: {
+    pUI->m_LineWidthSlider->deactivate();
+    pUI->m_LineAngleSlider->deactivate();
+    pUI->m_EdgeClippingLightButton->deactivate();
+    pUI->m_AnotherGradientLightButton->deactivate();
+
+    // reset the stroke direction
+    pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
+    pUI->m_StrokeDirectionChoice->deactivate();
+
+    // active kernel only option
+    pUI->m_KernelInput->activate();
+    pUI->m_KernelApplyButton->activate();
+    pUI->m_KernelNormalizeButton->activate();
+    break;
+  }
+  default: {
+    pUI->m_KernelInput->deactivate();
+    pUI->m_KernelApplyButton->deactivate();
+    pUI->m_KernelNormalizeButton->deactivate();
+
     pUI->m_SizeRandLightButton->activate();
     pUI->m_AlphaSlider->activate();
     pUI->m_LineWidthSlider->activate();
@@ -355,6 +390,8 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_AnotherGradientLightButton->activate();
 
     pUI->m_StrokeDirectionChoice->activate();
+    break;
+  }
   }
 }
 
@@ -562,6 +599,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Alpha Mapped", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_ALPHA_MAPPED},
+    {"Kernel", FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CUSTOM_KERNEL},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {
@@ -648,7 +687,7 @@ ImpressionistUI::ImpressionistUI() {
   m_StrokeDirectionChoice->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_StrokeDirectionChoice->menu(strokeDirectionMenu);
-  m_StrokeDirectionChoice->callback(cb_brushChoice);
+  m_StrokeDirectionChoice->callback(cb_strokeDirectionChoice);
 
   // Add brush size slider to the dialog
   m_BrushSizeSlider = new Fl_Value_Slider(10, 80, 300, 20, "Size");
@@ -783,6 +822,11 @@ ImpressionistUI::ImpressionistUI() {
   m_EdgeClippingLightButton->deactivate();
   m_AnotherGradientLightButton->deactivate();
   m_StrokeDirectionChoice->deactivate();
+
+  // deactivate kernel only option
+  m_KernelInput->deactivate();
+  m_KernelApplyButton->deactivate();
+  m_KernelNormalizeButton->deactivate();
 
   m_brushDialog->end();
 }
