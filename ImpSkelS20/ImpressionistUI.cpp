@@ -268,8 +268,11 @@ bool ImpressionistUI::parseKernel() {
     size++;
   }
 
-  if (sqrt(size) != (int)sqrt(size)) {
-    fl_alert("Invalid kernel size! Detected Size: %d", size);
+  // check if the input is a square odd matrix
+  if (sqrt(size) != (int)sqrt(size) || size % 2 == 0) {
+    fl_alert("Invalid kernel size! It should be square matrix in odd size! "
+             "Detected number(s): %d",
+             sqrt(size));
     return false;
   }
 
@@ -319,8 +322,16 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
 
   int type = (int)v;
 
+  void *arg = NULL;
+  switch (type) {
+  case BRUSH_CUSTOM_KERNEL:
+    arg = static_cast<void *>(&pUI->matrix_kernel);
+    break;
+  default:
+    break;
+  }
   // add brush init & its checking
-  if (!ImpBrush::c_pBrushes[type]->BrushInit()) {
+  if (!ImpBrush::c_pBrushes[type]->BrushInit(&arg)) {
     fl_alert("Brush failed to initialize!");
     return;
   }

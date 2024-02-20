@@ -20,7 +20,7 @@ AlphaMappedBrush::AlphaMappedBrush(ImpressionistDoc *pDoc, char *name)
   m_alphaMap = NULL;
 }
 
-int AlphaMappedBrush::BrushInit(void) {
+int AlphaMappedBrush::BrushInit(void *dummy) {
   ImpressionistDoc *pDoc = GetDocument();
 
   // load alpha map

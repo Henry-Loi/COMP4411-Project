@@ -402,4 +402,11 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
   rightCLick = false;
 }
 
-void PaintView::applyKernel() {}
+void PaintView::applyKernel() {
+  ImpressionistUI *dlg = m_pDoc->m_pUI;
+  if (dlg->matrix_kernel.size() == 0) {
+    return;
+  }
+  ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL]->BrushInit(
+      static_cast<void *>(&dlg->matrix_kernel));
+}
