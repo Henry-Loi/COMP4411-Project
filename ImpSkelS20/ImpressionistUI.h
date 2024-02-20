@@ -16,6 +16,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 #include <sys/stat.h>
+#include <FL/Fl_Value_Input.H>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -36,6 +37,7 @@ public:
 
   // for brush dialog
   Fl_Window *m_brushDialog;
+  Fl_Window* m_colorSelectionDialog;
 
   Fl_Choice *m_BrushTypeChoice;
   Fl_Choice *m_StrokeDirectionChoice;
@@ -54,6 +56,8 @@ public:
   Fl_Light_Button *m_EdgeClippingLightButton;
   Fl_Light_Button *m_AnotherGradientLightButton;
   Fl_Light_Button *m_SizeRandLightButton;
+
+  Fl_Value_Input* m_pColor1;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
@@ -114,6 +118,7 @@ private:
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
   static void cb_paint_button(Fl_Widget *o, void *v);
   static void cb_do_it_button(Fl_Widget *o, void *v);
+  static void cb_colorSelection(Fl_Menu_ * o, void* v);
 
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
 

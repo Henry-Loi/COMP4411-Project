@@ -215,6 +215,9 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
 void ImpressionistUI::cb_brushes(Fl_Menu_ *o, void *v) {
   whoami(o)->m_brushDialog->show();
 }
+void ImpressionistUI::cb_colorSelection(Fl_Menu_* o, void* v) {
+    whoami(o)->m_colorSelectionDialog ->show();
+}
 
 //------------------------------------------------------------
 // Clears the paintview canvas.
@@ -450,6 +453,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
+     {"&Colors...", FL_ALT + 'k', (Fl_Callback*)ImpressionistUI::cb_colorSelection},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
 
@@ -685,4 +689,9 @@ ImpressionistUI::ImpressionistUI() {
   m_StrokeDirectionChoice->deactivate();
 
   m_brushDialog->end();
+
+  m_colorSelectionDialog = new Fl_Window(220, 220, "color Selection Dialog");
+  m_pColor1 = new Fl_Value_Input(150,50,50,20);
+  m_pColor1->value(1.0);
+  m_colorSelectionDialog->end();
 }
