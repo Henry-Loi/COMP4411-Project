@@ -31,7 +31,10 @@ int KernelBrush::BrushInit(void *params) {
     kernel_str += "\n";
   }
 
-  fl_alert("Kernel:\n%s", kernel_str.c_str());
+  if (kernel.size()) {
+    fl_alert("Kernel:\n%s", kernel_str.c_str());
+    return 0;
+  }
 
   return 1;
 }
@@ -73,12 +76,13 @@ void KernelBrush::BrushMove(const Point source, const Point target) {
       for (int i = 0; i < ksize; i++) {
         for (int j = 0; j < ksize; j++) {
           unsigned char color[3];
-          Point new_target = Point(w + i - ksize / 2, h + j - ksize / 2);
-          if (new_target.x < 0 || new_target.x >= pDoc->m_nWidth ||
-              new_target.y < 0 || new_target.y >= pDoc->m_nHeight) {
+          Point new_source =
+              Point(source.x + i - ksize / 2, source.y + j - ksize / 2);
+          if (new_source.x < 0 || new_source.x >= pDoc->m_nWidth ||
+              new_source.y < 0 || new_source.y >= pDoc->m_nHeight) {
             continue;
           }
-          getSourceRGB(source, color);
+          getSourceRGB(new_source, color);
           sum[0] += kernel[i][j] * color[0];
           sum[1] += kernel[i][j] * color[1];
           sum[2] += kernel[i][j] * color[2];

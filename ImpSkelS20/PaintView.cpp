@@ -336,6 +336,9 @@ int PaintView::autoPaint(void) {
 
   glFlush();
 
+  refresh();
+  m_pDoc->m_pUI->m_origView->updateCursor(coord);
+
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_BACK);
