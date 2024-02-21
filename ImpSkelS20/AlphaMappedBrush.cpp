@@ -43,6 +43,8 @@ int AlphaMappedBrush::BrushInit(void *dummy) {
     delete[] m_alphaMap;
 
   convertToAlphaMap(data);
+
+  return 1;
 }
 
 void AlphaMappedBrush::BrushBegin(const Point source, const Point target) {

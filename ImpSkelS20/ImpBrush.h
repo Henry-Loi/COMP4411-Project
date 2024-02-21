@@ -57,6 +57,8 @@ public:
   void SetColor(const Point source);
   void SetColorAlpha(const Point source, float alpha);
 
+  void getSourceRGB(const Point source, unsigned char color[3]);
+
   // get Doc to communicate with it
   ImpressionistDoc *GetDocument(void);
 

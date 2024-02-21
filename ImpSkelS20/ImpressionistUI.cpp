@@ -6,6 +6,7 @@
 
 #include <FL/fl_ask.h>
 
+#include <iterator>
 #include <math.h>
 #include <sstream>
 #include <stdio.h>
@@ -252,19 +253,22 @@ void ImpressionistUI::cb_about(Fl_Menu_ *o, void *v) {
 bool ImpressionistUI::parseKernel() {
   matrix_kernel.clear();
   std::string input(m_KernelStr);
-  if (input.empty())
+  if (input.empty()) {
+    fl_alert("Invalid kernel input! Input is empty!");
     return false;
+  }
   std::stringstream ss(input);
+  std::stringstream ssSize(input);
 
   int size = 0;
   float dummy = 0.0f;
-  while (ss.rdbuf()->in_avail()) {
+  while (ssSize.rdbuf()->in_avail()) {
     // check if the input is all number
-    if (!isdigit(ss.peek()) && ss.peek() != ' ') {
+    if (!isdigit(ssSize.peek()) && ssSize.peek() != ' ') {
       fl_alert("Invalid kernel input! Input must be all numbers!");
       return false;
     }
-    ss >> dummy;
+    ssSize >> dummy;
     size++;
   }
 
@@ -275,6 +279,8 @@ bool ImpressionistUI::parseKernel() {
              sqrt(size));
     return false;
   }
+
+  size = sqrt(size);
 
   for (int i = 0; i < size; i++) {
     std::vector<float> row;
@@ -322,16 +328,8 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
 
   int type = (int)v;
 
-  void *arg = NULL;
-  switch (type) {
-  case BRUSH_CUSTOM_KERNEL:
-    arg = static_cast<void *>(&pUI->matrix_kernel);
-    break;
-  default:
-    break;
-  }
   // add brush init & its checking
-  if (!ImpBrush::c_pBrushes[type]->BrushInit(&arg)) {
+  if (!ImpBrush::c_pBrushes[type]->BrushInit(nullptr)) {
     fl_alert("Brush failed to initialize!");
     return;
   }
@@ -386,6 +384,7 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_KernelInput->activate();
     pUI->m_KernelApplyButton->activate();
     pUI->m_KernelNormalizeButton->activate();
+    pUI->m_BrushSizeSlider->deactivate();
     break;
   }
   default: {
@@ -399,6 +398,8 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_LineAngleSlider->activate();
     pUI->m_EdgeClippingLightButton->activate();
     pUI->m_AnotherGradientLightButton->activate();
+
+    pUI->m_BrushSizeSlider->activate();
 
     pUI->m_StrokeDirectionChoice->activate();
     break;

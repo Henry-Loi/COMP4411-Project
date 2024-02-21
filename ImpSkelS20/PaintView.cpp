@@ -407,6 +407,5 @@ void PaintView::applyKernel() {
   if (dlg->matrix_kernel.size() == 0) {
     return;
   }
-  ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL]->BrushInit(
-      static_cast<void *>(&dlg->matrix_kernel));
+  ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL]->BrushInit(nullptr);
 }

@@ -19,9 +19,9 @@ public:
   void BrushEnd(const Point source, const Point target);
   char *BrushName(void);
 
-  int BrushInit(void *) { return 1; }
+  int BrushInit(void *);
 
-  std::vector<float> kernel;
+  std::vector<std::vector<float>> kernel;
 };
 
 #endif
