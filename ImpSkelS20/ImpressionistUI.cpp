@@ -262,6 +262,7 @@ bool ImpressionistUI::parseKernel() {
 
   int size = 0;
   float dummy = 0.0f;
+  float sum = 0.0f;
   while (ssSize.rdbuf()->in_avail()) {
     // check if the input is all number
     if (!isdigit(ssSize.peek()) && ssSize.peek() != ' ') {
@@ -269,6 +270,7 @@ bool ImpressionistUI::parseKernel() {
       return false;
     }
     ssSize >> dummy;
+    sum += dummy;
     size++;
   }
 
@@ -289,6 +291,9 @@ bool ImpressionistUI::parseKernel() {
       if (!ss.rdbuf()->in_avail())
         return false;
       ss >> tmp;
+      if (m_IsNormalizedKernel) {
+        tmp /= sum;
+      }
       row.push_back(tmp);
     }
     matrix_kernel.push_back(row);
@@ -384,7 +389,6 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_KernelInput->activate();
     pUI->m_KernelApplyButton->activate();
     pUI->m_KernelNormalizeButton->activate();
-    pUI->m_BrushSizeSlider->deactivate();
     break;
   }
   default: {
@@ -642,6 +646,8 @@ void ImpressionistUI::brush_dialog_value_init() {
   isEdgeClipping = true;
   isAnotherGradient = false;
   isSizeRand = true;
+
+  m_IsNormalizedKernel = true;
 }
 
 //----------------------------------------------------
