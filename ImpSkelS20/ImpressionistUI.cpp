@@ -265,7 +265,9 @@ bool ImpressionistUI::parseKernel() {
   float sum = 0.0f;
   while (ssSize.rdbuf()->in_avail()) {
     // check if the input is all number
-    if (!isdigit(ssSize.peek()) && ssSize.peek() != ' ') {
+    if (!isdigit((ssSize.peek())) && ssSize.peek() != ' ' &&
+        ssSize.peek() != '-') {
+      char test = ssSize.peek();
       fl_alert("Invalid kernel input! Input must be all numbers!");
       return false;
     }
@@ -291,7 +293,7 @@ bool ImpressionistUI::parseKernel() {
       if (!ss.rdbuf()->in_avail())
         return false;
       ss >> tmp;
-      if (m_IsNormalizedKernel) {
+      if (m_IsNormalizedKernel && sum != 0.0f) {
         tmp /= sum;
       }
       row.push_back(tmp);
