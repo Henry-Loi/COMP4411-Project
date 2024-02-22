@@ -10,6 +10,7 @@
 
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <iostream>
 
 /*
 //------------------------------ Widget Examples
@@ -215,6 +216,9 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
 void ImpressionistUI::cb_brushes(Fl_Menu_ *o, void *v) {
   whoami(o)->m_brushDialog->show();
 }
+void ImpressionistUI::cb_colorSelection(Fl_Menu_* o, void* v) {
+    whoami(o)->m_colorSelectionDialog ->show();
+}
 
 //------------------------------------------------------------
 // Clears the paintview canvas.
@@ -394,6 +398,16 @@ void ImpressionistUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
     pUI->isSizeRand = TRUE;
 }
 
+void ImpressionistUI::cb_ManualColor(Fl_Widget* o, void* v) {
+    ((ImpressionistUI*)(o->user_data()))->m_color1 =
+        int(((Fl_Color_Chooser *)o)->r());
+    ((ImpressionistUI*)(o->user_data()))->m_color2 =
+        int(((Fl_Color_Chooser*)o)->g());
+    ((ImpressionistUI*)(o->user_data()))->m_color3 =
+        int(((Fl_Color_Chooser*)o)->b());
+   
+}
+
 //---------------------------------- per instance functions
 //--------------------------------------
 
@@ -472,6 +486,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
+     {"&Colors...", FL_ALT + 'k', (Fl_Callback*)ImpressionistUI::cb_colorSelection},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
 
@@ -533,6 +548,22 @@ void ImpressionistUI::brush_dialog_value_init() {
   isEdgeClipping = true;
   isAnotherGradient = false;
   isSizeRand = true;
+}
+
+void ImpressionistUI::color_Selection_init() {
+    m_color1 = 1.000;
+    m_color2 = 1.000;
+    m_color3 = 1.000;
+}
+
+float ImpressionistUI::getR() {
+    return m_color1;
+}
+float ImpressionistUI::getB() {
+    return m_color2;
+}
+float ImpressionistUI::getG() {
+    return m_color3;
 }
 
 //----------------------------------------------------
@@ -710,4 +741,19 @@ ImpressionistUI::ImpressionistUI() {
   m_StrokeDirectionChoice->deactivate();
 
   m_brushDialog->end();
+
+
+  //Manual Color Slection
+  
+  m_colorSelectionDialog = new Fl_Window(220, 220, "color Selection Dialog");
+  Color_Selection = new Fl_Color_Chooser(10, 20, 200, 190,"Color Blending");
+  Color_Selection->user_data(
+      (void*)(this));
+  Color_Selection->type(FL_RGB);
+  Color_Selection->rgb(1.0,1.0,1.0);
+  Color_Selection->callback(cb_ManualColor);
+  
+  
+  m_colorSelectionDialog->end();
+  //Manual Color Selection end
 }

@@ -146,6 +146,9 @@ void PaintView::draw() {
         right_start.y = cur.y;
       }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+     
+      std::cout << m_pDoc->m_pUI->getR() << " " << m_pDoc->m_pUI->getG() << " " << m_pDoc->m_pUI->getB() << std::endl;
+      std::cout << m_pDoc->m_pUI->Color_Selection->r() << " " << m_pDoc->m_pUI->Color_Selection->g() << " " << m_pDoc->m_pUI->Color_Selection->b() << " " << std::endl;
       break;
     case LEFT_MOUSE_UP:
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);

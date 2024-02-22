@@ -16,6 +16,8 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 #include <sys/stat.h>
+#include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Color_Chooser.H>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -36,6 +38,7 @@ public:
 
   // for brush dialog
   Fl_Window *m_brushDialog;
+  Fl_Window* m_colorSelectionDialog;
 
   Fl_Choice *m_BrushTypeChoice;
   Fl_Choice *m_StrokeDirectionChoice;
@@ -55,6 +58,8 @@ public:
   Fl_Light_Button *m_AnotherGradientLightButton;
   Fl_Light_Button *m_SizeRandLightButton;
 
+  Fl_Color_Chooser* Color_Selection;
+
   // Member functions
   void setDocument(ImpressionistDoc *doc);
   ImpressionistDoc *getDocument();
@@ -72,10 +77,14 @@ public:
   int getSpacing();
   int getEdgeThreshold();
 
+  float getR();
+  float getB();
+  float getG();
+
   void setSize(int size);
   void setLineAngle(int angle);
   void brush_dialog_value_init();
-
+  void color_Selection_init();
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
@@ -93,6 +102,9 @@ private:
   float m_alpha;
   int m_spacing;
   int m_edgeThreshold;
+  float m_color1;
+  float m_color2;
+  float m_color3;
 
   // Static class members
   static Fl_Menu_Item menuitems[];
@@ -114,6 +126,8 @@ private:
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
   static void cb_paint_button(Fl_Widget *o, void *v);
   static void cb_do_it_button(Fl_Widget *o, void *v);
+  static void cb_colorSelection(Fl_Menu_ * o, void* v);
+  static void cb_ManualColor(Fl_Widget* o, void* v);
 
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
 
@@ -127,6 +141,7 @@ private:
   static void cb_EdgeClippingLightButton(Fl_Widget *o, void *v);
   static void cb_AnotherGradientLightButton(Fl_Widget *o, void *v);
   static void cb_sizeRandLightButton(Fl_Widget *o, void *v);
+
 };
 
 #endif
