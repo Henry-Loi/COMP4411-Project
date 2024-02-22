@@ -7,6 +7,7 @@
 #include "ImpBrush.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <iostream>
 
 // Static class member initializations
 int ImpBrush::c_nBrushCount = 0;
@@ -45,8 +46,20 @@ void ImpBrush::SetAlpha(const Point source, float alpha) {
 
   GLubyte color[3];
 
-  memcpy(color, pDoc->GetOriginalPixel(source), 3);
 
+  memcpy(color, pDoc->GetOriginalPixel(source), 3);
+  //std::cout << "checkAlpha" << std::endl;
+  //std::cout << (float)color[0] <<" "<< (float)color[1]<<" " << (float)color[2] << std::endl;
+
+  //For Manual_Color_Selection (Note that color[] => R->B->G
+  color[0] = ((float)color[0] + (pDoc->m_pUI->getR())*255)-255 >0? ((float)color[0] + (pDoc->m_pUI->getR()) * 255) - 255:0;
+  color[1] = ((float)color[1] + (pDoc->m_pUI->getB()) * 255) - 255 > 0 ? ((float)color[1] + (pDoc->m_pUI->getB()) * 255) - 255 : 0;
+  color[2] = ((float)color[2] + (pDoc->m_pUI->getG()) * 255) - 255 > 0 ? ((float)color[2] + (pDoc->m_pUI->getG()) * 255) - 255 : 0;
+  //
+  
+  //std::cout << "checkAlpha2" << std::endl;
+  //std::cout << (float)color[0] << " " << (float)color[1] << " " << (float)color[2] << std::endl;
+  
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
