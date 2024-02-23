@@ -400,11 +400,11 @@ void ImpressionistUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
 
 void ImpressionistUI::cb_ManualColor(Fl_Widget* o, void* v) {
     ((ImpressionistUI*)(o->user_data()))->m_color1 =
-        int(((Fl_Color_Chooser *)o)->r());
+        float(((Fl_Color_Chooser *)o)->r());
     ((ImpressionistUI*)(o->user_data()))->m_color2 =
-        int(((Fl_Color_Chooser*)o)->g());
+        float(((Fl_Color_Chooser*)o)->g());
     ((ImpressionistUI*)(o->user_data()))->m_color3 =
-        int(((Fl_Color_Chooser*)o)->b());
+        float(((Fl_Color_Chooser*)o)->b());
    
 }
 
@@ -556,13 +556,13 @@ void ImpressionistUI::color_Selection_init() {
     m_color3 = 1.000;
 }
 
-float ImpressionistUI::getR() {
+float ImpressionistUI::get_m_R() {
     return m_color1;
 }
-float ImpressionistUI::getB() {
+float ImpressionistUI::get_m_B() {
     return m_color2;
 }
-float ImpressionistUI::getG() {
+float ImpressionistUI::get_m_G() {
     return m_color3;
 }
 
@@ -744,13 +744,13 @@ ImpressionistUI::ImpressionistUI() {
 
 
   //Manual Color Slection
-  
+  //color_Selection_init();
   m_colorSelectionDialog = new Fl_Window(220, 220, "color Selection Dialog");
   Color_Selection = new Fl_Color_Chooser(10, 20, 200, 190,"Color Blending");
   Color_Selection->user_data(
       (void*)(this));
-  Color_Selection->type(FL_RGB);
-  Color_Selection->rgb(1.0,1.0,1.0);
+  /*Color_Selection->type(FL_RGB);*/
+  Color_Selection->rgb(1.000,1.000,1.000);
   Color_Selection->callback(cb_ManualColor);
   
   
