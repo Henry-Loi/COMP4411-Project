@@ -79,9 +79,10 @@ public:
   int getSpacing();
   int getEdgeThreshold();
 
-  float getR();
-  float getB();
-  float getG();
+  //RGB values from manual color selection
+  float get_m_R();
+  float get_m_B();
+  float get_m_G();
 
   void setSize(int size);
   void setLineAngle(int angle);
@@ -110,9 +111,9 @@ private:
   float m_alpha;
   int m_spacing;
   int m_edgeThreshold;
-  float m_color1;
-  float m_color2;
-  float m_color3;
+  float m_color1 =1.0;
+  float m_color2 =1.0;
+  float m_color3 =1.0;
 
   // Static class members
   static Fl_Menu_Item menuitems[];

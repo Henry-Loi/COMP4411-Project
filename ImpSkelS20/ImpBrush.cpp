@@ -48,17 +48,20 @@ void ImpBrush::SetColorAlpha(const Point source, float alpha) {
 
 
   memcpy(color, pDoc->GetOriginalPixel(source), 3);
-  //std::cout << "checkAlpha" << std::endl;
-  //std::cout << (float)color[0] <<" "<< (float)color[1]<<" " << (float)color[2] << std::endl;
+  std::cout << "checkAlpha" << std::endl;
+  std::cout << (float)color[0] <<" "<< (float)color[1]<<" " << (float)color[2] << std::endl;
 
-  //For Manual_Color_Selection (Note that color[] => R->B->G
-  color[0] = ((float)color[0] + (pDoc->m_pUI->getR())*255)-255 >0? ((float)color[0] + (pDoc->m_pUI->getR()) * 255) - 255:0;
-  color[1] = ((float)color[1] + (pDoc->m_pUI->getB()) * 255) - 255 > 0 ? ((float)color[1] + (pDoc->m_pUI->getB()) * 255) - 255 : 0;
-  color[2] = ((float)color[2] + (pDoc->m_pUI->getG()) * 255) - 255 > 0 ? ((float)color[2] + (pDoc->m_pUI->getG()) * 255) - 255 : 0;
+  //For Manual_Color_Selection 
+  color[0] = ((float)color[0] + (float)(pDoc->m_pUI->Color_Selection->r())*255.0-255.0 >0)? ((float)color[0] + (float)(pDoc->m_pUI->Color_Selection->r()) * 255.0) - 255.0:0;
+  color[1] = ((float)color[1] + (float)(pDoc->m_pUI->Color_Selection->g())*255.0 - 255.0 > 0) ? ((float)color[1] + (float)(pDoc->m_pUI->Color_Selection->g()) * 255.0) - 255.0 : 0;
+  color[2] = ((float)color[2] + (float)(pDoc->m_pUI->Color_Selection->b())*255.0 - 255.0 > 0) ? ((float)color[2] + (float)(pDoc->m_pUI->Color_Selection->b()) * 255.0) - 255.0 : 0;
   //
   
-  //std::cout << "checkAlpha2" << std::endl;
-  //std::cout << (float)color[0] << " " << (float)color[1] << " " << (float)color[2] << std::endl;
+  std::cout << "checkAlpha2" << std::endl;
+  std::cout << (float)color[0] << " " << (float)color[1] << " " << (float)color[2] << std::endl;
+  std::cout << "checkRGB" << std::endl;
+  std::cout << (float)pDoc->m_pUI->get_m_R() << " " << (float)pDoc->m_pUI->get_m_G() << " " << (float)pDoc->m_pUI->get_m_B() << std::endl;
+
   
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
