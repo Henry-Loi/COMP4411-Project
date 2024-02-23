@@ -9,6 +9,7 @@
 #include "Kernelbrush.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <corecrt_math.h>
 #include <exception>
 #include <string>
 #include <vector>
@@ -68,7 +69,7 @@ void KernelBrush::BrushMove(const Point source, const Point target) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  int ksize = sqrt(kernel.size());
+  int ksize = kernel.size();
   int bsize = pDoc->getSize();
   for (int w = 0; w < bsize; w++) {
     for (int h = 0; h < bsize; h++) {
@@ -76,8 +77,8 @@ void KernelBrush::BrushMove(const Point source, const Point target) {
       for (int i = 0; i < ksize; i++) {
         for (int j = 0; j < ksize; j++) {
           unsigned char color[3];
-          Point new_source =
-              Point(source.x + i - ksize / 2, source.y + j - ksize / 2);
+          Point new_source = Point(source.x + i - (ksize - 1) / 2,
+                                   source.y + j - (ksize - 1) / 2);
           if (new_source.x < 0 || new_source.x >= pDoc->m_nWidth ||
               new_source.y < 0 || new_source.y >= pDoc->m_nHeight) {
             continue;
