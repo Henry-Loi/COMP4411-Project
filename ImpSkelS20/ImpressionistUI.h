@@ -15,6 +15,7 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
+#include <FL/Fl_Color_Chooser.H>
 #include <sys/stat.h>
 #include <vector>
 
@@ -61,6 +62,8 @@ public:
   Fl_Light_Button *m_SizeRandLightButton;
 
   Fl_Input *m_KernelInput;
+
+  Fl_Color_Chooser* Color_Selection;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
