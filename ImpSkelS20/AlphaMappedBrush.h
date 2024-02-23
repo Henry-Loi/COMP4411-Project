@@ -18,7 +18,7 @@ public:
   void BrushEnd(const Point source, const Point target);
   char *BrushName(void);
 
-  int BrushInit();
+  int BrushInit(void*);
 
 private:
   unsigned char *m_alphaMap; // imported alpha map

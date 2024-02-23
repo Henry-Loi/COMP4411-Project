@@ -158,16 +158,13 @@ void PaintView::draw() {
       break;
     case RIGHT_MOUSE_DOWN:
       RightClickBrushBegin(source, target);
-      // MY TODO: Implement mouse down line creation
       break;
     case RIGHT_MOUSE_DRAG:
 
       PointerMove(source, target, right_start);
       RestoreContent();
-      // MY TODO: Implement line real time update
       break;
     case RIGHT_MOUSE_UP:
-      // MY TODO: Calculate the line angle and set it in the document
       RightClickBrushEnd(source, target);
 
       break;
@@ -342,6 +339,9 @@ int PaintView::autoPaint(void) {
 
   glFlush();
 
+  refresh();
+  m_pDoc->m_pUI->m_origView->updateCursor(coord);
+
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_BACK);
@@ -406,4 +406,12 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
     dlg->setSize(right_size);
   }
   rightCLick = false;
+}
+
+void PaintView::applyKernel() {
+  ImpressionistUI *dlg = m_pDoc->m_pUI;
+  if (dlg->matrix_kernel.size() == 0) {
+    return;
+  }
+  ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL]->BrushInit(nullptr);
 }

@@ -16,8 +16,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
 #include <sys/stat.h>
-#include <FL/Fl_Value_Input.H>
-#include <FL/Fl_Color_Chooser.H>
+#include <vector>
 
 #include "Impressionist.h"
 #include "OriginalView.h"
@@ -53,12 +52,15 @@ public:
   Fl_Button *m_ClearCanvasButton;
   Fl_Button *m_PaintButton;
   Fl_Button *m_DoItButton;
+  Fl_Button *m_KernelApplyButton;
+
+  Fl_Check_Button *m_KernelNormalizeButton;
 
   Fl_Light_Button *m_EdgeClippingLightButton;
   Fl_Light_Button *m_AnotherGradientLightButton;
   Fl_Light_Button *m_SizeRandLightButton;
 
-  Fl_Color_Chooser* Color_Selection;
+  Fl_Input *m_KernelInput;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
@@ -88,6 +90,12 @@ public:
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
+
+  // custom kernel
+  char *m_KernelStr;
+  std::vector<std::vector<float>> matrix_kernel =
+      std::vector<std::vector<float>>();
+  bool get_IsNormalizedKernel();
 
   int m_tarLineAngle; // for right click
 
@@ -142,6 +150,12 @@ private:
   static void cb_AnotherGradientLightButton(Fl_Widget *o, void *v);
   static void cb_sizeRandLightButton(Fl_Widget *o, void *v);
 
+  // custom kernel
+  bool m_IsNormalizedKernel;
+  static void cb_KernelInput(Fl_Widget *o, void *v);
+  static void cb_KernelApplyButton(Fl_Widget *o, void *v);
+  static void cb_KernelNormalizeButton(Fl_Widget *o, void *v);
+  bool ImpressionistUI::parseKernel(); // helper function
 };
 
 #endif

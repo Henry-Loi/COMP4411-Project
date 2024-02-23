@@ -19,7 +19,7 @@ BW alpha brush						yes
 BW automatic paint whole image				yes
 BW gradient from user-specified image			yes/no
 BW edge clipping					yes/no
-2B user-specified kernel				yes/no
+2B user-specified kernel				yes
 2B edge detection + user-specified edge clipping	yes/no
 2B multiresolution					yes/no
 2B warp brush						yes/no

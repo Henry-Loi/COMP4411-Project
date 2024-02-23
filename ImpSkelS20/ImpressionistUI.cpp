@@ -6,7 +6,11 @@
 
 #include <FL/fl_ask.h>
 
+#include <iterator>
 #include <math.h>
+#include <sstream>
+#include <stdio.h>
+#include <string>
 
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
@@ -247,6 +251,81 @@ void ImpressionistUI::cb_about(Fl_Menu_ *o, void *v) {
   fl_message("Impressionist FLTK version for CS341, Spring 2002");
 }
 
+/* *************************
+ * Custom Kernel
+ ************************** */
+bool ImpressionistUI::parseKernel() {
+  matrix_kernel.clear();
+  std::string input(m_KernelStr);
+  if (input.empty()) {
+    fl_alert("Invalid kernel input! Input is empty!");
+    return false;
+  }
+  std::stringstream ss(input);
+  std::stringstream ssSize(input);
+
+  int size = 0;
+  float dummy = 0.0f;
+  float sum = 0.0f;
+  while (ssSize.rdbuf()->in_avail()) {
+    // check if the input is all number
+    if (!isdigit((ssSize.peek())) && ssSize.peek() != ' ' &&
+        ssSize.peek() != '-') {
+      char test = ssSize.peek();
+      fl_alert("Invalid kernel input! Input must be all numbers!");
+      return false;
+    }
+    ssSize >> dummy;
+    sum += dummy;
+    size++;
+  }
+
+  // check if the input is a square odd matrix
+  if (sqrt(size) != (int)sqrt(size) || size % 2 == 0) {
+    fl_alert("Invalid kernel size! It should be square matrix in odd size! "
+             "Detected number(s): %d",
+             sqrt(size));
+    return false;
+  }
+
+  size = sqrt(size);
+
+  for (int i = 0; i < size; i++) {
+    std::vector<float> row;
+    for (int j = 0; j < size; j++) {
+      float tmp;
+      if (!ss.rdbuf()->in_avail())
+        return false;
+      ss >> tmp;
+      if (m_IsNormalizedKernel && sum != 0.0f) {
+        tmp /= sum;
+      }
+      row.push_back(tmp);
+    }
+    matrix_kernel.push_back(row);
+  }
+  return true;
+}
+
+void ImpressionistUI::cb_KernelInput(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+
+  const char *str = ((Fl_Input *)o)->value();
+  strcpy(pUI->m_KernelStr, str);
+}
+
+void ImpressionistUI::cb_KernelApplyButton(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+  if (pUI->parseKernel()) {
+    pUI->m_paintView->applyKernel();
+  }
+}
+
+void ImpressionistUI::cb_KernelNormalizeButton(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = (ImpressionistUI *)(o->user_data());
+  pUI->m_IsNormalizedKernel = !pUI->m_IsNormalizedKernel;
+}
+
 //------- UI should keep track of the current for all the controls for answering
 // the query from Doc ---------
 //-------------------------------------------------------------
@@ -261,7 +340,7 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   int type = (int)v;
 
   // add brush init & its checking
-  if (!ImpBrush::c_pBrushes[type]->BrushInit()) {
+  if (!ImpBrush::c_pBrushes[type]->BrushInit(nullptr)) {
     fl_alert("Brush failed to initialize!");
     return;
   }
@@ -269,8 +348,11 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
   pDoc->setBrushType(type);
 
   // add activate and deactivate handler
-  if (type == BRUSH_POINTS || type == BRUSH_SCATTERED_POINTS ||
-      type == BRUSH_CIRCLES || type == BRUSH_SCATTERED_CIRCLES) {
+  switch (type) {
+  case BRUSH_POINTS:
+  case BRUSH_SCATTERED_POINTS:
+  case BRUSH_CIRCLES:
+  case BRUSH_SCATTERED_CIRCLES: {
     pUI->m_LineWidthSlider->deactivate();
     pUI->m_LineAngleSlider->deactivate();
     pUI->m_EdgeClippingLightButton->deactivate();
@@ -279,9 +361,12 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     // reset the stroke direction
     pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
     pUI->m_StrokeDirectionChoice->deactivate();
-
-  } else if (type == BRUSH_ALPHA_MAPPED) {
+    break;
+  }
+  case BRUSH_ALPHA_MAPPED: {
+    // no alpha slider
     pUI->m_AlphaSlider->deactivate();
+
     pUI->m_LineWidthSlider->deactivate();
     pUI->m_LineAngleSlider->deactivate();
     pUI->m_EdgeClippingLightButton->deactivate();
@@ -294,7 +379,29 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_SizeRandLightButton->deactivate();
     pUI->m_SizeRandLightButton->value(false);
     pUI->isSizeRand = false;
-  } else {
+    break;
+  }
+  case BRUSH_CUSTOM_KERNEL: {
+    pUI->m_LineWidthSlider->deactivate();
+    pUI->m_LineAngleSlider->deactivate();
+    pUI->m_EdgeClippingLightButton->deactivate();
+    pUI->m_AnotherGradientLightButton->deactivate();
+
+    // reset the stroke direction
+    pDoc->setStokeDirection(SLIDER_RIGHT_MOUSE);
+    pUI->m_StrokeDirectionChoice->deactivate();
+
+    // active kernel only option
+    pUI->m_KernelInput->activate();
+    pUI->m_KernelApplyButton->activate();
+    pUI->m_KernelNormalizeButton->activate();
+    break;
+  }
+  default: {
+    pUI->m_KernelInput->deactivate();
+    pUI->m_KernelApplyButton->deactivate();
+    pUI->m_KernelNormalizeButton->deactivate();
+
     pUI->m_SizeRandLightButton->activate();
     pUI->m_AlphaSlider->activate();
     pUI->m_LineWidthSlider->activate();
@@ -302,7 +409,11 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_EdgeClippingLightButton->activate();
     pUI->m_AnotherGradientLightButton->activate();
 
+    pUI->m_BrushSizeSlider->activate();
+
     pUI->m_StrokeDirectionChoice->activate();
+    break;
+  }
   }
 }
 
@@ -458,6 +569,8 @@ float ImpressionistUI::getAlpha() { return m_alpha; }
 int ImpressionistUI::getSpacing() { return m_spacing; }
 int ImpressionistUI::getEdgeThreshold() { return m_edgeThreshold; }
 
+bool ImpressionistUI::get_IsNormalizedKernel() { return m_IsNormalizedKernel; }
+
 //-------------------------------------------------
 // Set the brush size
 //-------------------------------------------------
@@ -519,6 +632,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     {"Alpha Mapped", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_ALPHA_MAPPED},
+    {"Kernel", FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CUSTOM_KERNEL},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {
@@ -548,6 +663,8 @@ void ImpressionistUI::brush_dialog_value_init() {
   isEdgeClipping = true;
   isAnotherGradient = false;
   isSizeRand = true;
+
+  m_IsNormalizedKernel = true;
 }
 
 void ImpressionistUI::color_Selection_init() {
@@ -571,6 +688,9 @@ float ImpressionistUI::getG() {
 // Add new widgets here
 //----------------------------------------------------
 ImpressionistUI::ImpressionistUI() {
+  m_KernelStr = new char[1000];
+  memset(m_KernelStr, 0, 1000);
+
   // Create the main window
   m_mainWindow = new Fl_Window(600, 300, "Impressionist");
   m_mainWindow->user_data(
@@ -601,7 +721,7 @@ ImpressionistUI::ImpressionistUI() {
   brush_dialog_value_init();
 
   // brush dialog definition
-  m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+  m_brushDialog = new Fl_Window(400, 380, "Brush Dialog");
   // Add a brush type choice to the dialog
   m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
   m_BrushTypeChoice->user_data(
@@ -618,7 +738,7 @@ ImpressionistUI::ImpressionistUI() {
   m_StrokeDirectionChoice->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_StrokeDirectionChoice->menu(strokeDirectionMenu);
-  m_StrokeDirectionChoice->callback(cb_brushChoice);
+  m_StrokeDirectionChoice->callback(cb_strokeDirectionChoice);
 
   // Add brush size slider to the dialog
   m_BrushSizeSlider = new Fl_Value_Slider(10, 80, 300, 20, "Size");
@@ -733,12 +853,31 @@ ImpressionistUI::ImpressionistUI() {
   m_DoItButton->user_data((void *)(this));
   m_DoItButton->callback(cb_do_it_button);
 
+  m_KernelInput = new Fl_Input(50, 310, 300, 35, "Kernel");
+  m_KernelInput->value(m_KernelStr);
+  m_KernelInput->user_data((void *)(this));
+  m_KernelInput->callback(cb_KernelInput);
+
+  m_KernelApplyButton = new Fl_Button(60, 350, 150, 20, "Apply");
+  m_KernelApplyButton->user_data((void *)(this));
+  m_KernelApplyButton->callback(cb_KernelApplyButton);
+
+  m_KernelNormalizeButton = new Fl_Check_Button(240, 348, 150, 25, "Normalize");
+  m_KernelNormalizeButton->user_data((void *)(this));
+  m_KernelNormalizeButton->value(m_IsNormalizedKernel);
+  m_KernelNormalizeButton->callback(cb_KernelNormalizeButton);
+
   // deactivation init
   m_LineWidthSlider->deactivate();
   m_LineAngleSlider->deactivate();
   m_EdgeClippingLightButton->deactivate();
   m_AnotherGradientLightButton->deactivate();
   m_StrokeDirectionChoice->deactivate();
+
+  // deactivate kernel only option
+  m_KernelInput->deactivate();
+  m_KernelApplyButton->deactivate();
+  m_KernelNormalizeButton->deactivate();
 
   m_brushDialog->end();
 
