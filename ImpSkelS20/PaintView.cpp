@@ -64,7 +64,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
   m_painterlyParam[PAINTERLY_COLOR_WASH] = {
       PainterlyParam(200, 1.0f, 0.5f, 1.0f, 4, 16, 0.5f, 3, 3, 0.3f, 0.3f, 0.3f,
                      0.0f, 0.0f, 0.0f)};
-  m_painterlyParam[PAINTERLY_COLOR_WASH] = {
+  m_painterlyParam[PAINTERLY_POINTILLIST] = {
       PainterlyParam(100, 1.0f, 0.5f, 1.0f, 0, 0, 1.0f, 2, 2, 0.0f, 0.0f, 0.0f,
                      0.3f, 0.0f, 1.0f)};
   m_painterlyParam[PAINTERLY_CUSTOMIZED] = {

@@ -774,46 +774,55 @@ void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
     pUI->m_painterlyJsSlider->activate();
     pUI->m_painterlyJvSlider->activate();
 
-    // pUI->m_painterlyThreshold->value(pUI->m_painterlyThreshold);
-    // pUI->m_painterlyCurvature->value(pUI->m_painterlyCurvature);
-    // pUI->m_painterlyBlur->value(pUI->m_painterlyBlur);
-    // pUI->m_painterlyGridSize->value(pUI->m_painterlyGridSize);
-    // pUI->m_painterlyMinStrokeLength->value(pUI->m_painterlyMinStrokeLength);
-    // pUI->m_painterlyMaxStrokeLength->value(pUI->m_painterlyMaxStrokeLength);
-    // pUI->m_painterlyAlpha->value(pUI->m_painterlyAlpha);
-    // pUI->m_painterlyLayers->value(pUI->m_painterlyLayers);
-    // pUI->m_painterlyR0Level->value(pUI->m_painterlyR0Level);
-    // pUI->m_painterlyJr->value(pUI->m_painterlyJr);
-    // pUI->m_painterlyJg->value(pUI->m_painterlyJg);
-    // pUI->m_painterlyJb->value(pUI->m_painterlyJb);
-    // pUI->m_painterlyJh->value(pUI->m_painterlyJh);
-    // pUI->m_painterlyJs->value(pUI->m_painterlyJs);
-    // pUI->m_painterlyJv->value(pUI->m_painterlyJv);
+    pUI->m_painterlyThresholdSlider->value(pUI->m_painterlyThreshold);
+    pUI->m_painterlyCurvatureSlider->value(pUI->m_painterlyCurvature);
+    pUI->m_painterlyBlurSlider->value(pUI->m_painterlyBlur);
+    pUI->m_painterlyGridSizeSlider->value(pUI->m_painterlyGridSize);
+    pUI->m_painterlyMinStrokeLengthSlider->value(
+        pUI->m_painterlyMinStrokeLength);
+    pUI->m_painterlyMaxStrokeLengthSlider->value(
+        pUI->m_painterlyMaxStrokeLength);
+    pUI->m_painterlyAlphaSlider->value(pUI->m_painterlyAlpha);
+    pUI->m_painterlyLayersSlider->value(pUI->m_painterlyLayers);
+    pUI->m_painterlyR0LevelSlider->value(pUI->m_painterlyR0Level);
+    pUI->m_painterlyJrSlider->value(pUI->m_painterlyJr);
+    pUI->m_painterlyJgSlider->value(pUI->m_painterlyJg);
+    pUI->m_painterlyJbSlider->value(pUI->m_painterlyJb);
+    pUI->m_painterlyJhSlider->value(pUI->m_painterlyJh);
+    pUI->m_painterlyJsSlider->value(pUI->m_painterlyJs);
+    pUI->m_painterlyJvSlider->value(pUI->m_painterlyJv);
   } else {
-    // pUI->m_painterlyStrokeChoice->value(PAINTERLY_CURVE_BRUSH);
-    // pUI->m_painterlyThreshold->value(
-    //     pUI->m_paintView->m_painterlyParam[type].Threshold);
-    // pUI->m_painterlyCurvature->value(
-    //     pUI->m_paintView->m_painterlyParam[type].Curvature);
-    // pUI->m_painterlyBlur->value(pUI->m_paintView->m_painterlyParam[type].Blur);
-    // pUI->m_painterlyGridSize->value(
-    //     pUI->m_paintView->m_painterlyParam[type].GridSize);
-    // pUI->m_painterlyMinStrokeLength->value(
-    //     pUI->m_paintView->m_painterlyParam[type].MinStrokeLength);
-    // pUI->m_painterlyMaxStrokeLength->value(
-    //     pUI->m_paintView->m_painterlyParam[type].MaxStrokeLength);
-    // pUI->m_painterlyAlpha->value(
-    //     pUI->m_paintView->m_painterlyParam[type].Alpha);
-    // pUI->m_painterlyLayers->value(
-    //     pUI->m_paintView->m_painterlyParam[type].Layer);
-    // pUI->m_painterlyR0Level->value(
-    //     pUI->m_paintView->m_painterlyParam[type].R0Level);
-    // pUI->m_painterlyJr->value(pUI->m_paintView->m_painterlyParam[type].Jr);
-    // pUI->m_painterlyJg->value(pUI->m_paintView->m_painterlyParam[type].Jg);
-    // pUI->m_painterlyJb->value(pUI->m_paintView->m_painterlyParam[type].Jb);
-    // pUI->m_painterlyJh->value(pUI->m_paintView->m_painterlyParam[type].Jh);
-    // pUI->m_painterlyJs->value(pUI->m_paintView->m_painterlyParam[type].Js);
-    // pUI->m_painterlyJv->value(pUI->m_paintView->m_painterlyParam[type].Jv);
+    pUI->m_painterlyStrokeChoice->value(PAINTERLY_CURVE_BRUSH);
+    pUI->m_painterlyThresholdSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Threshold);
+    pUI->m_painterlyCurvatureSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Curvature);
+    pUI->m_painterlyBlurSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Blur);
+    pUI->m_painterlyGridSizeSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].GridSize);
+    pUI->m_painterlyMinStrokeLengthSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].MinStrokeLength);
+    pUI->m_painterlyMaxStrokeLengthSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].MaxStrokeLength);
+    pUI->m_painterlyAlphaSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Alpha);
+    pUI->m_painterlyLayersSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Layer);
+    pUI->m_painterlyR0LevelSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].R0Level);
+    pUI->m_painterlyJrSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Jr);
+    pUI->m_painterlyJgSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Jg);
+    pUI->m_painterlyJbSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Jb);
+    pUI->m_painterlyJhSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Jh);
+    pUI->m_painterlyJsSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Js);
+    pUI->m_painterlyJvSlider->value(
+        pUI->m_paintView->m_painterlyParam[type].Jv);
 
     pUI->m_painterlyStrokeChoice->deactivate();
     pUI->m_painterlyThresholdSlider->deactivate();
@@ -1149,6 +1158,7 @@ ImpressionistUI::ImpressionistUI() {
 
   // painterly dialog definition
   m_painterlyDialog = new Fl_Window(400, 280, "Painterly Dialog");
+  painterly_dialog_value_init();
 
   // Add a brush type choice to the dialog
   m_painterlyStyleTypeChoice = new Fl_Choice(50, 10, 120, 20, "&Style");
