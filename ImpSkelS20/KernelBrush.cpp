@@ -69,6 +69,8 @@ void KernelBrush::BrushMove(const Point source, const Point target) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  unsigned char *bitstart;
+
   int ksize = kernel.size();
   int bsize = pDoc->getSize();
   for (int w = 0; w < bsize; w++) {

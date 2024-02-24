@@ -97,6 +97,8 @@ public:
   // painterly
   PainterlyParam m_painterlyParam[NUM_OF_PAINTERLY_STYLE];
   void apply_painterly(void);
+  void paintLayer(unsigned char *canvas, unsigned char *referenceImage,
+                  int radius);
 
   ImpressionistDoc *m_pDoc;
 
@@ -108,6 +110,7 @@ private:
   // painterly
   PainterlyStyle m_painterlyStyle;
   PainterlyStroke m_painterlyStroke;
+  const int R[3] = {2, 4, 8};
 };
 
 #endif

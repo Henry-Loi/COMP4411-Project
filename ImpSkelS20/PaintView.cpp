@@ -438,10 +438,9 @@ void PaintView::setPainterlyStroke(PainterlyStroke stroke) {
 }
 
 void PaintView::apply_painterly(void) {
+  m_pDoc->clearCanvas();
+
   ImpressionistUI *dlg = m_pDoc->m_pUI;
-  if (m_pDoc->m_ucBitmap == NULL) {
-    return;
-  }
   if (m_pDoc->m_ucPainting == NULL) {
     return;
   }
@@ -455,49 +454,136 @@ void PaintView::apply_painterly(void) {
   int paint_width = m_pDoc->m_nPaintWidth;
   int paint_height = m_pDoc->m_nPaintHeight;
 
-  int size = dlg->getSize();
-  int spacing = dlg->getSpacing();
-  int threshold = dlg->getPainterlyThreshold();
-  float curvature = dlg->getPainterlyCurvature();
-  float blur = dlg->getPainterlyBlur();
-  float grid_size = dlg->getPainterlyGridSize();
-  int min_stroke_length = dlg->getPainterlyMinStrokeLength();
-  int max_stroke_length = dlg->getPainterlyMaxStrokeLength();
-  float alpha = dlg->getPainterlyAlpha();
-  int layer = dlg->getPainterlyLayers();
-  int r0_level = dlg->getPainterlyR0Level();
+  /* pseduo code
+    function paint(sourceImage,R1 ... Rn)
+  { canvas := a new constant color image
+  // paint the canvas
+  for each brush radius Ri,
+  from largest to smallest do
+  { // apply Gaussian blur
+  referenceImage = sourceImage * G(fσ Ri)
+  // paint a layer
+  paintLayer(canvas, referenceImage, Ri)
+  }
+  return canvas
+  }
+  */
 
-  float Jr = dlg->getPainterlyJr();
-  float Jg = dlg->getPainterlyJg();
-  float Jb = dlg->getPainterlyJb();
-  float Jh = dlg->getPainterlyJh();
-  float Js = dlg->getPainterlyJs();
-  float Jv = dlg->getPainterlyJv();
+  // paint the canvas
+  for (int i = 0; i < m_painterlyParam[m_painterlyStyle].Layer; i++) {
+    // apply Gaussian blur
+    std::vector<std::vector<float>> GKernel =
+        gaussKernel(R[i], m_painterlyParam[m_painterlyStyle].Blur);
+    m_pDoc->applyKernel(m_pDoc->m_ucOriginal, m_pDoc->m_ucPainting, GKernel,
+                        m_nDrawWidth, m_nDrawHeight);
 
-  // Create a vector of pairs for all possible (i, j) values
-  std::vector<std::pair<float, float>> ij_pairs;
-  for (float i = size / 4; i < paint_width + spacing; i += spacing) {
-    for (float j = size / 4; j < paint_height + spacing; j += spacing) {
-      ij_pairs.push_back(std::make_pair(i, j));
+    // paint a layer
+    paintLayer(m_pDoc->m_ucPainting, m_pDoc->m_ucOriginal, R[i]);
+  }
+
+  SaveCurrentContent();
+  RestoreContent();
+
+  glFlush();
+
+  refresh();
+  m_pDoc->m_pUI->m_origView->updateCursor(coord);
+}
+
+void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
+                           int radius) {
+  /* pesudo code
+  procedure paintLayer(canvas,referenceImage, R)
+    { S := a new set of strokes, initially empty
+    // create a pointwise difference image
+    D := difference(canvas,referenceImage)
+    grid := fg R
+    for x=0 to imageWidth stepsize grid do
+    for y=0 to imageHeight stepsize grid do
+    { // sum the error near (x,y)
+    M := the region (x-grid/2..x+grid/2,
+    y-grid/2..y+grid/2)
+    areaError := i j M, ∈∑ Di,j / grid2
+    if (areaError > T) then
+    { // find the largest error point
+    (x1,y1) := arg max i j M, ∈ Di,j
+    s :=makeStroke(R,x1,y1,referenceImage)
+    add s to S
+    }
+    }
+    paint all strokes in S on the canvas,
+    in random order
+  }*/
+
+  // create a pointwise difference image
+  unsigned char *D = new unsigned char[m_nDrawWidth * m_nDrawHeight * 3];
+
+  for (int i = 0; i < m_nDrawWidth; i++) {
+    for (int j = 0; j < m_nDrawHeight; j++) {
+      D[3 * (j * m_nDrawWidth + i)] =
+          abs(canvas[3 * (j * m_nDrawWidth + i)] -
+              referenceImage[3 * (j * m_nDrawWidth + i)]);
+      D[3 * (j * m_nDrawWidth + i) + 1] =
+          abs(canvas[3 * (j * m_nDrawWidth + i) + 1] -
+              referenceImage[3 * (j * m_nDrawWidth + i) + 1]);
+      D[3 * (j * m_nDrawWidth + i) + 2] =
+          abs(canvas[3 * (j * m_nDrawWidth + i) + 2] -
+              referenceImage[3 * (j * m_nDrawWidth + i) + 2]);
     }
   }
 
-  // Shuffle the vector to get a random order
-  std::random_device rd;
-  std::mt19937 g(rd());
-  std::shuffle(ij_pairs.begin(), ij_pairs.end(), g);
+  m_pDoc->m_pUI->setSize(radius);
 
-  // Iterate over the shuffled vector
-  for (const auto &ij : ij_pairs) {
-    float i = ij.first;
-    float j = ij.second;
+  int grid = m_painterlyParam[m_painterlyStyle].GridSize * radius;
 
-    Point source((i), ((float)paint_height - j));
-    Point target(i, (float)paint_height - j);
+  for (int x = 0; x < m_nDrawWidth; x += grid) {
+    for (int y = 0; y < m_nDrawHeight; y += grid) {
+      // sum the error near (x,y)
+      float areaError = 0;
+      for (int i = x - grid / 2; i < x + grid / 2; i++) {
+        for (int j = y - grid / 2; j < y + grid / 2; j++) {
+          if (i < 0 || i >= m_nDrawWidth || j < 0 || j >= m_nDrawHeight) {
+            continue;
+          }
+          areaError += D[3 * (j * m_nDrawWidth + i)] +
+                       D[3 * (j * m_nDrawWidth + i) + 1] +
+                       D[3 * (j * m_nDrawWidth + i) + 2];
+        }
+      }
+      areaError /= grid * grid;
 
-    m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
-    m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-    m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+      if (areaError > m_painterlyParam[m_painterlyStyle].Threshold) {
+        // find the largest error point
+        int x1 = 0, y1 = 0;
+        float maxError = 0;
+        for (int i = x - grid / 2; i < x + grid / 2; i++) {
+          for (int j = y - grid / 2; j < y + grid / 2; j++) {
+            if (i < 0 || i >= m_nDrawWidth || j < 0 || j >= m_nDrawHeight) {
+              continue;
+            }
+            float error = D[3 * (j * m_nDrawWidth + i)] +
+                          D[3 * (j * m_nDrawWidth + i) + 1] +
+                          D[3 * (j * m_nDrawWidth + i) + 2];
+            if (error > maxError) {
+              maxError = error;
+              x1 = i;
+              y1 = j;
+            }
+          }
+        }
+
+        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushBegin(
+            Point(x1 + m_nStartCol, m_nEndRow - y1),
+            Point(x + m_nStartCol, m_nWindowHeight - y));
+        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushMove(
+            Point(x1 + m_nStartCol, m_nEndRow - y1),
+            Point(x + m_nStartCol, m_nWindowHeight - y));
+        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushEnd(
+            Point(x1 + m_nStartCol, m_nEndRow - y1),
+            Point(x + m_nStartCol, m_nWindowHeight - y));
+
+      } // end if
+    }
   }
 
   SaveCurrentContent();

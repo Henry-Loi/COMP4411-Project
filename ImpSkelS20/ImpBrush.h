@@ -19,7 +19,9 @@ enum {
   BRUSH_SCATTERED_CIRCLES,
   BRUSH_ALPHA_MAPPED,
   BRUSH_CUSTOM_KERNEL,
-  NUM_BRUSH_TYPE // Make sure this stays at the end!
+  BRUSH_PAINTERLY,
+  NUM_BRUSH_TYPE, // Make sure this stays at the end!
+  /* implicit brush here */
 };
 
 class ImpressionistDoc; // Pre-declaring class

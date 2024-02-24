@@ -10,6 +10,8 @@
 #include "bitmap.h"
 #include "impressionist.h"
 
+#include <vector>
+
 // Each stroke direction type has an associated constant.
 typedef enum {
   SLIDER_RIGHT_MOUSE = 0,
@@ -73,6 +75,10 @@ public:
   GLubyte *GetOriginalPixel(int x, int y);
   // Get the color of the original picture at the specified point
   GLubyte *GetOriginalPixel(const Point p);
+
+  void applyKernel(GLubyte *original, GLubyte *target,
+                   std::vector<std::vector<float>> kernel, int width,
+                   int height);
 
 private:
   char m_imageName[256];
