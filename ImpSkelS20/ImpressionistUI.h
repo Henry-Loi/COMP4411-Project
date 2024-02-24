@@ -200,8 +200,8 @@ private:
   static Fl_Menu_Item painterlyStyleMenu[NUM_OF_PAINTERLY_STYLE + 1];
   static Fl_Menu_Item painterlyStrokeMenu[NUM_OF_PAINTERLY_STROKE + 1];
 
-  int m_painterlyStyle;
-  int m_painterlyStroke;
+  PainterlyStyle m_painterlyStyle;
+  PainterlyStroke m_painterlyStroke;
 
   int m_painterlyThreshold;
   float m_painterlyCurvature;

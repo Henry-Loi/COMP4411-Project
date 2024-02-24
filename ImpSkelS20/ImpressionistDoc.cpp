@@ -29,6 +29,9 @@
 // kernel brush
 #include "KernelBrush.h"
 
+// painterly brush
+#include "PainterlyBrush.h"
+
 // MY TODO: add other brushes
 
 #define DESTROY(p)                                                             \
@@ -67,6 +70,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPED] =
       new AlphaMappedBrush(this, "Alpha Mapped");
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
+  ImpBrush::c_pBrushes[BRUSH_PAINTERLY] = new PainterlyBrush(this, "Painterly");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -253,27 +257,27 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
 
 void ImpressionistDoc::applyKernel(GLubyte *original, GLubyte *target,
                                    std::vector<std::vector<float>> kernel,
-                                   int width, int height){
-// apply kernel to the original image
-for (int i = 0; i < width; i++) {
-  for (int j = 0; j < height; j++) {
-    float r = 0, g = 0, b = 0;
-    for (int x = -kernel.size() / 2; x <= kernel.size() / 2; x++) {
-      for (int y = -kernel.size() / 2; y <= kernel.size() / 2; y++) {
-        int x0 = i + x;
-        int y0 = j + y;
-        if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height) {
-          continue;
+                                   int width, int height) {
+  // apply kernel to the original image
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      float r = 0, g = 0, b = 0;
+      for (int x = -kernel.size() / 2; x <= kernel.size() / 2; x++) {
+        for (int y = -kernel.size() / 2; y <= kernel.size() / 2; y++) {
+          int x0 = i + x;
+          int y0 = j + y;
+          if (x0 < 0 || x0 >= width || y0 < 0 || y0 >= height) {
+            continue;
+          }
+          GLubyte *pixel = GetOriginalPixel(x0, y0);
+          r += pixel[0] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
+          g += pixel[1] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
+          b += pixel[2] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
         }
-        GLubyte *pixel = GetOriginalPixel(x0, y0);
-        r += pixel[0] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
-        g += pixel[1] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
-        b += pixel[2] * kernel[x + kernel.size() / 2][y + kernel.size() / 2];
       }
+      target[3 * (j * width + i)] = (GLubyte)r;
+      target[3 * (j * width + i) + 1] = (GLubyte)g;
+      target[3 * (j * width + i) + 2] = (GLubyte)b;
     }
-    target[3 * (j * width + i)] = (GLubyte)r;
-    target[3 * (j * width + i) + 1] = (GLubyte)g;
-    target[3 * (j * width + i) + 2] = (GLubyte)b;
   }
-}
 }

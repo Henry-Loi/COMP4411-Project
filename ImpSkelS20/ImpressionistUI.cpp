@@ -701,6 +701,9 @@ void ImpressionistUI::painterly_dialog_value_init() {
   m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
   m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
 
+  m_paintView->setPainterlyStyle(PAINTERLY_IMPRESSIONIST);
+  m_paintView->setPainterlyStroke(PAINTERLY_CURVE_BRUSH);
+
   // default init
   m_painterlyThreshold =
       m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Threshold;
