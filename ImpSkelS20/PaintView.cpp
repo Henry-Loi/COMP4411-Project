@@ -54,7 +54,23 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
     : Fl_Gl_Window(x, y, w, h, l) {
   m_nWindowWidth = w;
   m_nWindowHeight = h;
-}
+
+  m_painterlyParam[PAINTERLY_IMPRESSIONIST] = {
+      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16, 1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
+                     0.0f, 0.0f, 0.0f)};
+  m_painterlyParam[PAINTERLY_EXPRESSIONIST] = {
+      PainterlyParam(550, 0.25f, 0.5f, 1.0f, 10, 16, 0.7f, 3, 3, 0.0f, 0.0f,
+                     0.0f, 0.0f, 0.0f, 0.5f)};
+  m_painterlyParam[PAINTERLY_COLOR_WASH] = {
+      PainterlyParam(200, 1.0f, 0.5f, 1.0f, 4, 16, 0.5f, 3, 3, 0.3f, 0.3f, 0.3f,
+                     0.0f, 0.0f, 0.0f)};
+  m_painterlyParam[PAINTERLY_COLOR_WASH] = {
+      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 0, 0, 1.0f, 2, 2, 0.0f, 0.0f, 0.0f,
+                     0.3f, 0.0f, 1.0f)};
+  m_painterlyParam[PAINTERLY_CUSTOMIZED] = {
+      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16, 1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
+                     0.0f, 0.0f, 0.0f)};
+};
 
 void PaintView::draw() {
 #ifndef MESA
@@ -411,4 +427,84 @@ void PaintView::applyKernel() {
     return;
   }
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL]->BrushInit(nullptr);
+}
+
+void PaintView::setPainterlyStyle(PainterlyStyle style) {
+  m_painterlyStyle = style;
+}
+
+void PaintView::setPainterlyStroke(PainterlyStroke stroke) {
+  m_painterlyStroke = stroke;
+}
+
+void PaintView::apply_painterly(void) {
+  ImpressionistUI *dlg = m_pDoc->m_pUI;
+  if (m_pDoc->m_ucBitmap == NULL) {
+    return;
+  }
+  if (m_pDoc->m_ucPainting == NULL) {
+    return;
+  }
+  if (m_pDoc->m_ucOriginal == NULL) {
+    return;
+  }
+
+  int width = m_pDoc->m_nWidth;
+  int height = m_pDoc->m_nHeight;
+
+  int paint_width = m_pDoc->m_nPaintWidth;
+  int paint_height = m_pDoc->m_nPaintHeight;
+
+  int size = dlg->getSize();
+  int spacing = dlg->getSpacing();
+  int threshold = dlg->getPainterlyThreshold();
+  float curvature = dlg->getPainterlyCurvature();
+  float blur = dlg->getPainterlyBlur();
+  float grid_size = dlg->getPainterlyGridSize();
+  int min_stroke_length = dlg->getPainterlyMinStrokeLength();
+  int max_stroke_length = dlg->getPainterlyMaxStrokeLength();
+  float alpha = dlg->getPainterlyAlpha();
+  int layer = dlg->getPainterlyLayers();
+  int r0_level = dlg->getPainterlyR0Level();
+
+  float Jr = dlg->getPainterlyJr();
+  float Jg = dlg->getPainterlyJg();
+  float Jb = dlg->getPainterlyJb();
+  float Jh = dlg->getPainterlyJh();
+  float Js = dlg->getPainterlyJs();
+  float Jv = dlg->getPainterlyJv();
+
+  // Create a vector of pairs for all possible (i, j) values
+  std::vector<std::pair<float, float>> ij_pairs;
+  for (float i = size / 4; i < paint_width + spacing; i += spacing) {
+    for (float j = size / 4; j < paint_height + spacing; j += spacing) {
+      ij_pairs.push_back(std::make_pair(i, j));
+    }
+  }
+
+  // Shuffle the vector to get a random order
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(ij_pairs.begin(), ij_pairs.end(), g);
+
+  // Iterate over the shuffled vector
+  for (const auto &ij : ij_pairs) {
+    float i = ij.first;
+    float j = ij.second;
+
+    Point source((i), ((float)paint_height - j));
+    Point target(i, (float)paint_height - j);
+
+    m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+    m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+    m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+  }
+
+  SaveCurrentContent();
+  RestoreContent();
+
+  glFlush();
+
+  refresh();
+  m_pDoc->m_pUI->m_origView->updateCursor(coord);
 }
