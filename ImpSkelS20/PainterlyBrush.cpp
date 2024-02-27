@@ -7,87 +7,89 @@
 //
 
 #include "painterlybrush.h"
+#include "BSplines.h"
 #include "fastmath.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
+#include <cmath>
+#include <vector>
+
 extern float frand();
 
 PainterlyBrush::PainterlyBrush(ImpressionistDoc *pDoc, char *name)
-    : ImpBrush(pDoc, name) {}
+    : ImpBrush(pDoc, name) {
+  param[PAINTERLY_IMPRESSIONIST] = {PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16,
+                                                   1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
+                                                   0.0f, 0.0f, 0.0f)};
+  param[PAINTERLY_EXPRESSIONIST] = {PainterlyParam(550, 0.25f, 0.5f, 1.0f, 10,
+                                                   16, 0.7f, 3, 3, 0.0f, 0.0f,
+                                                   0.0f, 0.0f, 0.0f, 0.5f)};
+  param[PAINTERLY_COLOR_WASH] = {PainterlyParam(200, 1.0f, 0.5f, 1.0f, 4, 16,
+                                                0.5f, 3, 3, 0.3f, 0.3f, 0.3f,
+                                                0.0f, 0.0f, 0.0f)};
+  param[PAINTERLY_POINTILLIST] = {PainterlyParam(100, 1.0f, 0.5f, 1.0f, 0, 0,
+                                                 1.0f, 2, 2, 0.0f, 0.0f, 0.0f,
+                                                 0.3f, 0.0f, 1.0f)};
+  param[PAINTERLY_CUSTOMIZED] = {PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16,
+                                                1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
+                                                0.0f, 0.0f, 0.0f)};
+};
 
-void PainterlyBrush::BrushBegin(const Point source, const Point target) {
-  ImpressionistDoc *pDoc = GetDocument();
-  ImpressionistUI *dlg = pDoc->m_pUI;
+void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes, float *zBuffer) {
+  PainterlyParam *param = &param[m_painterlyStyle];
 
-  int size = pDoc->getSize();
-  glPointSize((float)size);
+  for (auto *stroke : strokes) {
+    BSplines bSplines(stroke->controlPoints, 3, stroke->size * 4);
+    auto &samples = bSplines.samples;
 
-  BrushMove(source, target);
+    if (param->Jh > 0.0 || param->Js > 0.0 || param->Jv > 0.0) {
+      float hsv[3];
+      RGBtoHSV(stroke->color, hsv);
+      hsv[0] = (1 - param->Jh * JitterIndex) * hsv[0] +
+               param->Jh * JitterIndex * frand() * 360;
+      hsv[1] = (1 - param->Js * JitterIndex) * hsv[1] +
+               param->Js * JitterIndex * frand() * 1;
+      hsv[2] = (1 - param->Jv * JitterIndex) * hsv[2] +
+               param->Jv * JitterIndex * frand() * 1;
+      HSVtoRGB(hsv, stroke->color);
+    }
+
+    stroke->color[0] = (1 - param->Jr * JitterIndex) * stroke->color[0] +
+                       param->Jr * JitterIndex * frand() * 255;
+    stroke->color[1] = (1 - param->Jg * JitterIndex) * stroke->color[1] +
+                       param->Jg * JitterIndex * frand() * 255;
+    stroke->color[2] = (1 - param->Jb * JitterIndex) * stroke->color[2] +
+                       param->Jb * JitterIndex * frand() * 255;
+
+    for (auto &sample : samples) {
+      renderCircles(sample.x, sample.y, *stroke, zBuffer);
+    }
+  }
 }
 
-void PainterlyBrush::BrushMove(const Point source, const Point target) {
-  ImpressionistDoc *pDoc = GetDocument();
-  PainterlyParam *arr = pDoc->m_pUI->m_paintView->m_painterlyParam;
-  PainterlyStroke type =
-      static_cast<PainterlyStroke>(pDoc->m_pUI->getPainterlyStroke());
-  PainterlyParam *param = &arr[type];
+void PainterlyBrush::renderCircles(int x, int y, Stroke &stroke,
+                                   float *zBuffer) {
+  int height = m_pDoc->m_nPaintHeight, width = m_pDoc->m_nPaintWidth,
+      radius = stroke.size;
+  unsigned char *canvas = m_pDoc->m_ucPainting;
 
-  if (pDoc == NULL) {
-    printf("PainterlyBrush::BrushMove  document is NULL\n");
-    return;
-  }
+  PainterlyParam *param = &param[m_painterlyStyle];
 
-  // add color jitter
-  float Jr = param->Jr;
-  float Jg = param->Jg;
-  float Jb = param->Jb;
-  float Jh = param->Jh;
-  float Js = param->Js;
-  float Jv = param->Jv;
+  for (int i = y - radius; i < y + radius; ++i)
+    for (int j = x - radius; j < x + radius; ++j) {
+      if (std::sqrt((i - y) * (i - y) + (j - x) * (j - x)) > radius)
+        continue;
+      if (i < 0 || j < 0 || i >= height || j >= width)
+        continue;
 
-  float r = frand() * Jr;
-  float g = frand() * Jg;
-  float b = frand() * Jb;
-  float h = frand() * Jh;
-  float s = frand() * Js;
-  float v = frand() * Jv;
+      int index = i * width + j;
+      if (zBuffer[index] < stroke.depth)
+        continue;
+      zBuffer[index] = stroke.depth;
 
-  // apply color jitter to source color and paint
-  unsigned char color[3];
-  getSourceRGB(source, color);
-  float hsv[3];
-  RGBtoHSV(color, hsv);
-  hsv[0] += h;
-  hsv[1] += s;
-  hsv[2] += v;
-  hsv[0] = fmod(hsv[0], 360);
-  hsv[1] = min(1.0f, max(0.0f, hsv[1]));
-  hsv[2] = min(1.0f, max(0.0f, hsv[2]));
-
-  float rgb[3];
-  HSVtoRGB(hsv, rgb);
-  color[0] = (unsigned char)min(255.0f, max(0.0f, color[0] + r));
-  color[1] = (unsigned char)min(255.0f, max(0.0f, color[1] + g));
-  color[2] = (unsigned char)min(255.0f, max(0.0f, color[2] + b));
-
-  if (pDoc->m_pUI->getPainterlyStyle() == PAINTERLY_EXPRESSIONIST ||
-      pDoc->m_pUI->getPainterlyStyle() == PAINTERLY_POINTILLIST) {
-    // TODO: use stork length parameter
-  }
-
-  if (type == PAINTERLY_BSPLINE_BRUSH) {
-    // TODO: use curve parameter
-  }
-
-  glBegin(GL_POINTS);
-  glColor4f(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, param->Alpha);
-
-  glVertex2d(target.x, target.y);
-
-  glEnd();
-}
-
-void PainterlyBrush::BrushEnd(const Point source, const Point target) {
-  // do nothing so far
+      (canvas + index * 3)[0] = stroke.color[0] * param->Alpha;
+      (canvas + index * 3)[1] = stroke.color[1] * param->Alpha;
+      (canvas + index * 3)[2] = stroke.color[2] * param->Alpha;
+    }
 }

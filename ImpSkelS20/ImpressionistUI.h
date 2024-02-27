@@ -23,6 +23,7 @@
 #include "PaintView.h"
 
 #include "ImpBrush.h"
+#include "PainterlyBrush.h"
 
 class ImpressionistUI {
 public:

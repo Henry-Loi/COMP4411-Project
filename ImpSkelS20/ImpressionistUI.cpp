@@ -705,29 +705,23 @@ void ImpressionistUI::painterly_dialog_value_init() {
   m_paintView->setPainterlyStroke(PAINTERLY_CURVE_BRUSH);
 
   // default init
-  m_painterlyThreshold =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Threshold;
-  m_painterlyCurvature =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Curvature;
-  m_painterlyBlur = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Blur;
-  m_painterlyGridSize =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].GridSize;
+  m_painterlyThreshold = m_paintView->get_painterly_param()->Threshold;
+  m_painterlyCurvature = m_paintView->get_painterly_param()->Curvature;
+  m_painterlyBlur = m_paintView->get_painterly_param()->Blur;
+  m_painterlyGridSize = m_paintView->get_painterly_param()->GridSize;
   m_painterlyMinStrokeLength =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].MinStrokeLength;
+      m_paintView->get_painterly_param()->MinStrokeLength;
   m_painterlyMaxStrokeLength =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].MaxStrokeLength;
-  m_painterlyAlpha =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Alpha;
-  m_painterlyLayers =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Layer;
-  m_painterlyR0Level =
-      m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].R0Level;
-  m_painterlyJr = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Jr;
-  m_painterlyJg = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Jg;
-  m_painterlyJb = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Jb;
-  m_painterlyJh = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Jh;
-  m_painterlyJs = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Js;
-  m_painterlyJv = m_paintView->m_painterlyParam[PAINTERLY_IMPRESSIONIST].Jv;
+      m_paintView->get_painterly_param()->MaxStrokeLength;
+  m_painterlyAlpha = m_paintView->get_painterly_param()->Alpha;
+  m_painterlyLayers = m_paintView->get_painterly_param()->Layer;
+  m_painterlyR0Level = m_paintView->get_painterly_param()->R0Level;
+  m_painterlyJr = m_paintView->get_painterly_param()->Jr;
+  m_painterlyJg = m_paintView->get_painterly_param()->Jg;
+  m_painterlyJb = m_paintView->get_painterly_param()->Jb;
+  m_painterlyJh = m_paintView->get_painterly_param()->Jh;
+  m_painterlyJs = m_paintView->get_painterly_param()->Js;
+  m_painterlyJv = m_paintView->get_painterly_param()->Jv;
 }
 
 void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
@@ -739,26 +733,26 @@ void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
   pUI->m_paintView->setPainterlyStyle(type);
 
   if (type == PAINTERLY_CUSTOMIZED) {
-    pUI->m_paintView->m_painterlyParam[type].Threshold =
+    pUI->m_paintView->get_painterly_param()->Threshold =
         pUI->m_painterlyThreshold;
-    pUI->m_paintView->m_painterlyParam[type].Curvature =
+    pUI->m_paintView->get_painterly_param()->Curvature =
         pUI->m_painterlyCurvature;
-    pUI->m_paintView->m_painterlyParam[type].Blur = pUI->m_painterlyBlur;
-    pUI->m_paintView->m_painterlyParam[type].GridSize =
+    pUI->m_paintView->get_painterly_param()->Blur = pUI->m_painterlyBlur;
+    pUI->m_paintView->get_painterly_param()->GridSize =
         pUI->m_painterlyGridSize;
-    pUI->m_paintView->m_painterlyParam[type].MinStrokeLength =
+    pUI->m_paintView->get_painterly_param()->MinStrokeLength =
         pUI->m_painterlyMinStrokeLength;
-    pUI->m_paintView->m_painterlyParam[type].MaxStrokeLength =
+    pUI->m_paintView->get_painterly_param()->MaxStrokeLength =
         pUI->m_painterlyMaxStrokeLength;
-    pUI->m_paintView->m_painterlyParam[type].Alpha = pUI->m_painterlyAlpha;
-    pUI->m_paintView->m_painterlyParam[type].Layer = pUI->m_painterlyLayers;
-    pUI->m_paintView->m_painterlyParam[type].R0Level = pUI->m_painterlyR0Level;
-    pUI->m_paintView->m_painterlyParam[type].Jr = pUI->m_painterlyJr;
-    pUI->m_paintView->m_painterlyParam[type].Jg = pUI->m_painterlyJg;
-    pUI->m_paintView->m_painterlyParam[type].Jb = pUI->m_painterlyJb;
-    pUI->m_paintView->m_painterlyParam[type].Jh = pUI->m_painterlyJh;
-    pUI->m_paintView->m_painterlyParam[type].Js = pUI->m_painterlyJs;
-    pUI->m_paintView->m_painterlyParam[type].Jv = pUI->m_painterlyJv;
+    pUI->m_paintView->get_painterly_param()->Alpha = pUI->m_painterlyAlpha;
+    pUI->m_paintView->get_painterly_param()->Layer = pUI->m_painterlyLayers;
+    pUI->m_paintView->get_painterly_param()->R0Level = pUI->m_painterlyR0Level;
+    pUI->m_paintView->get_painterly_param()->Jr = pUI->m_painterlyJr;
+    pUI->m_paintView->get_painterly_param()->Jg = pUI->m_painterlyJg;
+    pUI->m_paintView->get_painterly_param()->Jb = pUI->m_painterlyJb;
+    pUI->m_paintView->get_painterly_param()->Jh = pUI->m_painterlyJh;
+    pUI->m_paintView->get_painterly_param()->Js = pUI->m_painterlyJs;
+    pUI->m_paintView->get_painterly_param()->Jv = pUI->m_painterlyJv;
 
     pUI->m_painterlyStrokeChoice->activate();
     pUI->m_painterlyThresholdSlider->activate();
@@ -797,35 +791,35 @@ void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
   } else {
     pUI->m_painterlyStrokeChoice->value(PAINTERLY_CURVE_BRUSH);
     pUI->m_painterlyThresholdSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Threshold);
+        pUI->m_paintView->get_painterly_param()->Threshold);
     pUI->m_painterlyCurvatureSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Curvature);
+        pUI->m_paintView->get_painterly_param()->Curvature);
     pUI->m_painterlyBlurSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Blur);
+        pUI->m_paintView->get_painterly_param()->Blur);
     pUI->m_painterlyGridSizeSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].GridSize);
+        pUI->m_paintView->get_painterly_param()->GridSize);
     pUI->m_painterlyMinStrokeLengthSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].MinStrokeLength);
+        pUI->m_paintView->get_painterly_param()->MinStrokeLength);
     pUI->m_painterlyMaxStrokeLengthSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].MaxStrokeLength);
+        pUI->m_paintView->get_painterly_param()->MaxStrokeLength);
     pUI->m_painterlyAlphaSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Alpha);
+        pUI->m_paintView->get_painterly_param()->Alpha);
     pUI->m_painterlyLayersSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Layer);
+        pUI->m_paintView->get_painterly_param()->Layer);
     pUI->m_painterlyR0LevelSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].R0Level);
+        pUI->m_paintView->get_painterly_param()->R0Level);
     pUI->m_painterlyJrSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Jr);
+        pUI->m_paintView->get_painterly_param()->Jr);
     pUI->m_painterlyJgSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Jg);
+        pUI->m_paintView->get_painterly_param()->Jg);
     pUI->m_painterlyJbSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Jb);
+        pUI->m_paintView->get_painterly_param()->Jb);
     pUI->m_painterlyJhSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Jh);
+        pUI->m_paintView->get_painterly_param()->Jh);
     pUI->m_painterlyJsSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Js);
+        pUI->m_paintView->get_painterly_param()->Js);
     pUI->m_painterlyJvSlider->value(
-        pUI->m_paintView->m_painterlyParam[type].Jv);
+        pUI->m_paintView->get_painterly_param()->Jv);
 
     pUI->m_painterlyStrokeChoice->deactivate();
     pUI->m_painterlyThresholdSlider->deactivate();

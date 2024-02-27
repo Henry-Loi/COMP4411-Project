@@ -20,13 +20,14 @@
 #include "impressionistUI.h"
 
 #include <algorithm>
+#include <cmath>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 #include <vector>
 
 #include "ScatteredLinesBrush.h"
 #include "SingleLineBrush.h"
-#include <iostream>
 
 #define LEFT_MOUSE_DOWN 1
 #define LEFT_MOUSE_DRAG 2
@@ -44,7 +45,7 @@ static int eventToDo;
 static int isAnEvent = 0;
 static Point coord;
 Point right_start(0, 0); // start of right click
-boolean rightCLick = false;
+bool rightCLick = false;
 float right_size = 0;
 float right_angle = 0;
 
@@ -54,22 +55,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l)
     : Fl_Gl_Window(x, y, w, h, l) {
   m_nWindowWidth = w;
   m_nWindowHeight = h;
-
-  m_painterlyParam[PAINTERLY_IMPRESSIONIST] = {
-      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16, 1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
-                     0.0f, 0.0f, 0.0f)};
-  m_painterlyParam[PAINTERLY_EXPRESSIONIST] = {
-      PainterlyParam(550, 0.25f, 0.5f, 1.0f, 10, 16, 0.7f, 3, 3, 0.0f, 0.0f,
-                     0.0f, 0.0f, 0.0f, 0.5f)};
-  m_painterlyParam[PAINTERLY_COLOR_WASH] = {
-      PainterlyParam(200, 1.0f, 0.5f, 1.0f, 4, 16, 0.5f, 3, 3, 0.3f, 0.3f, 0.3f,
-                     0.0f, 0.0f, 0.0f)};
-  m_painterlyParam[PAINTERLY_POINTILLIST] = {
-      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 0, 0, 1.0f, 2, 2, 0.0f, 0.0f, 0.0f,
-                     0.3f, 0.0f, 1.0f)};
-  m_painterlyParam[PAINTERLY_CUSTOMIZED] = {
-      PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16, 1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
-                     0.0f, 0.0f, 0.0f)};
+  m_pPainterlyBrush = new PainterlyBrush(m_pDoc, "Painterly Brush");
 };
 
 void PaintView::draw() {
@@ -430,17 +416,19 @@ void PaintView::applyKernel() {
 }
 
 void PaintView::setPainterlyStyle(PainterlyStyle style) {
-  m_painterlyStyle = style;
+  m_pPainterlyBrush->m_painterlyStyle = style;
 }
 
 void PaintView::setPainterlyStroke(PainterlyStroke stroke) {
-  m_painterlyStroke = stroke;
+  m_pPainterlyBrush->m_painterlyStroke = stroke;
 }
 
 void PaintView::apply_painterly(void) {
   m_pDoc->clearCanvas();
 
   ImpressionistUI *dlg = m_pDoc->m_pUI;
+  PainterlyParam *param = get_painterly_param();
+
   if (m_pDoc->m_ucPainting == NULL) {
     return;
   }
@@ -470,15 +458,18 @@ void PaintView::apply_painterly(void) {
   */
 
   // paint the canvas
-  for (int i = 0; i < m_painterlyParam[m_painterlyStyle].Layer; i++) {
+  for (int i = 0; i < param->Layer; i++) {
     // apply Gaussian blur
     std::vector<std::vector<float>> GKernel =
-        gaussKernel(R[i], m_painterlyParam[m_painterlyStyle].Blur);
+        gaussKernel(m_pPainterlyBrush->R[i], param->Blur * param->Blur *
+                                                 m_pPainterlyBrush->R[i] *
+                                                 m_pPainterlyBrush->R[i]);
     m_pDoc->applyKernel(m_pDoc->m_ucOriginal, m_pDoc->m_ucPainting, GKernel,
-                        m_nDrawWidth, m_nDrawHeight);
+                        m_pPainterlyBrush->R[i], m_pPainterlyBrush->R[i]);
 
     // paint a layer
-    paintLayer(m_pDoc->m_ucPainting, m_pDoc->m_ucOriginal, R[i]);
+    paintLayer(m_pDoc->m_ucPainting, m_pDoc->m_ucOriginal,
+               m_pPainterlyBrush->R[i]);
   }
 
   SaveCurrentContent();
@@ -514,83 +505,151 @@ void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
     paint all strokes in S on the canvas,
     in random order
   }*/
+  PainterlyParam *param = get_painterly_param();
+
+  int height = m_pDoc->m_nPaintHeight, width = m_pDoc->m_nPaintWidth;
+  float *zBuffer = new float[height * width];
+
+  std::vector<PainterlyBrush::Stroke *> strokes;
+
+  for (int i = 0; i < height * width; ++i)
+    zBuffer[i] = 1.f;
 
   // create a pointwise difference image
-  unsigned char *D = new unsigned char[m_nDrawWidth * m_nDrawHeight * 3];
+  unsigned char *D = new unsigned char[m_nDrawWidth * m_nDrawHeight];
 
   for (int i = 0; i < m_nDrawWidth; i++) {
     for (int j = 0; j < m_nDrawHeight; j++) {
-      D[3 * (j * m_nDrawWidth + i)] =
-          abs(canvas[3 * (j * m_nDrawWidth + i)] -
-              referenceImage[3 * (j * m_nDrawWidth + i)]);
-      D[3 * (j * m_nDrawWidth + i) + 1] =
-          abs(canvas[3 * (j * m_nDrawWidth + i) + 1] -
-              referenceImage[3 * (j * m_nDrawWidth + i) + 1]);
-      D[3 * (j * m_nDrawWidth + i) + 2] =
-          abs(canvas[3 * (j * m_nDrawWidth + i) + 2] -
-              referenceImage[3 * (j * m_nDrawWidth + i) + 2]);
+      int index = (i * width + j) * 3;
+      D[i * width + j] = calDifference(canvas + index, referenceImage + index);
     }
   }
 
   m_pDoc->m_pUI->setSize(radius);
 
-  int grid = m_painterlyParam[m_painterlyStyle].GridSize * radius;
+  int grid = param->GridSize * radius;
 
-  for (int x = 0; x < m_nDrawWidth; x += grid) {
-    for (int y = 0; y < m_nDrawHeight; y += grid) {
+  for (int x = 0; x < height; x += grid) {
+    for (int y = 0; y < width; y += grid) {
       // sum the error near (x,y)
       float areaError = 0;
-      for (int i = x - grid / 2; i < x + grid / 2; i++) {
-        for (int j = y - grid / 2; j < y + grid / 2; j++) {
-          if (i < 0 || i >= m_nDrawWidth || j < 0 || j >= m_nDrawHeight) {
-            continue;
+      int maxRow, maxCol;
+
+      int startRow = max(0, y - radius / 2), startCol = max(0, x - radius / 2);
+      int endRow = min(startRow + radius, height),
+          endCol = min(startCol + radius, width);
+
+      float maxError = 0;
+      for (int i = startRow; i < endRow; ++i)
+        for (int j = startCol; j < endCol; ++j) {
+          float curError = D[i * width + j];
+          areaError += curError;
+          if (curError > maxError) {
+            maxRow = i;
+            maxCol = j;
           }
-          areaError += D[3 * (j * m_nDrawWidth + i)] +
-                       D[3 * (j * m_nDrawWidth + i) + 1] +
-                       D[3 * (j * m_nDrawWidth + i) + 2];
         }
-      }
       areaError /= grid * grid;
 
-      if (areaError > m_painterlyParam[m_painterlyStyle].Threshold) {
-        // find the largest error point
-        int x1 = 0, y1 = 0;
-        float maxError = 0;
-        for (int i = x - grid / 2; i < x + grid / 2; i++) {
-          for (int j = y - grid / 2; j < y + grid / 2; j++) {
-            if (i < 0 || i >= m_nDrawWidth || j < 0 || j >= m_nDrawHeight) {
-              continue;
-            }
-            float error = D[3 * (j * m_nDrawWidth + i)] +
-                          D[3 * (j * m_nDrawWidth + i) + 1] +
-                          D[3 * (j * m_nDrawWidth + i) + 2];
-            if (error > maxError) {
-              maxError = error;
-              x1 = i;
-              y1 = j;
-            }
-          }
-        }
-
-        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushBegin(
-            Point(x1 + m_nStartCol, m_nEndRow - y1),
-            Point(x + m_nStartCol, m_nWindowHeight - y));
-        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushMove(
-            Point(x1 + m_nStartCol, m_nEndRow - y1),
-            Point(x + m_nStartCol, m_nWindowHeight - y));
-        ImpBrush::c_pBrushes[BRUSH_PAINTERLY]->BrushEnd(
-            Point(x1 + m_nStartCol, m_nEndRow - y1),
-            Point(x + m_nStartCol, m_nWindowHeight - y));
-
-      } // end if
+      if (areaError > param->Threshold) {
+        strokes.push_back(makeSplineStroke(canvas, maxCol, maxRow, radius));
+      }
     }
   }
 
-  SaveCurrentContent();
-  RestoreContent();
+  // painterly brush
+  m_pPainterlyBrush->StartPaint(strokes, zBuffer);
 
-  glFlush();
+  delete[] zBuffer;
+  delete[] D;
+  for (auto *stroke : strokes)
+    delete stroke;
+}
 
-  refresh();
-  m_pDoc->m_pUI->m_origView->updateCursor(coord);
+PainterlyBrush::Stroke *PaintView::makeSplineStroke(unsigned char *ref, int x,
+                                                    int y, int size) {
+  PainterlyBrush::Stroke *stroke = new PainterlyBrush::Stroke;
+  stroke->depth = frand();
+  stroke->size = size;
+
+  Point cur(x, y);
+  double prevGradX = 0.0, prevGradY = 0.0;
+  stroke->controlPoints.push_back(cur);
+
+  int width = m_pDoc->m_nPaintWidth, height = m_pDoc->m_nPaintHeight;
+  int index = (y * width + x) * 3;
+  memcpy(stroke->color, ref + index, 3);
+
+  PainterlyParam *param = get_painterly_param();
+
+  for (int i = 0; i < param->MaxStrokeLength; ++i) {
+    index = (cur.y * width + cur.x) * 3;
+    if (calDifference(ref + index, m_pDoc->m_ucPainting + index) <
+        calDifference(ref + index, stroke->color)) {
+      if (i >= param->MinStrokeLength)
+        return stroke;
+    }
+
+    auto grad = calGradient(cur.x, cur.y, ref);
+    float magnitude =
+        std::sqrt(grad.first * grad.first + grad.second * grad.second);
+    if (magnitude < 1e-4)
+      return stroke; // vanishing gradient
+
+    float gradX = -grad.second / magnitude,
+          gradY = grad.first / magnitude; // find perpendicular and unit vector
+
+    if (gradX * prevGradX + gradY * prevGradY <
+        0) // find direction with smaller angle
+    {
+      gradX = -gradX;
+      gradY = -gradY;
+    }
+
+    gradX = param->Curvature * gradX + (1 - param->Curvature) * prevGradX;
+    gradY = param->Curvature * gradY + (1 - param->Curvature) * prevGradY;
+
+    magnitude = std::sqrt(gradX * gradX + gradY * gradY);
+    prevGradX = gradX / magnitude;
+    prevGradY = gradY / magnitude;
+
+    cur.x += prevGradX * size;
+    cur.y += prevGradY * size;
+    cur.x = max(cur.x, 0);
+    cur.x = min(width - 1, cur.x);
+    cur.y = max(cur.y, 0);
+    cur.y = min(height - 1, cur.y);
+    stroke->controlPoints.push_back(cur);
+  }
+
+  return stroke;
+}
+
+unsigned char *PaintView::getColor(int x, int y, unsigned char *src) {
+  x = max(x, 0);
+  x = min(x, m_pDoc->m_nPaintWidth - 1);
+  y = max(y, 0);
+  y = min(y, m_pDoc->m_nPaintHeight - 1);
+
+  return src + (y * m_pDoc->m_nPaintWidth + x) * 3;
+}
+
+int sobelOpDirY[3][3] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+int sobelOpDirX[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+
+std::pair<float, float> PaintView::calGradient(int x, int y,
+                                               unsigned char *src) {
+  float gradX = 0.f, gradY = 0.f;
+  for (int i = 0; i < 3; ++i)   // row
+    for (int j = 0; j < 3; ++j) // col
+    {
+      float greyScale = rgb2Grey(getColor(x + j - 1, y + 2 - i, src));
+      gradX += greyScale * sobelOpDirX[i][j];
+      gradY += greyScale * sobelOpDirY[i][j];
+    }
+  return std::pair<float, float>(gradX, gradY);
+}
+
+PainterlyParam *PaintView::get_painterly_param(void) {
+  return &m_pPainterlyBrush->param[m_pPainterlyBrush->m_painterlyStyle];
 }

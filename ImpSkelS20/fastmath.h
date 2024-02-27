@@ -32,6 +32,12 @@ static std::vector<std::vector<float>> gaussKernel(int size, float sigma) {
   return kernel;
 }
 
+static float calDifference(unsigned char *a, unsigned char *b) {
+  int deltaR = (int)a[0] - b[0], deltaG = (int)a[1] - b[1],
+      deltaB = (int)a[2] - b[2];
+  return std::sqrt(deltaR * deltaR + deltaG * deltaG + deltaB * deltaB);
+}
+
 static void RGBtoHSV(const unsigned char *rgb, float *hsv) {
   float r = rgb[0] / 255.0;
   float g = rgb[1] / 255.0;
@@ -60,7 +66,7 @@ static void RGBtoHSV(const unsigned char *rgb, float *hsv) {
   }
 }
 
-static void HSVtoRGB(const float *hsv, float *rgb) {
+static void HSVtoRGB(const float *hsv, unsigned char *rgb) {
   float c = hsv[2] * hsv[1];
   float x = c * (1 - fabs(fmod(hsv[0] / 60, 2) - 1));
   float m = hsv[2] - c;
@@ -93,4 +99,8 @@ static void HSVtoRGB(const float *hsv, float *rgb) {
   rgb[0] = (r + m) * 255;
   rgb[1] = (g + m) * 255;
   rgb[2] = (b + m) * 255;
+}
+
+static float rgb2Grey(unsigned char *src) {
+  return 0.30f * src[0] + 0.59f * src[1] + 0.11f * src[2];
 }

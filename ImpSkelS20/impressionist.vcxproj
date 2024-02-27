@@ -156,6 +156,8 @@
     <ClCompile Include="AlphaMappedBrush.cpp" />
     <ClCompile Include="KernelBrush.cpp" />
     <ClCompile Include="PainterlyBrush.cpp" />
+    <ClCompile Include="CurvedBrush.cpp" />
+    <ClCompile Include="BSplines.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h" />
@@ -175,6 +177,8 @@
     <ClInclude Include="AlphaMappedBrush.h" />
     <ClInclude Include="KernelBrush.h" />
     <ClInclude Include="PainterlyBrush.h" />
+    <ClInclude Include="CurvedBrush.h" />
+    <ClInclude Include="BSplines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
