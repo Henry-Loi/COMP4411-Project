@@ -51,11 +51,12 @@ float right_angle = 0;
 
 int irand(int);
 
-PaintView::PaintView(int x, int y, int w, int h, const char *l)
+PaintView::PaintView(int x, int y, int w, int h, const char *l,
+                     ImpressionistDoc *pDoc)
     : Fl_Gl_Window(x, y, w, h, l) {
+  m_pDoc = pDoc;
   m_nWindowWidth = w;
   m_nWindowHeight = h;
-  m_pPainterlyBrush = new PainterlyBrush(m_pDoc, "Painterly Brush");
 };
 
 void PaintView::draw() {
@@ -416,11 +417,11 @@ void PaintView::applyKernel() {
 }
 
 void PaintView::setPainterlyStyle(PainterlyStyle style) {
-  m_pPainterlyBrush->m_painterlyStyle = style;
+  // m_pDoc->m_pUI->m_painterlyStyle = style;
 }
 
 void PaintView::setPainterlyStroke(PainterlyStroke stroke) {
-  m_pPainterlyBrush->m_painterlyStroke = stroke;
+  // m_pDoc->m_pUI->m_painterlyStroke = stroke;
 }
 
 void PaintView::apply_painterly(void) {
@@ -428,6 +429,7 @@ void PaintView::apply_painterly(void) {
 
   ImpressionistUI *dlg = m_pDoc->m_pUI;
   PainterlyParam *param = get_painterly_param();
+  PainterlyBrush *m_pPainterlyBrush = m_pDoc->m_pUI->m_pPainterlyBrush;
 
   if (m_pDoc->m_ucPainting == NULL) {
     return;
@@ -518,8 +520,8 @@ void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
   // create a pointwise difference image
   unsigned char *D = new unsigned char[m_nDrawWidth * m_nDrawHeight];
 
-  for (int i = 0; i < m_nDrawWidth; i++) {
-    for (int j = 0; j < m_nDrawHeight; j++) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
       int index = (i * width + j) * 3;
       D[i * width + j] = calDifference(canvas + index, referenceImage + index);
     }
@@ -558,7 +560,7 @@ void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
   }
 
   // painterly brush
-  m_pPainterlyBrush->StartPaint(strokes, zBuffer);
+  m_pDoc->m_pUI->m_pPainterlyBrush->StartPaint(strokes, zBuffer);
 
   delete[] zBuffer;
   delete[] D;
@@ -651,5 +653,6 @@ std::pair<float, float> PaintView::calGradient(int x, int y,
 }
 
 PainterlyParam *PaintView::get_painterly_param(void) {
-  return &m_pPainterlyBrush->param[m_pPainterlyBrush->m_painterlyStyle];
+  return &m_pDoc->m_pUI->m_pPainterlyBrush
+              ->param[m_pDoc->m_pUI->m_pPainterlyBrush->m_painterlyStyle];
 }

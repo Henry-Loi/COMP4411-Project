@@ -9,7 +9,7 @@
 
 CurvedBrush::CurvedBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {
-  painterly = new PainterlyBrush();
+  painterly = new PainterlyBrush(pDoc, name);
 }
 
 void CurvedBrush::BrushBegin(const Point source, const Point target) {

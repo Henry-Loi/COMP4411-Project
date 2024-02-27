@@ -27,7 +27,7 @@
 
 class ImpressionistUI {
 public:
-  ImpressionistUI();
+  ImpressionistUI(ImpressionistDoc *);
 
   // The FLTK widgets
   Fl_Window *m_mainWindow;
@@ -122,6 +122,7 @@ public:
   int m_tarLineAngle; // for right click
 
   // interface to get painterly attributes
+  PainterlyBrush *m_pPainterlyBrush;
   int getPainterlyStyle();
   int getPainterlyStroke();
 
@@ -200,9 +201,6 @@ private:
   // all painterly attributes
   static Fl_Menu_Item painterlyStyleMenu[NUM_OF_PAINTERLY_STYLE + 1];
   static Fl_Menu_Item painterlyStrokeMenu[NUM_OF_PAINTERLY_STROKE + 1];
-
-  PainterlyStyle m_painterlyStyle;
-  PainterlyStroke m_painterlyStroke;
 
   int m_painterlyThreshold;
   float m_painterlyCurvature;

@@ -88,6 +88,8 @@ public:
 
   int BrushInit(void *) { return 1; }
 
+  ImpressionistDoc *m_pDoc;
+
   void StartPaint(std::vector<Stroke *>, float *);
   void renderCircles(int x, int y, Stroke &stroke, float *zBuffer);
 };

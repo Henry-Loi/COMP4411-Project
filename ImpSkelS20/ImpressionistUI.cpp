@@ -698,30 +698,27 @@ Fl_Menu_Item ImpressionistUI::painterlyStrokeMenu[NUM_OF_PAINTERLY_STROKE + 1] =
      {0}};
 
 void ImpressionistUI::painterly_dialog_value_init() {
-  m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
-  m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
-
-  m_paintView->setPainterlyStyle(PAINTERLY_IMPRESSIONIST);
-  m_paintView->setPainterlyStroke(PAINTERLY_CURVE_BRUSH);
+  // m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
+  // m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
 
   // default init
-  m_painterlyThreshold = m_paintView->get_painterly_param()->Threshold;
-  m_painterlyCurvature = m_paintView->get_painterly_param()->Curvature;
-  m_painterlyBlur = m_paintView->get_painterly_param()->Blur;
-  m_painterlyGridSize = m_paintView->get_painterly_param()->GridSize;
-  m_painterlyMinStrokeLength =
-      m_paintView->get_painterly_param()->MinStrokeLength;
-  m_painterlyMaxStrokeLength =
-      m_paintView->get_painterly_param()->MaxStrokeLength;
-  m_painterlyAlpha = m_paintView->get_painterly_param()->Alpha;
-  m_painterlyLayers = m_paintView->get_painterly_param()->Layer;
-  m_painterlyR0Level = m_paintView->get_painterly_param()->R0Level;
-  m_painterlyJr = m_paintView->get_painterly_param()->Jr;
-  m_painterlyJg = m_paintView->get_painterly_param()->Jg;
-  m_painterlyJb = m_paintView->get_painterly_param()->Jb;
-  m_painterlyJh = m_paintView->get_painterly_param()->Jh;
-  m_painterlyJs = m_paintView->get_painterly_param()->Js;
-  m_painterlyJv = m_paintView->get_painterly_param()->Jv;
+  // m_painterlyThreshold = m_paintView->get_painterly_param()->Threshold;
+  // m_painterlyCurvature = m_paintView->get_painterly_param()->Curvature;
+  // m_painterlyBlur = m_paintView->get_painterly_param()->Blur;
+  // m_painterlyGridSize = m_paintView->get_painterly_param()->GridSize;
+  // m_painterlyMinStrokeLength =
+  //     m_paintView->get_painterly_param()->MinStrokeLength;
+  // m_painterlyMaxStrokeLength =
+  //     m_paintView->get_painterly_param()->MaxStrokeLength;
+  // m_painterlyAlpha = m_paintView->get_painterly_param()->Alpha;
+  // m_painterlyLayers = m_paintView->get_painterly_param()->Layer;
+  // m_painterlyR0Level = m_paintView->get_painterly_param()->R0Level;
+  // m_painterlyJr = m_paintView->get_painterly_param()->Jr;
+  // m_painterlyJg = m_paintView->get_painterly_param()->Jg;
+  // m_painterlyJb = m_paintView->get_painterly_param()->Jb;
+  // m_painterlyJh = m_paintView->get_painterly_param()->Jh;
+  // m_painterlyJs = m_paintView->get_painterly_param()->Js;
+  // m_painterlyJv = m_paintView->get_painterly_param()->Jv;
 }
 
 void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
@@ -730,7 +727,7 @@ void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
 
   PainterlyStyle type = static_cast<PainterlyStyle>((int)v);
 
-  pUI->m_paintView->setPainterlyStyle(type);
+  pUI->m_pPainterlyBrush->m_painterlyStyle = type;
 
   if (type == PAINTERLY_CUSTOMIZED) {
     pUI->m_paintView->get_painterly_param()->Threshold =
@@ -930,8 +927,8 @@ void ImpressionistUI::cb_painterlyJv(Fl_Widget *o, void *v) {
       int(((Fl_Slider *)o)->value());
 }
 
-int ImpressionistUI::getPainterlyStyle() { return m_painterlyStyle; }
-int ImpressionistUI::getPainterlyStroke() { return m_painterlyStroke; }
+int ImpressionistUI::getPainterlyStyle() { return m_pPainterlyBrush->m_painterlyStyle; }
+int ImpressionistUI::getPainterlyStroke() { return m_pPainterlyBrush->m_painterlyStroke; }
 
 int ImpressionistUI::getPainterlyThreshold() { return m_painterlyThreshold; }
 float ImpressionistUI::getPainterlyCurvature() { return m_painterlyCurvature; }
@@ -959,7 +956,8 @@ float ImpressionistUI::getPainterlyJv() { return m_painterlyJv; }
 // Constructor.  Creates all of the widgets.
 // Add new widgets here
 //----------------------------------------------------
-ImpressionistUI::ImpressionistUI() {
+ImpressionistUI::ImpressionistUI(ImpressionistDoc *pDoc) {
+  m_pDoc = pDoc;
   m_KernelStr = new char[1000];
   memset(m_KernelStr, 0, 1000);
 
@@ -976,8 +974,8 @@ ImpressionistUI::ImpressionistUI() {
   Fl_Group *group = new Fl_Group(0, 25, 600, 275);
 
   // install paint view window
-  m_paintView =
-      new PaintView(300, 25, 300, 275, "This is the paint view"); // 0jon
+  m_paintView = new PaintView(300, 25, 300, 275, "This is the paint view",
+                              m_pDoc); // 0jon
   m_paintView->box(FL_DOWN_FRAME);
 
   // install original view window
@@ -989,6 +987,8 @@ ImpressionistUI::ImpressionistUI() {
   group->end();
   Fl_Group::current()->resizable(group);
   m_mainWindow->end();
+
+  m_pPainterlyBrush = new PainterlyBrush(m_pDoc, "Painterly Brush");
 
   brush_dialog_value_init();
 

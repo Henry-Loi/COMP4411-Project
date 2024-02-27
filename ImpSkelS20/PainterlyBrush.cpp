@@ -19,6 +19,10 @@ extern float frand();
 
 PainterlyBrush::PainterlyBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {
+  m_pDoc = pDoc;
+  m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
+  m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
+
   param[PAINTERLY_IMPRESSIONIST] = {PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16,
                                                    1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
                                                    0.0f, 0.0f, 0.0f)};
@@ -70,6 +74,8 @@ void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes, float *zBuffer) {
 
 void PainterlyBrush::renderCircles(int x, int y, Stroke &stroke,
                                    float *zBuffer) {
+  ImpressionistDoc *m_pDoc = GetDocument();
+
   int height = m_pDoc->m_nPaintHeight, width = m_pDoc->m_nPaintWidth,
       radius = stroke.size;
   unsigned char *canvas = m_pDoc->m_ucPainting;

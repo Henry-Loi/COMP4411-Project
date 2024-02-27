@@ -20,7 +20,7 @@ class ImpressionistDoc;
 
 class PaintView : public Fl_Gl_Window {
 public:
-  PaintView(int x, int y, int w, int h, const char *l);
+  PaintView(int x, int y, int w, int h, const char *l, ImpressionistDoc *);
   void draw();
   int handle(int event);
 
@@ -56,8 +56,6 @@ public:
   std::pair<float, float> calGradient(int x, int y, unsigned char *src);
 
   ImpressionistDoc *m_pDoc;
-
-  PainterlyBrush *m_pPainterlyBrush;
 
 private:
   GLvoid *m_pPaintBitstart;
