@@ -399,6 +399,15 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget *o, void *v) {
     pUI->m_KernelNormalizeButton->activate();
     break;
   }
+  case BRUSH_CURVED: {
+    pUI->m_LineWidthSlider->deactivate();
+    pUI->m_BrushSizeSlider->deactivate();
+
+    pUI->m_SizeRandLightButton->deactivate();
+    pUI->m_SizeRandLightButton->value(false);
+    pUI->isSizeRand = false;
+    break;
+  }
   default: {
     pUI->m_KernelInput->deactivate();
     pUI->m_KernelApplyButton->deactivate();
@@ -628,6 +637,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_ALPHA_MAPPED},
     {"Kernel", FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_CUSTOM_KERNEL},
+    {"Curved", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_CURVED},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {
@@ -698,27 +709,7 @@ Fl_Menu_Item ImpressionistUI::painterlyStrokeMenu[NUM_OF_PAINTERLY_STROKE + 1] =
      {0}};
 
 void ImpressionistUI::painterly_dialog_value_init() {
-  // m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
-  // m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
-
   // default init
-  // m_painterlyThreshold = m_paintView->get_painterly_param()->Threshold;
-  // m_painterlyCurvature = m_paintView->get_painterly_param()->Curvature;
-  // m_painterlyBlur = m_paintView->get_painterly_param()->Blur;
-  // m_painterlyGridSize = m_paintView->get_painterly_param()->GridSize;
-  // m_painterlyMinStrokeLength =
-  //     m_paintView->get_painterly_param()->MinStrokeLength;
-  // m_painterlyMaxStrokeLength =
-  //     m_paintView->get_painterly_param()->MaxStrokeLength;
-  // m_painterlyAlpha = m_paintView->get_painterly_param()->Alpha;
-  // m_painterlyLayers = m_paintView->get_painterly_param()->Layer;
-  // m_painterlyR0Level = m_paintView->get_painterly_param()->R0Level;
-  // m_painterlyJr = m_paintView->get_painterly_param()->Jr;
-  // m_painterlyJg = m_paintView->get_painterly_param()->Jg;
-  // m_painterlyJb = m_paintView->get_painterly_param()->Jb;
-  // m_painterlyJh = m_paintView->get_painterly_param()->Jh;
-  // m_painterlyJs = m_paintView->get_painterly_param()->Js;
-  // m_painterlyJv = m_paintView->get_painterly_param()->Jv;
 }
 
 void ImpressionistUI::cb_painterlyStyleChoice(Fl_Widget *o, void *v) {
@@ -927,8 +918,12 @@ void ImpressionistUI::cb_painterlyJv(Fl_Widget *o, void *v) {
       int(((Fl_Slider *)o)->value());
 }
 
-int ImpressionistUI::getPainterlyStyle() { return m_pPainterlyBrush->m_painterlyStyle; }
-int ImpressionistUI::getPainterlyStroke() { return m_pPainterlyBrush->m_painterlyStroke; }
+int ImpressionistUI::getPainterlyStyle() {
+  return m_pPainterlyBrush->m_painterlyStyle;
+}
+int ImpressionistUI::getPainterlyStroke() {
+  return m_pPainterlyBrush->m_painterlyStroke;
+}
 
 int ImpressionistUI::getPainterlyThreshold() { return m_painterlyThreshold; }
 float ImpressionistUI::getPainterlyCurvature() { return m_painterlyCurvature; }

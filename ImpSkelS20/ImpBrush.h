@@ -19,6 +19,7 @@ enum {
   BRUSH_SCATTERED_CIRCLES,
   BRUSH_ALPHA_MAPPED,
   BRUSH_CUSTOM_KERNEL,
+  BRUSH_CURVED,
   NUM_BRUSH_TYPE, // Make sure this stays at the end!
   /* implicit brush here */
   BRUSH_PAINTERLY,

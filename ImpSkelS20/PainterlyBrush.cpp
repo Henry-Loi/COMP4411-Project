@@ -41,30 +41,30 @@ PainterlyBrush::PainterlyBrush(ImpressionistDoc *pDoc, char *name)
 };
 
 void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes, float *zBuffer) {
-  PainterlyParam *param = &param[m_painterlyStyle];
+  PainterlyParam *p = &param[m_painterlyStyle];
 
   for (auto *stroke : strokes) {
     BSplines bSplines(stroke->controlPoints, 3, stroke->size * 4);
     auto &samples = bSplines.samples;
 
-    if (param->Jh > 0.0 || param->Js > 0.0 || param->Jv > 0.0) {
+    if (p->Jh > 0.0 || p->Js > 0.0 || p->Jv > 0.0) {
       float hsv[3];
       RGBtoHSV(stroke->color, hsv);
-      hsv[0] = (1 - param->Jh * JitterIndex) * hsv[0] +
-               param->Jh * JitterIndex * frand() * 360;
-      hsv[1] = (1 - param->Js * JitterIndex) * hsv[1] +
-               param->Js * JitterIndex * frand() * 1;
-      hsv[2] = (1 - param->Jv * JitterIndex) * hsv[2] +
-               param->Jv * JitterIndex * frand() * 1;
+      hsv[0] = (1 - p->Jh * JitterIndex) * hsv[0] +
+               p->Jh * JitterIndex * frand() * 360;
+      hsv[1] = (1 - p->Js * JitterIndex) * hsv[1] +
+               p->Js * JitterIndex * frand() * 1;
+      hsv[2] = (1 - p->Jv * JitterIndex) * hsv[2] +
+               p->Jv * JitterIndex * frand() * 1;
       HSVtoRGB(hsv, stroke->color);
     }
 
-    stroke->color[0] = (1 - param->Jr * JitterIndex) * stroke->color[0] +
-                       param->Jr * JitterIndex * frand() * 255;
-    stroke->color[1] = (1 - param->Jg * JitterIndex) * stroke->color[1] +
-                       param->Jg * JitterIndex * frand() * 255;
-    stroke->color[2] = (1 - param->Jb * JitterIndex) * stroke->color[2] +
-                       param->Jb * JitterIndex * frand() * 255;
+    stroke->color[0] = (1 - p->Jr * JitterIndex) * stroke->color[0] +
+                       p->Jr * JitterIndex * frand() * 255;
+    stroke->color[1] = (1 - p->Jg * JitterIndex) * stroke->color[1] +
+                       p->Jg * JitterIndex * frand() * 255;
+    stroke->color[2] = (1 - p->Jb * JitterIndex) * stroke->color[2] +
+                       p->Jb * JitterIndex * frand() * 255;
 
     for (auto &sample : samples) {
       renderCircles(sample.x, sample.y, *stroke, zBuffer);

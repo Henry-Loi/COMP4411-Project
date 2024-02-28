@@ -33,6 +33,7 @@
 #include "PainterlyBrush.h"
 
 // MY TODO: add other brushes
+#include "CurvedBrush.h"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -70,6 +71,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPED] =
       new AlphaMappedBrush(this, "Alpha Mapped");
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
+  ImpBrush::c_pBrushes[BRUSH_CURVED] = new CurvedBrush(this, "Curved");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

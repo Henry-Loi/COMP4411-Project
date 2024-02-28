@@ -21,6 +21,8 @@ public:
   void BrushEnd(const Point source, const Point target);
   char *BrushName(void);
 
+  int BrushInit(void *params) { return 1; };
+
 private:
   void renderStrokes(PainterlyBrush::Stroke *stroke);
   void renderCircles(int x, int y, PainterlyBrush::Stroke &stroke);
