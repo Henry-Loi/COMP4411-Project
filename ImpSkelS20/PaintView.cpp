@@ -474,8 +474,7 @@ float PaintView::GradientDirection(const Point source, const Point target) {
     //return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0])); 
     return gradient[0];
   }
-  return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0]));
-}
+
 
 void PaintView::applyKernel() {
   ImpressionistUI *dlg = m_pDoc->m_pUI;

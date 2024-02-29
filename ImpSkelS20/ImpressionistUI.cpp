@@ -661,10 +661,10 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Colors...", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_colorSelection},
     {"&Clear Canvas", FL_ALT + 'c',
-     (Fl_Callback *)ImpressionistUI::cb_clear_canvas},
+         (Fl_Callback*)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
     {"&Swap Canvas", FL_ALT + 'w',
      (Fl_Callback *)ImpressionistUI::cb_swap_canvas, 0, FL_MENU_DIVIDER},
-     (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
+
     {"&Load Another Image...", FL_ALT + 'a',
      (Fl_Callback*)ImpressionistUI::cb_load_another_image},
 
