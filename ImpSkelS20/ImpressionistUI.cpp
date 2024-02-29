@@ -687,6 +687,16 @@ void ImpressionistUI::brush_dialog_value_init() {
   m_IsNormalizedKernel = true;
 }
 
+void ImpressionistUI::color_Selection_init() {
+  m_color1 = 1.000;
+  m_color2 = 1.000;
+  m_color3 = 1.000;
+}
+
+float ImpressionistUI::get_m_R() { return m_color1; }
+float ImpressionistUI::get_m_B() { return m_color2; }
+float ImpressionistUI::get_m_G() { return m_color3; }
+
 Fl_Menu_Item ImpressionistUI::painterlyStyleMenu[NUM_OF_PAINTERLY_STYLE + 1] = {
     {"Impressionist", FL_ALT + 'i',
      (Fl_Callback *)ImpressionistUI::cb_painterlyStyleChoice,
@@ -1163,6 +1173,20 @@ ImpressionistUI::ImpressionistUI(ImpressionistDoc *pDoc) {
 
   m_brushDialog->end();
 
+  //Manual Color Slection
+  //color_Selection_init();
+  m_colorSelectionDialog = new Fl_Window(220, 220, "color Selection Dialog");
+  Color_Selection = new Fl_Color_Chooser(10, 20, 200, 190, "Color Blending");
+  Color_Selection->user_data(
+      (void*)(this));
+  /*Color_Selection->type(FL_RGB);*/
+  Color_Selection->rgb(1.000,1.000,1.000);
+  Color_Selection->callback(cb_ManualColor);
+  
+  
+  m_colorSelectionDialog->end();
+  //Manual Color Selection end
+  
   // painterly dialog definition
   m_painterlyDialog = new Fl_Window(400, 280, "Painterly Dialog");
   painterly_dialog_value_init();

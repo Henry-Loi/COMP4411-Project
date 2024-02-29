@@ -117,7 +117,7 @@ public:
 
   void setSize(int size);
   void setLineAngle(int angle);
-  void brush_dialog_value_init();
+
   void color_Selection_init();
   bool isEdgeClipping;
   bool isAnotherGradient;
