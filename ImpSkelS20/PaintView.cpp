@@ -132,6 +132,9 @@ void PaintView::draw() {
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
+      if (coord.x > m_pDoc->m_nPaintWidth || coord.y > m_pDoc->m_nPaintHeight) {
+        break;
+      }
       if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
         // coordinate of start point
         right_start.x = coord.x;
@@ -140,6 +143,9 @@ void PaintView::draw() {
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
     case LEFT_MOUSE_DRAG:
+      if (coord.x > m_pDoc->m_nPaintWidth || coord.y > m_pDoc->m_nPaintHeight) {
+        break;
+      }
       if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
         // coordinate of endpoint
         cur.x = coord.x;
