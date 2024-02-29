@@ -36,6 +36,8 @@ public:
   void RightClickBrushEnd(const Point source, const Point target);
   float GradientDirection(const Point source, const Point target);
 
+  void undo(void);
+
   Point last_target;
 
   // auto painting
@@ -59,7 +61,9 @@ public:
   ImpressionistDoc *m_pDoc;
 
 private:
+  bool isUndo = false;
   GLvoid *m_pPaintBitstart;
+  GLvoid *m_pUndoBitstart;
   int m_nDrawWidth, m_nDrawHeight, m_nStartRow, m_nEndRow, m_nStartCol,
       m_nEndCol, m_nWindowWidth, m_nWindowHeight;
 };

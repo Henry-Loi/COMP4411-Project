@@ -60,6 +60,7 @@ public:
   unsigned char *m_ucOriginal;
   unsigned char *m_ucBitmap;
   unsigned char *m_ucPainting;
+  unsigned char *m_ucLastPainting;
 
   // The current active brush.
   ImpBrush *m_pCurrentBrush;
@@ -80,6 +81,9 @@ public:
 
   void applyKernel(GLubyte *target, std::vector<std::vector<float>> kernel,
                    int width, int height);
+
+  void Undo(void);
+  void saveUndo(void);
 
 private:
   char m_imageName[256];

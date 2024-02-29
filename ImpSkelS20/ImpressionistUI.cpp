@@ -250,6 +250,16 @@ void ImpressionistUI::cb_swap_canvas(Fl_Menu_ *o, void *v) {
 }
 
 //------------------------------------------------------------
+// Swaps the paintview canvas.
+// Called by the UI when the swap canvas menu item is chosen
+//------------------------------------------------------------
+void ImpressionistUI::cb_undo(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  pDoc->Undo();
+}
+
+//------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
 //------------------------------------------------------------
@@ -629,6 +639,9 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas},
     {"&Swap Canvas", FL_ALT + 'w',
      (Fl_Callback *)ImpressionistUI::cb_swap_canvas, 0, FL_MENU_DIVIDER},
+
+    {"&Undo", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_undo, 0,
+     FL_MENU_DIVIDER},
 
     {"&Painterly", FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_painterly,
      0, FL_MENU_DIVIDER},
