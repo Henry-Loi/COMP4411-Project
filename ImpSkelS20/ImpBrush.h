@@ -21,6 +21,8 @@ enum {
   BRUSH_CUSTOM_KERNEL,
   NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
+// Decide to get pixel from Original Image/Another Image /Edge Image
+
 
 class ImpressionistDoc; // Pre-declaring class
 extern float frand();
@@ -67,6 +69,8 @@ public:
 
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
+  float kernelOperation(const Point Source, int arr[3][3], const int kernel_size, const int border[2]); // Use kernel/mask on the image and get value from local 
+  float* getGradient(const Point Source,const int border[2]) ;
 
 protected:
   ImpressionistDoc *m_pDoc;
