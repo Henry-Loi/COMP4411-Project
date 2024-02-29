@@ -8,6 +8,8 @@
 #define PAINTVIEW_H
 
 #include "ImpBrush.h"
+#include "PainterlyBrush.h"
+
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
@@ -18,7 +20,7 @@ class ImpressionistDoc;
 
 class PaintView : public Fl_Gl_Window {
 public:
-  PaintView(int x, int y, int w, int h, const char *l);
+  PaintView(int x, int y, int w, int h, const char *l, ImpressionistDoc *);
   void draw();
   int handle(int event);
 
@@ -41,6 +43,18 @@ public:
 
   // custom kernel
   void applyKernel(void);
+
+  // painterly
+  PainterlyParam *get_painterly_param(void);
+  void setPainterlyStyle(PainterlyStyle style);
+  void setPainterlyStroke(PainterlyStroke stroke);
+  void apply_painterly(void);
+  void paintLayer(unsigned char *canvas, unsigned char *referenceImage,
+                  int radius);
+  PainterlyBrush::Stroke *makeSplineStroke(unsigned char *ref, int x, int y,
+                                           int size);
+  unsigned char *getColor(int x, int y, unsigned char *);
+  std::pair<float, float> calGradient(int x, int y, unsigned char *src);
 
   ImpressionistDoc *m_pDoc;
 

@@ -6,6 +6,8 @@
 //
 
 #include <FL/fl_ask.H>
+#include <vcruntime_string.h>
+#include <vector>
 
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
@@ -27,7 +29,11 @@
 // kernel brush
 #include "KernelBrush.h"
 
+// painterly brush
+#include "PainterlyBrush.h"
+
 // MY TODO: add other brushes
+#include "CurvedBrush.h"
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -65,6 +71,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPED] =
       new AlphaMappedBrush(this, "Alpha Mapped");
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
+  ImpBrush::c_pBrushes[BRUSH_CURVED] = new CurvedBrush(this, "Curved");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -247,4 +254,27 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(int x, int y) {
 //----------------------------------------------------------------
 GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
   return GetOriginalPixel(p.x, p.y);
+}
+
+void ImpressionistDoc::applyKernel(GLubyte *target,
+                                   std::vector<std::vector<float>> kernel,
+                                   int width, int height) {
+  // apply kernel to the original image
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      unsigned char *source, sum[3];
+
+      for (int x = 0; x < kernel.size(); x++) {
+        for (int y = 0; y < kernel.size(); y++) {
+          int curX = i - kernel.size() / 2 + x,
+              curY = j - kernel.size() / 2 + y;
+          source = GetOriginalPixel(curX + j, curY + i);
+          for (int k = 0; k < 3; ++k) {
+            sum[k] += source[k] * kernel[i][j];
+          }
+        }
+      }
+      memcpy(target + (j * width + i) * 3, sum, 3);
+    }
+  }
 }
