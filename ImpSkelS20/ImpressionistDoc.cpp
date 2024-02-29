@@ -148,6 +148,10 @@ int ImpressionistDoc::loadImage(char *iname) {
   m_ucPainting = new unsigned char[width * height * 3];
   memset(m_ucPainting, 0, width * height * 3);
 
+  // init the history record
+  m_ucLastPainting = new unsigned char[width * height * 3];
+  memset(m_ucLastPainting, 0, width * height * 3);
+
   m_pUI->m_mainWindow->resize(m_pUI->m_mainWindow->x(),
                               m_pUI->m_mainWindow->y(), width * 2, height + 25);
 
@@ -208,6 +212,17 @@ int ImpressionistDoc::saveImage(char *iname) {
   writeBMP(iname, m_nPaintWidth, m_nPaintHeight, m_ucPainting);
 
   return 1;
+}
+
+void ImpressionistDoc::Undo(void) {
+  memcpy(m_ucPainting, m_ucLastPainting,
+         m_nWidth * m_nHeight * 3 * sizeof(unsigned char));
+  m_pUI->m_paintView->refresh();
+}
+
+void ImpressionistDoc::saveUndo(void) {
+  memcpy(m_ucLastPainting, m_ucPainting,
+         m_nWidth * m_nHeight * 3 * sizeof(unsigned char));
 }
 
 //----------------------------------------------------------------

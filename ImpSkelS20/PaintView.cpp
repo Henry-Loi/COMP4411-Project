@@ -57,6 +57,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l,
   m_pDoc = pDoc;
   m_nWindowWidth = w;
   m_nWindowHeight = h;
+  m_pUndoBitstart = new unsigned char[m_nWindowWidth * m_nWindowHeight * 3];
 };
 
 void PaintView::draw() {
@@ -75,6 +76,11 @@ void PaintView::draw() {
     ortho();
 
     glClear(GL_COLOR_BUFFER_BIT);
+  }
+
+  if (isUndo) {
+    isUndo = false;
+    return;
   }
 
   Point scrollpos; // = GetScrollPosition();
@@ -171,7 +177,7 @@ void PaintView::draw() {
       break;
     case LEFT_MOUSE_UP:
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
-
+      m_pDoc->saveUndo();
       SaveCurrentContent();
       RestoreContent();
       break;
@@ -289,6 +295,8 @@ int PaintView::autoPaint(void) {
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);
 #endif // !MESA
+
+  m_pDoc->saveUndo();
 
   Point scrollpos; // = GetScrollPosition();
   scrollpos.x = 0;
