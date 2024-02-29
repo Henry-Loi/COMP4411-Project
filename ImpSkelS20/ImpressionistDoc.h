@@ -34,7 +34,9 @@ public:
   int saveImage(char *iname); // called by the UI to save image
 
   int clearCanvas();           // called by the UI to clear the drawing canvas
+  int swapCanvas();            // called by the UI to swap the canvas
   void setBrushType(int type); // called by the UI to set the brushType
+
   // called by the UI to set the Stroke Direction
   void setStokeDirection(int type);
   int getSize(); // get the UI size

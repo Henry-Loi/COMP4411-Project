@@ -232,6 +232,18 @@ int ImpressionistDoc::clearCanvas() {
   return 0;
 }
 
+int ImpressionistDoc::swapCanvas() {
+  unsigned char *temp = m_ucOriginal;
+  m_ucOriginal = m_ucPainting;
+  m_ucBitmap = m_ucOriginal;
+  m_ucPainting = temp;
+
+  m_pUI->m_origView->refresh();
+  m_pUI->m_paintView->refresh();
+
+  return 0;
+}
+
 //------------------------------------------------------------------
 // Get the color of the pixel in the original image at coord x and y
 //------------------------------------------------------------------
