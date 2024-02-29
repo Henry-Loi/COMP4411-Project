@@ -53,6 +53,8 @@ public:
   Fl_Slider *m_EdgeThresholdSlider;
 
   Fl_Button *m_ClearCanvasButton;
+  Fl_Button *m_SwapCanvasButton;
+
   Fl_Button *m_PaintButton;
   Fl_Button *m_DoItButton;
   Fl_Button *m_KernelApplyButton;
@@ -184,6 +186,7 @@ private:
   static void cb_save_image(Fl_Menu_ *o, void *v);
   static void cb_brushes(Fl_Menu_ *o, void *v);
   static void cb_clear_canvas(Fl_Menu_ *o, void *v);
+  static void cb_swap_canvas(Fl_Menu_ *o, void *v);
   static void cb_exit(Fl_Menu_ *o, void *v);
   static void cb_about(Fl_Menu_ *o, void *v);
   static void cb_brushChoice(Fl_Widget *o, void *v);

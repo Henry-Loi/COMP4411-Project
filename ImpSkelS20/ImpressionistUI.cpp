@@ -240,6 +240,16 @@ void ImpressionistUI::cb_clear_canvas(Fl_Menu_ *o, void *v) {
 }
 
 //------------------------------------------------------------
+// Swaps the paintview canvas.
+// Called by the UI when the swap canvas menu item is chosen
+//------------------------------------------------------------
+void ImpressionistUI::cb_swap_canvas(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  pDoc->swapCanvas();
+}
+
+//------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
 //------------------------------------------------------------
@@ -616,7 +626,9 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Colors...", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_colorSelection},
     {"&Clear Canvas", FL_ALT + 'c',
-     (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
+     (Fl_Callback *)ImpressionistUI::cb_clear_canvas},
+    {"&Swap Canvas", FL_ALT + 'w',
+     (Fl_Callback *)ImpressionistUI::cb_swap_canvas, 0, FL_MENU_DIVIDER},
 
     {"&Painterly", FL_ALT + 'p', (Fl_Callback *)ImpressionistUI::cb_painterly,
      0, FL_MENU_DIVIDER},
@@ -1173,20 +1185,18 @@ ImpressionistUI::ImpressionistUI(ImpressionistDoc *pDoc) {
 
   m_brushDialog->end();
 
-  //Manual Color Slection
-  //color_Selection_init();
+  // Manual Color Slection
+  // color_Selection_init();
   m_colorSelectionDialog = new Fl_Window(220, 220, "color Selection Dialog");
   Color_Selection = new Fl_Color_Chooser(10, 20, 200, 190, "Color Blending");
-  Color_Selection->user_data(
-      (void*)(this));
+  Color_Selection->user_data((void *)(this));
   /*Color_Selection->type(FL_RGB);*/
-  Color_Selection->rgb(1.000,1.000,1.000);
+  Color_Selection->rgb(1.000, 1.000, 1.000);
   Color_Selection->callback(cb_ManualColor);
-  
-  
+
   m_colorSelectionDialog->end();
-  //Manual Color Selection end
-  
+  // Manual Color Selection end
+
   // painterly dialog definition
   m_painterlyDialog = new Fl_Window(400, 280, "Painterly Dialog");
   painterly_dialog_value_init();
