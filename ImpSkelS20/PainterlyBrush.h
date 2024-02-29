@@ -77,6 +77,8 @@ public:
   PainterlyStyle m_painterlyStyle;
   PainterlyStroke m_painterlyStroke;
 
+  CurvedBrush *curved_brush;
+
   const int R[3] = {2, 4, 8};
   const float JitterIndex = 0.2;
 
@@ -90,7 +92,7 @@ public:
 
   ImpressionistDoc *m_pDoc;
 
-  void StartPaint(std::vector<Stroke *>, float *);
+  void StartPaint(std::vector<Stroke *>, unsigned char *);
   void renderCircles(int x, int y, Stroke &stroke, float *zBuffer);
 };
 

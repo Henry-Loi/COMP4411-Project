@@ -9,7 +9,7 @@
 
 CurvedBrush::CurvedBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {
-  painterly = new PainterlyBrush(pDoc, name);
+  // painterly = new PainterlyBrush(pDoc, name);
 }
 
 void CurvedBrush::BrushBegin(const Point source, const Point target) {
@@ -34,7 +34,42 @@ void CurvedBrush::BrushMove(const Point source, const Point target) {
     size = 5 + (size - 5) / 10;
 
   auto *stroke = pDoc->m_pUI->m_paintView->makeSplineStroke(
-      pDoc->m_ucBitmap, source.x, source.y, size);
+      pDoc->m_ucPainting, source.x, source.y, size);
+  renderStrokes(stroke);
+}
+
+void CurvedBrush::PainterlyBrushBegin(
+    const Point source, const Point target, unsigned char *ref,
+    PainterlyBrush::Stroke *stroke = nullptr) {
+  ImpressionistDoc *pDoc = GetDocument();
+
+  PainterlyBrushMove(source, target, ref, stroke);
+}
+
+void CurvedBrush::PainterlyBrushMove(const Point source, const Point target,
+                                     unsigned char *ref = nullptr,
+                                     PainterlyBrush::Stroke *stroke = nullptr) {
+  ImpressionistDoc *pDoc = GetDocument();
+  ImpressionistUI *dlg = pDoc->m_pUI;
+
+  if (pDoc == NULL) {
+    printf("Curved Brush::BrushMove  document is NULL\n");
+    return;
+  }
+
+  if (ref == nullptr)
+    ref = pDoc->m_ucBitmap;
+
+  int size = pDoc->getSize(), height = pDoc->m_nPaintHeight,
+      width = pDoc->m_nPaintWidth;
+
+  if (size > 5)
+    size = 5 + (size - 5) / 10;
+
+  if (stroke == nullptr) {
+    stroke = pDoc->m_pUI->m_paintView->makeSplineStroke(ref, source.x, source.y,
+                                                        size);
+  }
   renderStrokes(stroke);
 }
 

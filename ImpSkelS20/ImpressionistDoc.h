@@ -76,9 +76,8 @@ public:
   // Get the color of the original picture at the specified point
   GLubyte *GetOriginalPixel(const Point p);
 
-  void applyKernel(GLubyte *original, GLubyte *target,
-                   std::vector<std::vector<float>> kernel, int width,
-                   int height);
+  void applyKernel(GLubyte *target, std::vector<std::vector<float>> kernel,
+                   int width, int height);
 
 private:
   char m_imageName[256];

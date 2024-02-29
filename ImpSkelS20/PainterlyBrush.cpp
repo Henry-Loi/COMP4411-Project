@@ -8,20 +8,26 @@
 
 #include "painterlybrush.h"
 #include "BSplines.h"
+#include "CurvedBrush.h"
 #include "fastmath.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
+#include <algorithm>
 #include <cmath>
+#include <random>
 #include <vector>
 
 extern float frand();
+extern int irand(int max);
 
 PainterlyBrush::PainterlyBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {
   m_pDoc = pDoc;
   m_painterlyStyle = PAINTERLY_IMPRESSIONIST;
   m_painterlyStroke = PAINTERLY_CURVE_BRUSH;
+
+  curved_brush = new CurvedBrush(pDoc, name);
 
   param[PAINTERLY_IMPRESSIONIST] = {PainterlyParam(100, 1.0f, 0.5f, 1.0f, 4, 16,
                                                    1.0f, 3, 3, 0.0f, 0.0f, 0.0f,
@@ -40,7 +46,8 @@ PainterlyBrush::PainterlyBrush(ImpressionistDoc *pDoc, char *name)
                                                 0.0f, 0.0f, 0.0f)};
 };
 
-void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes, float *zBuffer) {
+void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes,
+                                unsigned char *ref) {
   PainterlyParam *p = &param[m_painterlyStyle];
 
   for (auto *stroke : strokes) {
@@ -66,8 +73,66 @@ void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes, float *zBuffer) {
     stroke->color[2] = (1 - p->Jb * JitterIndex) * stroke->color[2] +
                        p->Jb * JitterIndex * frand() * 255;
 
-    for (auto &sample : samples) {
-      renderCircles(sample.x, sample.y, *stroke, zBuffer);
+    // for (auto &sample : samples) {
+    //   curved_brush->renderCircles(sample.x, sample.y, *stroke);
+    // }
+
+    Point scrollpos; // = GetScrollPosition();
+    scrollpos.x = 0;
+    scrollpos.y = 0;
+
+    int drawWidth, drawHeight;
+    drawWidth = m_pDoc->m_nPaintWidth;
+    drawHeight = m_pDoc->m_nPaintHeight;
+
+    int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
+    if (startrow < 0)
+      startrow = 0;
+
+    unsigned char *m_pPaintBitstart =
+        m_pDoc->m_ucPainting +
+        3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+
+    int m_nDrawWidth = drawWidth;
+    int m_nDrawHeight = drawHeight;
+
+    int m_nStartRow = startrow;
+    int m_nEndRow = startrow + drawHeight;
+    int m_nStartCol = scrollpos.x;
+    int m_nEndCol = m_nStartCol + drawWidth;
+
+    float original_size = m_pDoc->m_pUI->getSize();
+    float spacing = m_pDoc->m_pUI->getSpacing();
+
+    // Create a vector of pairs for all possible (i, j) values
+    std::vector<std::pair<float, float>> ij_pairs;
+    for (float i = original_size / 4; i < m_nDrawWidth + spacing;
+         i += spacing) {
+      for (float j = original_size / 4; j < m_nDrawHeight + spacing;
+           j += spacing) {
+        ij_pairs.push_back(std::make_pair(i, j));
+      }
+    }
+
+    // Shuffle the vector to get a random order
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(ij_pairs.begin(), ij_pairs.end(), g);
+
+    // Iterate over the shuffled vector
+    for (const auto &ij : ij_pairs) {
+      float i = ij.first;
+      float j = ij.second;
+
+      if (m_pDoc->m_pUI->isSizeRand) {
+        m_pDoc->m_pUI->setSize(original_size * (0.8 + irand(20) / 100.0));
+      }
+
+      Point source((i + m_nStartCol), ((float)m_nEndRow - j));
+      Point target(i, (float)drawHeight - j);
+
+      curved_brush->PainterlyBrushBegin(source, target, ref, stroke);
+      curved_brush->PainterlyBrushMove(source, target, ref, stroke);
     }
   }
 }

@@ -19,6 +19,11 @@ public:
   void BrushBegin(const Point source, const Point target);
   void BrushMove(const Point source, const Point target);
   void BrushEnd(const Point source, const Point target);
+
+  void PainterlyBrushBegin(const Point source, const Point target,
+                           unsigned char *, PainterlyBrush::Stroke *);
+  void PainterlyBrushMove(const Point source, const Point target,
+                          unsigned char *, PainterlyBrush::Stroke *);
   char *BrushName(void);
 
   int BrushInit(void *params) { return 1; };

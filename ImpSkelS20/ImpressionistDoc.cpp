@@ -256,23 +256,25 @@ GLubyte *ImpressionistDoc::GetOriginalPixel(const Point p) {
   return GetOriginalPixel(p.x, p.y);
 }
 
-void ImpressionistDoc::applyKernel(GLubyte *original, GLubyte *target,
+void ImpressionistDoc::applyKernel(GLubyte *target,
                                    std::vector<std::vector<float>> kernel,
                                    int width, int height) {
   // apply kernel to the original image
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
-      unsigned char *color, sum[3];
-      int curX = i - width / 2, curY = j - height / 2;
+      unsigned char *source, sum[3];
 
-      for (int x = 0; x < height; x++) {
-        for (int y = 0; y < width; y++) {
-          color = GetOriginalPixel(curX + j, curY + i);
-          for (int k = 0; k < 3; ++k)
-            sum[k] += color[k] * kernel[i][j];
+      for (int x = 0; x < kernel.size(); x++) {
+        for (int y = 0; y < kernel.size(); y++) {
+          int curX = i - kernel.size() / 2 + x,
+              curY = j - kernel.size() / 2 + y;
+          source = GetOriginalPixel(curX + j, curY + i);
+          for (int k = 0; k < 3; ++k) {
+            sum[k] += source[k] * kernel[i][j];
+          }
         }
       }
-      memcpy(target + (j * m_nPaintWidth + i) * 3, color, 3);
+      memcpy(target + (j * width + i) * 3, sum, 3);
     }
   }
 }

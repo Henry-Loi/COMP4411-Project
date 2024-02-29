@@ -425,7 +425,26 @@ void PaintView::setPainterlyStroke(PainterlyStroke stroke) {
 }
 
 void PaintView::apply_painterly(void) {
+#ifndef MESA
+  // To avoid flicker on some machines.
+  glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
   m_pDoc->clearCanvas();
+
+  /* pseduo code
+    function paint(sourceImage,R1 ... Rn)
+  { canvas := a new constant color image
+  // paint the canvas
+  for each brush radius Ri,
+  from largest to smallest do
+  { // apply Gaussian blur
+  referenceImage = sourceImage * G(fσ Ri)
+  // paint a layer
+  paintLayer(canvas, referenceImage, Ri)
+  }
+  return canvas
+  }
+  */
 
   ImpressionistUI *dlg = m_pDoc->m_pUI;
   PainterlyParam *param = get_painterly_param();
@@ -444,34 +463,36 @@ void PaintView::apply_painterly(void) {
   int paint_width = m_pDoc->m_nPaintWidth;
   int paint_height = m_pDoc->m_nPaintHeight;
 
-  /* pseduo code
-    function paint(sourceImage,R1 ... Rn)
-  { canvas := a new constant color image
-  // paint the canvas
-  for each brush radius Ri,
-  from largest to smallest do
-  { // apply Gaussian blur
-  referenceImage = sourceImage * G(fσ Ri)
-  // paint a layer
-  paintLayer(canvas, referenceImage, Ri)
-  }
-  return canvas
-  }
-  */
+  // FIXME: is this a hack to make the painterly brush work?
+  // glColor3d(1, 1, 1);
+  // glBegin(GL_POLYGON);
+  // glVertex2d(0, 0);
+  // glVertex2d(0, height);
+  // glVertex2d(width, height);
+  // glVertex2d(width, 0);
+  // glEnd();
+
+  unsigned char *canvas = new unsigned char[width * height * 3];
+  memset(canvas, 255, width * height * 3);
 
   // paint the canvas
   for (int i = 0; i < param->Layer; i++) {
+    unsigned char *tmp = new unsigned char[width * height * 3];
     // apply Gaussian blur
     std::vector<std::vector<float>> GKernel =
         gaussKernel(m_pPainterlyBrush->R[i], param->Blur * param->Blur *
                                                  m_pPainterlyBrush->R[i] *
                                                  m_pPainterlyBrush->R[i]);
-    m_pDoc->applyKernel(m_pDoc->m_ucOriginal, m_pDoc->m_ucPainting, GKernel,
-                        m_pPainterlyBrush->R[i], m_pPainterlyBrush->R[i]);
+    if (param->Blur != 0) {
+      m_pDoc->applyKernel(tmp, GKernel, m_pPainterlyBrush->R[i],
+                          m_pPainterlyBrush->R[i]);
+    } else {
+      memcpy(tmp, m_pDoc->m_ucOriginal, width * height * 3);
+    }
 
     // paint a layer
-    paintLayer(m_pDoc->m_ucPainting, m_pDoc->m_ucOriginal,
-               m_pPainterlyBrush->R[i]);
+    paintLayer(canvas, tmp, m_pPainterlyBrush->R[i]);
+    delete[] tmp;
   }
 
   SaveCurrentContent();
@@ -481,6 +502,11 @@ void PaintView::apply_painterly(void) {
 
   refresh();
   m_pDoc->m_pUI->m_origView->updateCursor(coord);
+
+#ifndef MESA
+  // To avoid flicker on some machines.
+  glDrawBuffer(GL_BACK);
+#endif // !MESA
 }
 
 void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
@@ -535,32 +561,36 @@ void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
     for (int y = 0; y < width; y += grid) {
       // sum the error near (x,y)
       float areaError = 0;
-      int maxRow, maxCol;
+      Point maxPoint;
 
-      int startRow = max(0, y - radius / 2), startCol = max(0, x - radius / 2);
-      int endRow = min(startRow + radius, height),
-          endCol = min(startCol + radius, width);
+      int startRow = max(0, y - grid / 2), startCol = max(0, x - grid / 2);
+      int endRow = min(startRow + grid / 2, height),
+          endCol = min(startCol + grid / 2, width);
 
-      float maxError = 0;
+      float maxError = -1;
+      int gridSum = 0;
       for (int i = startRow; i < endRow; ++i)
         for (int j = startCol; j < endCol; ++j) {
           float curError = D[i * width + j];
           areaError += curError;
+          gridSum++;
           if (curError > maxError) {
-            maxRow = i;
-            maxCol = j;
+            maxPoint.x = i;
+            maxPoint.y = j;
+            maxError = curError;
           }
         }
-      areaError /= grid * grid;
+      areaError /= gridSum;
 
       if (areaError > param->Threshold) {
-        strokes.push_back(makeSplineStroke(canvas, maxCol, maxRow, radius));
+        strokes.push_back(
+            makeSplineStroke(canvas, maxPoint.y, maxPoint.x, radius));
       }
     }
   }
 
   // painterly brush
-  m_pDoc->m_pUI->m_pPainterlyBrush->StartPaint(strokes, zBuffer);
+  m_pDoc->m_pUI->m_pPainterlyBrush->StartPaint(strokes, canvas);
 
   delete[] zBuffer;
   delete[] D;
