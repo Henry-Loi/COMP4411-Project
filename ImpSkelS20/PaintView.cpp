@@ -127,12 +127,13 @@ void PaintView::draw() {
     // }
 
     last_target = target;
-    float angle = 0;
+    int angle = 0;
     int size = 0;
     // This is the event handler
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+        // coordinate of start point
         right_start.x = coord.x;
         right_start.y = coord.y;
       }
@@ -140,15 +141,27 @@ void PaintView::draw() {
       break;
     case LEFT_MOUSE_DRAG:
       if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
+        // coordinate of endpoint
         cur.x = coord.x;
         cur.y = coord.y;
-        angle = atan(((double)right_start.y - (double)cur.y) /
-                     ((double)cur.x - (double)right_start.x));
-        m_pDoc->m_pUI->setLineAngle(RAD2DEG(angle));
+        angle = RAD2DEG(atan(((double)right_start.y - (double)cur.y) /
+                             ((double)cur.x - (double)right_start.x)));
+        if (angle < 0)
+          angle += 360;
+        m_pDoc->m_pUI->setLineAngle(angle);
+        // coordiante for start point of next iteration
         right_start.x = cur.x;
         right_start.y = cur.y;
+      } else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
+        angle = RAD2DEG(GradientDirection(source, target));
+        if (angle < 0)
+          angle += 360;
+        m_pDoc->m_pUI->setLineAngle(angle);
       }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+      std::cout << m_pDoc->m_pUI->get_m_R() << " " << m_pDoc->m_pUI->get_m_B()
+                << " " << m_pDoc->m_pUI->get_m_G() << " " << std::endl;
+
       break;
     case LEFT_MOUSE_UP:
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
@@ -406,6 +419,26 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
     dlg->setSize(right_size);
   }
   rightCLick = false;
+}
+
+// find gradient angle(degree)
+// (x,y) color_origin[0]->(0,0); color_origin[1]->(0,-1);
+// color_origin[2]->(1,0);
+float PaintView::GradientDirection(const Point source, const Point target) {
+
+  Point temp;
+  GLubyte color_origin[3][3];
+  float intensity[3] = {0};
+  for (int i = 0; i < 3; i++) {
+    temp.y = source.y - i % 2;
+    temp.x = source.x + i / 2;
+    memcpy(color_origin[i], m_pDoc->GetOriginalPixel(temp), 3);
+    intensity[i] = 0.299 * (float)color_origin[i][0] +
+                   0.587 * (float)color_origin[i][2] +
+                   0.114 * (float)color_origin[i][1];
+  }
+
+  return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0]));
 }
 
 void PaintView::applyKernel() {

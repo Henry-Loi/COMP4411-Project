@@ -34,6 +34,7 @@ public:
   void RightClickBrushBegin(const Point source, const Point target);
   void PointerMove(const Point source, const Point target, const Point start);
   void RightClickBrushEnd(const Point source, const Point target);
+  float GradientDirection(const Point source, const Point target);
 
   Point last_target;
 

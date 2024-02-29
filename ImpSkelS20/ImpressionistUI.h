@@ -10,8 +10,10 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H> // FLTK file chooser
@@ -38,6 +40,7 @@ public:
 
   // for brush dialog
   Fl_Window *m_brushDialog;
+  Fl_Window *m_colorSelectionDialog;
 
   Fl_Choice *m_BrushTypeChoice;
   Fl_Choice *m_StrokeDirectionChoice;
@@ -89,6 +92,7 @@ public:
   Fl_Slider *m_painterlyJvSlider;
 
   // painterly dialog ends here
+  Fl_Color_Chooser *Color_Selection;
 
   // Member functions
   void setDocument(ImpressionistDoc *doc);
@@ -106,9 +110,15 @@ public:
   int getSpacing();
   int getEdgeThreshold();
 
+  // RGB values from manual color selection
+  float get_m_R();
+  float get_m_B();
+  float get_m_G();
+
   void setSize(int size);
   void setLineAngle(int angle);
-
+  void brush_dialog_value_init();
+  void color_Selection_init();
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
@@ -156,6 +166,9 @@ private:
   float m_alpha;
   int m_spacing;
   int m_edgeThreshold;
+  float m_color1 = 1.0;
+  float m_color2 = 1.0;
+  float m_color3 = 1.0;
 
   void brush_dialog_value_init();
 
@@ -177,6 +190,8 @@ private:
   static void cb_clear_canvas_button(Fl_Widget *o, void *v);
   static void cb_paint_button(Fl_Widget *o, void *v);
   static void cb_do_it_button(Fl_Widget *o, void *v);
+  static void cb_colorSelection(Fl_Menu_ *o, void *v);
+  static void cb_ManualColor(Fl_Widget *o, void *v);
 
   static void cb_strokeDirectionChoice(Fl_Widget *o, void *v);
 

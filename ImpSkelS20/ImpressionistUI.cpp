@@ -15,6 +15,7 @@
 #include "PaintView.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include <iostream>
 
 /*
 //------------------------------ Widget Examples
@@ -219,6 +220,9 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
 //-------------------------------------------------------------
 void ImpressionistUI::cb_brushes(Fl_Menu_ *o, void *v) {
   whoami(o)->m_brushDialog->show();
+}
+void ImpressionistUI::cb_colorSelection(Fl_Menu_ *o, void *v) {
+  whoami(o)->m_colorSelectionDialog->show();
 }
 
 void ImpressionistUI::cb_painterly(Fl_Menu_ *o, void *v) {
@@ -520,6 +524,15 @@ void ImpressionistUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
     pUI->isSizeRand = TRUE;
 }
 
+void ImpressionistUI::cb_ManualColor(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))->m_color1 =
+      float(((Fl_Color_Chooser *)o)->r());
+  ((ImpressionistUI *)(o->user_data()))->m_color2 =
+      float(((Fl_Color_Chooser *)o)->g());
+  ((ImpressionistUI *)(o->user_data()))->m_color3 =
+      float(((Fl_Color_Chooser *)o)->b());
+}
+
 //---------------------------------- per instance functions
 //--------------------------------------
 
@@ -600,6 +613,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
+    {"&Colors...", FL_ALT + 'k',
+     (Fl_Callback *)ImpressionistUI::cb_colorSelection},
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
 
