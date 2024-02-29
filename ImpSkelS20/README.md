@@ -36,12 +36,12 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 9.5/41** \
+> **Total marks: 10.0/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
 - [X] [0.5] More Brushes (1. Curved Brush)
-- [ ] [0.5] Clip brush strokes to the painted region
+- [X] [0.5] Clip brush strokes to the painted region
 - [X] [0.5] Add a marker cursor to the original image
 - [ ] [0.5] swap contents of painting window and original image window
 - [X] [1] independent RGB Brush
