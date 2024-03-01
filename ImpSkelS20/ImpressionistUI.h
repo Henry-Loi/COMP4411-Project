@@ -184,6 +184,8 @@ private:
   static void cb_load_image(Fl_Menu_ *o, void *v);
   static void cb_load_mural_image(Fl_Menu_ *o, void *v);
   static void cb_load_another_image(Fl_Menu_* o, void* v);
+  static void cb_load_edge_image(Fl_Menu_* o, void* v);
+
   static void cb_save_image(Fl_Menu_ *o, void *v);
   static void cb_brushes(Fl_Menu_ *o, void *v);
   static void cb_clear_canvas(Fl_Menu_ *o, void *v);
@@ -214,6 +216,7 @@ private:
   //display callback
   static void cb_display_original_image(Fl_Menu_* o, void* v);
   static void cb_display_another_image(Fl_Menu_* o, void* v);
+  static void cb_display_edge_image(Fl_Menu_* o, void* v);
 
   // custom kernel
   bool m_IsNormalizedKernel;

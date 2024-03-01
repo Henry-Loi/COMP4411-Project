@@ -37,6 +37,7 @@ public:
   int loadImage(char *iname);      // called by the UI to load image
   int loadMuralImage(char *iname); // called by the UI to load mural image
   int loadAnotherImage(char* iname); // called by the UI to load another image
+  int loadEdgeImage(char* iname);// called by the UI to load another image
 
   int saveImage(char *iname); // called by the UI to save image
 
@@ -69,6 +70,7 @@ public:
   unsigned char *m_ucPainting;
   unsigned char *m_ucLastPainting;
   unsigned char* m_ucAnotherImage;
+  unsigned char* m_ucEdgeImage;
 
   // The current active brush.
   ImpBrush *m_pCurrentBrush;
@@ -86,7 +88,8 @@ public:
   GLubyte *GetOriginalPixel(int x, int y);
   // Get the color of the original picture at the specified point
   GLubyte *GetOriginalPixel(const Point p);
-
+  GLubyte* GetEdgeImagePixel(int x, int y);
+  GLubyte* GetEdgeImagePixel(const Point p);
   void applyKernel(GLubyte *target, std::vector<std::vector<float>> kernel,
                    int width, int height);
 
@@ -98,6 +101,7 @@ public:
   //function pointer
   GLubyte* (ImpressionistDoc:: *GetPixel)(const Point) = 0;
   void setGetPixel(int u);
+
 
 private:
   char m_imageName[256];

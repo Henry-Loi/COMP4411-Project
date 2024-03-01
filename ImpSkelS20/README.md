@@ -36,7 +36,7 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 10.5/41** \
+> **Total marks: 14/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
@@ -57,7 +57,7 @@
 - [ ] [1.5] Edge Clipping (cut the exceed edge when painting)
 
 - [X] [2] User-specified kernel (odd size matrix only)
-- [ ] [2] Edge detection + user-specified edge clipping (using sobal)
+- [x] [2] Edge detection + user-specified edge clipping (using sobal)
 - [ ] [2] Multiresolution automatic painting
 - [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
 - [ ] [2] Design curved brush following image gradient

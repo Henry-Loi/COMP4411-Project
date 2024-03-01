@@ -34,6 +34,7 @@
 
 // MY TODO: add other brushes
 #include "CurvedBrush.h"
+#include<iostream>
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -52,6 +53,7 @@ ImpressionistDoc::ImpressionistDoc() {
   m_ucOriginal = NULL;
   m_ucPainting = NULL;
   m_ucAnotherImage = NULL;
+  m_ucEdgeImage = NULL;
 
   // create one instance of each brush
   ImpBrush::c_nBrushCount = NUM_BRUSH_TYPE;
@@ -141,10 +143,18 @@ int ImpressionistDoc::loadImage(char *iname) {
     delete[] m_ucPainting;
     m_ucPainting = nullptr;
   }
+  if (m_ucAnotherImage != nullptr) {
+      delete[] m_ucAnotherImage;
+      m_ucAnotherImage = nullptr;
+  }
+  if (m_ucEdgeImage != nullptr) {
+      delete[] m_ucEdgeImage;
+      m_ucEdgeImage = nullptr;
+  }
 
   m_ucOriginal = data;
   m_ucBitmap = m_ucOriginal;
-
+  std::cout << "m_ucOriginal"<< m_ucOriginal << std::endl;
   // allocate space for draw view
   m_ucPainting = new unsigned char[width * height * 3];
   memset(m_ucPainting, 0, width * height * 3);
@@ -305,16 +315,36 @@ GLubyte* ImpressionistDoc::GetAnotherImagePixel(const Point p) {
     return Get_AnotherImagePixel(p.x, p.y);
 }
 
+GLubyte* ImpressionistDoc::GetEdgeImagePixel(int x, int y) {
+    if (x < 0)
+        x = 0;
+    else if (x >= m_nWidth)
+        x = m_nWidth - 1;
+
+    if (y < 0)
+        y = 0;
+    else if (y >= m_nHeight)
+        y = m_nHeight - 1;
+
+    return (GLubyte*)(m_ucEdgeImage + 3 * (y * m_nWidth + x));
+}
+
+GLubyte* ImpressionistDoc::GetEdgeImagePixel(const Point p) {
+    return GetEdgeImagePixel(p.x, p.y);
+}
+
 void ImpressionistDoc::setGetPixel(int u) {
     switch (u)
     {
     case ORIGINAL_IMAGE: GetPixel = &ImpressionistDoc::GetOriginalPixel; break;
     case ANOTHER_IMAGE: GetPixel = &ImpressionistDoc::GetAnotherImagePixel; break;
-    case EDGE_IMAGE:break;
+    case EDGE_IMAGE:GetPixel = &ImpressionistDoc::GetEdgeImagePixel; break;
     default:
         break;
     }
 }
+
+
 
 //---------------------------------------------------------
 // Load the specified image
@@ -352,6 +382,37 @@ int ImpressionistDoc::loadAnotherImage(char* iname) {
     return 1;
 }
 
+int ImpressionistDoc::loadEdgeImage(char* iname) {
+    // try to open the image to read
+    unsigned char* data;
+    int width, height;
+
+    if ((data = readBMP(iname, width, height)) == NULL) {
+        fl_alert("Can't load bitmap file");
+        return 0;
+    }
+    if (width != m_nWidth || height != m_nHeight) {
+        fl_alert("Loaded image does not match the height and weight");
+        return 0;
+    }
+
+    // reflect the fact of loading the new image
+    m_nWidth = width;
+    m_nPaintWidth = width;
+    m_nHeight = height;
+    m_nPaintHeight = height;
+
+    // release old storage
+    if (m_ucEdgeImage != nullptr) {
+        delete[] m_ucEdgeImage;
+        m_ucAnotherImage = nullptr;
+        m_ucBitmap = nullptr;
+    }
+
+    m_ucEdgeImage = data;
+    return 1;
+}
+
 void ImpressionistDoc::applyKernel(GLubyte *target,
                                    std::vector<std::vector<float>> kernel,
                                    int width, int height) {
@@ -374,3 +435,5 @@ void ImpressionistDoc::applyKernel(GLubyte *target,
     }
   }
 }
+
+

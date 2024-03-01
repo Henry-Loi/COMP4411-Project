@@ -21,6 +21,7 @@ public:
   int BrushInit(void *) { return 1; }
   void RightClickBrushBegin(const Point source, const Point target);
   void PointerMove(const Point source, const Point target);
+  //void EdgeClipMove(const Point source, const Point target,const int size,const int angle);
 };
 
 #endif

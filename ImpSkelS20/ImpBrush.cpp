@@ -10,6 +10,8 @@
 #include <iostream>
 #include <cmath>
 #include "fastmath.h"
+#include <iostream>
+
 
 // Static class member initializations
 int ImpBrush::c_nBrushCount = 0;
@@ -50,21 +52,20 @@ void ImpBrush::SetColorAlpha(const Point source, float alpha) {
 
 
   memcpy(color, pDoc->GetOriginalPixel(source), 3);
-  std::cout << "checkAlpha" << std::endl;
-  std::cout << (float)color[0] <<" "<< (float)color[1]<<" " << (float)color[2] << std::endl;
+  //std::cout << "checkAlpha" << std::endl;
+  //std::cout << (float)color[0] <<" "<< (float)color[1]<<" " << (float)color[2] << std::endl;
 
   //For Manual_Color_Selection 
   color[0] = ((float)color[0] + (float)(pDoc->m_pUI->Color_Selection->r())*255.0-255.0 >0)? ((float)color[0] + (float)(pDoc->m_pUI->Color_Selection->r()) * 255.0) - 255.0:0;
   color[1] = ((float)color[1] + (float)(pDoc->m_pUI->Color_Selection->g())*255.0 - 255.0 > 0) ? ((float)color[1] + (float)(pDoc->m_pUI->Color_Selection->g()) * 255.0) - 255.0 : 0;
   color[2] = ((float)color[2] + (float)(pDoc->m_pUI->Color_Selection->b())*255.0 - 255.0 > 0) ? ((float)color[2] + (float)(pDoc->m_pUI->Color_Selection->b()) * 255.0) - 255.0 : 0;
   //
-  
-  std::cout << "checkAlpha2" << std::endl;
+  /*std::cout << "checkAlpha2" << std::endl;
   std::cout << (float)color[0] << " " << (float)color[1] << " " << (float)color[2] << std::endl;
   std::cout << "checkRGB" << std::endl;
   std::cout << (float)pDoc->m_pUI->get_m_R() << " " << (float)pDoc->m_pUI->get_m_G() << " " << (float)pDoc->m_pUI->get_m_B() << std::endl;
 
-  
+  */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -78,7 +79,7 @@ void ImpBrush::getSourceRGB(const Point source, GLubyte color[3]) {
 }
 
 // input a int matrix as kernel
-float ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_size, const int border[2]) {
+float ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_size) {
     float sum = 0;
     float intensity = 0;
     GLubyte color_origin[3];
@@ -88,18 +89,8 @@ float ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_si
     for (int i = Source.x - (kernel_size - 1) / 2; i <= Source.x + (kernel_size - 1) / 2; i++) {//column
         row = 0;
         for (int j = Source.y - (kernel_size - 1) / 2; j <= Source.y + (kernel_size - 1) / 2; j++) {//row
-            //if (i > border[0]) {
-            //    if (j > border[1])
-            //        memcpy(color_origin, (m_pDoc->*(m_pDoc->GetPixel))(Point(abs(2 * border[0] - i), abs(2 * border[1] - j))), 3);
-            //    else
-            //        memcpy(color_origin, (m_pDoc->*(m_pDoc->GetPixel))(Point(abs(2 * border[0] - i), abs(j))), 3);
-            //}
-            //else if(j>border[1])
-            //    memcpy(color_origin, (m_pDoc->*(m_pDoc->GetPixel))(Point(abs(i), abs(2 * border[1] - j))), 3);
-            //else
                 memcpy(color_origin, (m_pDoc->*(m_pDoc->GetPixel))(Point(abs(i),abs(j))), 3);
             intensity = 0.299 * (float)color_origin[0] + 0.587 * (float)color_origin[1] + 0.114 * (float)color_origin[2];
-            std::cout << "row:" << row << "Column:" << column <<"arr"<<arr[row][column] << std::endl;
             sum += intensity * (float) arr[row][column];
             row++;
         }
@@ -110,25 +101,13 @@ float ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_si
 
 
 // return gradient direction and magnitude, [1] ->direction,[2]->magnitude
-float* ImpBrush::getGradient(const Point Source,const int border[2]) {
+float* ImpBrush::getGradient(const Point Source) {
 
     int o_sobelX[3][3] = { {-1,0,1},{-2,0,2},{-1,0,1} };
     int o_sobelY[3][3] = { {1,2,1},{0,0,0},{-1,-2,-1} };
-
-
-
-    //int* sobelX[3];
-    //int* sobelY[3];
-    //for (int i = 0; i < 3; i++) {
-    //    sobelX[i] = o_sobelX[i];
-    //}
-    //for (int i = 0; i < 3; i++) {
-    //    sobelY[i] = o_sobelY[i];
-    //}
-
     int kernel_size = 3;
-    float gradientX = kernelOperation(Source, o_sobelX, kernel_size, border);
-    float gradientY = kernelOperation(Source, o_sobelY, kernel_size, border);
+    float gradientX = kernelOperation(Source, o_sobelX, kernel_size);
+    float gradientY = kernelOperation(Source, o_sobelY, kernel_size);
 
     float gradient[2];
     if (gradientX != 0)
@@ -140,4 +119,76 @@ float* ImpBrush::getGradient(const Point Source,const int border[2]) {
     gradient[1] = sqrt(pow(gradientX, 2) + pow(gradientY, 2));
 
     return gradient;
+}
+
+void ImpBrush::EdgeClipMove(const Point source, const Point target, const int size, const int angle) {
+
+    std::cout << "edgerun" << std::endl;
+    ImpressionistDoc* pDoc = GetDocument();
+    if (pDoc->m_ucEdgeImage == NULL) {
+     std::cout << "edgeAuto" << std::endl;
+        EdgeAutoPaint();
+    }
+    float start_x = target.x - (cos(DEG2RAD(angle)) * size / 2);
+    float start_y = target.y - (sin(DEG2RAD(angle)) * size / 2);
+    float end_x = target.x + (cos(DEG2RAD(angle)) * size / 2);
+    float end_y = target.y + (sin(DEG2RAD(angle)) * size / 2);
+
+    int iterate = 0;
+    bool end_found = FALSE;
+    bool start_found = FALSE;
+
+    while (iterate < size / 2) {
+        if (!end_found) {
+            GLubyte* color_e = pDoc->GetEdgeImagePixel(source.x + cos(DEG2RAD(angle)) * iterate, source.y + sin(DEG2RAD(angle)) * iterate);
+            std::cout << "end:" << 0.299 * (float)color_e[0] + 0.587 * (float)color_e[1] + 0.114 * (float)color_e[2] << std::endl;
+            if ((0.299 * (float)color_e[0] + 0.587 * (float)color_e[1] + 0.114 * (float)color_e[2]) / 255 >0.9) {
+                end_x = target.x + cos(DEG2RAD(angle)) * iterate;
+                end_y = target.y + sin(DEG2RAD(angle)) * iterate;
+                end_found = TRUE;
+            }
+        }
+        if (!start_found) {
+            GLubyte* color_s = pDoc->GetEdgeImagePixel(source.x - cos(DEG2RAD(angle)) * iterate, source.y - sin(DEG2RAD(angle)) * iterate);
+            std::cout << "start:" << 0.299 * (float)color_s[0] + 0.587 * (float)color_s[1] + 0.114 * (float)color_s[2] << std::endl;
+            if ((0.299 * (float)color_s[0] + 0.587 * (float)color_s[1] + 0.114 * (float)color_s[2]) / 255 >0.9) {
+                start_x = target.x - cos(DEG2RAD(angle)) * iterate;
+                start_y = target.y - sin(DEG2RAD(angle)) * iterate;
+                start_found = TRUE;
+            }
+        }
+        if (start_found && end_found)
+            break;
+        iterate++;
+    }
+    glVertex2f(start_x, start_y);
+    glVertex2f(end_x, end_y);
+}
+void ImpBrush::EdgeAutoPaint() {
+    ImpressionistDoc* pDoc = GetDocument();
+    GLubyte* pixelData = new GLubyte[pDoc->m_nWidth * pDoc->m_nHeight * 3];
+    for (int j = 0; j <  pDoc->m_nHeight; j++) {
+        for (int i = 0; i < pDoc->m_nWidth; i++) {
+            Point temp(i, j);
+            float* gradient = getGradient(temp); 
+        
+            if (gradient[1] > 160) {//threshold
+                int index = (j) * pDoc->m_nWidth + i;
+                pixelData[index * 3] = 255; // Red component
+                pixelData[index * 3 + 1] = 255; // Green component
+                pixelData[index * 3 + 2] = 255; // Blue component
+            }
+            else {
+                int index = (j) * pDoc->m_nWidth + i;
+                pixelData[index * 3] = 0; // Red component
+                pixelData[index * 3 + 1] = 0; // Green component
+                pixelData[index * 3 + 2] = 0; // Blue component
+            }
+        }
+    }
+    size_t bufferSize = pDoc->m_nWidth * pDoc->m_nHeight * 3;
+    pDoc->m_ucEdgeImage = new unsigned char[bufferSize];
+    memset(pDoc->m_ucEdgeImage, 0, bufferSize);
+    std::memcpy(pDoc->m_ucEdgeImage, pixelData, bufferSize);
+
 }
