@@ -57,7 +57,7 @@
 - [ ] [1.5] Edge Clipping (cut the exceed edge when painting)
 
 - [X] [2] User-specified kernel (odd size matrix only)
-- [ ] [2] Edge detection + user-specified edge clipping (using sobal)
+- [x] [2] Edge detection + user-specified edge clipping (using sobal)
 - [ ] [2] Multiresolution automatic painting
 - [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
 - [ ] [2] Design curved brush following image gradient

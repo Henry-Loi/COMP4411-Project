@@ -47,14 +47,20 @@ void ScatteredLinesBrush::BrushMove(const Point source, Point target) {
 
   for (int i = 0; i < num_of_lines; i++) {
     glBegin(GL_LINES);
-
     Point ran_target = target.scattered(spacing);
-    SetColorAlpha(ran_target, pDoc->getAlpha());
-
-    glVertex2f(ran_target.x - (cos(DEG2RAD(angle)) * size / 2),
-               ran_target.y - (sin(DEG2RAD(angle)) * size / 2));
-    glVertex2f(ran_target.x + (cos(DEG2RAD(angle)) * size / 2),
-               ran_target.y + (sin(DEG2RAD(angle)) * size / 2));
+    Point ran_source = Point(ran_target.x+ pDoc->m_pUI->m_paintView->getStartCol(),
+        ran_target.y - pDoc->m_pUI->m_paintView->getWindowHeight() + pDoc->m_pUI->m_paintView->getEndRow());
+    SetColorAlpha(ran_source, pDoc->getAlpha());
+    if ((pDoc->m_pUI->isEdgeClipping)) {
+        pDoc->setGetPixel(ORIGINAL_IMAGE);
+        EdgeClipMove(ran_source, ran_target, size, angle);
+    }
+    else {
+        glVertex2f(ran_target.x - (cos(DEG2RAD(angle)) * size / 2),
+            ran_target.y - (sin(DEG2RAD(angle)) * size / 2));
+        glVertex2f(ran_target.x + (cos(DEG2RAD(angle)) * size / 2),
+            ran_target.y + (sin(DEG2RAD(angle)) * size / 2));
+    }
 
     glEnd();
   }

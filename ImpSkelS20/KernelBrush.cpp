@@ -59,7 +59,7 @@ void KernelBrush::BrushMove(const Point source, const Point target) {
   ImpressionistUI *dlg = pDoc->m_pUI;
 
   if (pDoc == NULL) {
-    printf("KernelBrush::BrushMove  document is NULL\n");
+    printf("KernelBrush::Br1ushMove  document is NULL\n");
     return;
   }
 

@@ -35,6 +35,13 @@ public:
   void PointerMove(const Point source, const Point target, const Point start);
   void RightClickBrushEnd(const Point source, const Point target);
   float GradientDirection(const Point source, const Point target);
+ void GradientMove(const Point source, const Point target);
+ int getWindowHeight();
+ int getDrawHeight();
+ int getEndRow();
+ int getStartCol();
+ int getDrawWidth();
+
 
   void undo(void);
 

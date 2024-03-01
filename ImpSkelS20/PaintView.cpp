@@ -145,18 +145,9 @@ void PaintView::draw() {
         // coordinate of start point
         right_start.x = coord.x;
         right_start.y = coord.y;
-      } else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
-
-        if (m_pDoc->m_pUI->isAnotherGradient)
-          m_pDoc->setGetPixel(ANOTHER_IMAGE);
-        else
-          m_pDoc->setGetPixel(ORIGINAL_IMAGE);
-        angle = RAD2DEG(GradientDirection(source, target)) + 90;
-        if (angle < 0)
-          angle += 360;
-        else if (angle > 360)
-          angle -= 360;
-        m_pDoc->m_pUI->setLineAngle(angle);
+      }
+      else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
+          GradientMove(source, target);
       }
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
@@ -176,18 +167,9 @@ void PaintView::draw() {
         // coordiante for start point of next iteration
         right_start.x = cur.x;
         right_start.y = cur.y;
-      } else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
-
-        if (m_pDoc->m_pUI->isAnotherGradient)
-          m_pDoc->setGetPixel(ANOTHER_IMAGE);
-        else
-          m_pDoc->setGetPixel(ORIGINAL_IMAGE);
-        angle = RAD2DEG(GradientDirection(source, target)) + 90;
-        if (angle < 0)
-          angle += 360;
-        else if (angle > 360)
-          angle -= 360;
-        m_pDoc->m_pUI->setLineAngle(angle);
+      }
+      else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
+          GradientMove(source, target);
       }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
       /*std::cout << m_pDoc->m_pUI->get_m_R() << " " << m_pDoc->m_pUI->get_m_B()
@@ -497,22 +479,9 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
 // (x,y) color_origin[0]->(0,0); color_origin[1]->(0,-1);
 // color_origin[2]->(1,0);
 float PaintView::GradientDirection(const Point source, const Point target) {
-  int border[2] = {m_nDrawWidth, m_nDrawHeight};
-  float *gradient = (m_pDoc->m_pCurrentBrush->getGradient(source, border));
-  // Point temp;
-  // GLubyte color_origin[3][3];
-  // float intensity[3] = {0};
-  // for (int i = 0; i < 3; i++) {
-  //     temp.y = source.y - i % 2;
-  //     temp.x = source.x + i / 2;
-  //     memcpy(color_origin[i], m_pDoc->GetOriginalPixel(temp), 3);
-  //     intensity[i] = 0.299 * (float)color_origin[i][0] + 0.587 *
-  //     (float)color_origin[i][2] + 0.114 * (float)color_origin[i][1];
-  // }
-
-  // return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0]));
-  return gradient[0];
-}
+    float* gradient = (m_pDoc->m_pCurrentBrush->getGradient(source));
+    return gradient[0];
+  }
 
 void PaintView::applyKernel() {
   ImpressionistUI *dlg = m_pDoc->m_pUI;
@@ -791,4 +760,36 @@ std::pair<float, float> PaintView::calGradient(int x, int y,
 PainterlyParam *PaintView::get_painterly_param(void) {
   return &m_pDoc->m_pUI->m_pPainterlyBrush
               ->param[m_pDoc->m_pUI->m_pPainterlyBrush->m_painterlyStyle];
+}
+
+void PaintView::GradientMove(const Point source,const Point target) {
+    //gradient clipping
+    int angle = 0;
+    if (m_pDoc->m_pUI->isAnotherGradient)
+        m_pDoc->setGetPixel(ANOTHER_IMAGE);
+    else
+        m_pDoc->setGetPixel(ORIGINAL_IMAGE);
+    angle = RAD2DEG(GradientDirection(source, target)) + 90;
+    if (angle < 0)
+        angle += 360;
+    else if (angle > 360)
+        angle -= 360;
+    m_pDoc->m_pUI->setLineAngle(angle);
+}
+
+int PaintView::getWindowHeight() {
+    return m_nWindowHeight;
+}
+int PaintView::getEndRow() {
+    return m_nEndRow;
+
+}
+int PaintView::getStartCol() {
+    return m_nStartCol;
+}
+int PaintView::getDrawHeight() {
+    return m_nDrawHeight;
+}
+int PaintView::getDrawWidth() {
+    return m_nDrawWidth;
 }
