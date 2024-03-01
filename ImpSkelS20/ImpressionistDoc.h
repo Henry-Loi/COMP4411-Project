@@ -41,6 +41,8 @@ public:
   int swapCanvas();            // called by the UI to swap the canvas
   void setBrushType(int type); // called by the UI to set the brushType
 
+  int fadeAlpha(void);
+
   // called by the UI to set the Stroke Direction
   void setStokeDirection(int type);
   int getSize(); // get the UI size
@@ -64,6 +66,7 @@ public:
   unsigned char *m_ucOriginal;
   unsigned char *m_ucBitmap;
   unsigned char *m_ucPainting;
+  unsigned char *m_ucRawPainting;
   unsigned char *m_ucLastPainting;
   unsigned char *m_ucAnotherImage;
 

@@ -68,6 +68,11 @@ public:
   Fl_Input *m_KernelInput;
   // brush dialog ends here
 
+  // for fade dialog
+  Fl_Window *m_fadeDialog;
+  Fl_Value_Slider *m_fadeOpacitySlider;
+  // fade dialog ends here
+
   // for painterly dialog
   Fl_Window *m_painterlyDialog;
 
@@ -124,6 +129,9 @@ public:
   bool isEdgeClipping;
   bool isAnotherGradient;
   bool isSizeRand;
+
+  // fade alpha
+  float fadeAlpha = 0;
 
   // custom kernel
   char *m_KernelStr;
@@ -183,10 +191,11 @@ private:
   // static
   static void cb_load_image(Fl_Menu_ *o, void *v);
   static void cb_load_mural_image(Fl_Menu_ *o, void *v);
-  static void cb_load_another_image(Fl_Menu_* o, void* v);
+  static void cb_load_another_image(Fl_Menu_ *o, void *v);
   static void cb_save_image(Fl_Menu_ *o, void *v);
   static void cb_dissolve_image(Fl_Menu_ *o, void *v);
   static void cb_brushes(Fl_Menu_ *o, void *v);
+  static void cb_fade(Fl_Menu_ *o, void *v);
   static void cb_clear_canvas(Fl_Menu_ *o, void *v);
   static void cb_swap_canvas(Fl_Menu_ *o, void *v);
   static void cb_undo(Fl_Menu_ *o, void *v);
@@ -212,9 +221,12 @@ private:
   static void cb_AnotherGradientLightButton(Fl_Widget *o, void *v);
   static void cb_sizeRandLightButton(Fl_Widget *o, void *v);
 
-  //display callback
-  static void cb_display_original_image(Fl_Menu_* o, void* v);
-  static void cb_display_another_image(Fl_Menu_* o, void* v);
+  // fade window
+  static void cb_fadeAlpha(Fl_Widget *o, void *v);
+
+  // display callback
+  static void cb_display_original_image(Fl_Menu_ *o, void *v);
+  static void cb_display_another_image(Fl_Menu_ *o, void *v);
 
   // custom kernel
   bool m_IsNormalizedKernel;
