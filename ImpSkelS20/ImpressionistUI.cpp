@@ -200,14 +200,13 @@ void ImpressionistUI::cb_load_mural_image(Fl_Menu_ *o, void *v) {
   }
 }
 
-void ImpressionistUI::cb_load_another_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
+void ImpressionistUI::cb_load_another_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
-    char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
-    if (newfile != NULL) {
-        pDoc->loadAnotherImage(newfile);
-    }
-
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+  if (newfile != NULL) {
+    pDoc->loadAnotherImage(newfile);
+  }
 }
 
 //------------------------------------------------------------------
@@ -563,29 +562,27 @@ void ImpressionistUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
     pUI->isSizeRand = TRUE;
 }
 
-void ImpressionistUI::cb_ManualColor(Fl_Widget* o, void* v) {
-    ((ImpressionistUI*)(o->user_data()))->m_color1 =
-        float(((Fl_Color_Chooser *)o)->r());
-    ((ImpressionistUI*)(o->user_data()))->m_color2 =
-        float(((Fl_Color_Chooser*)o)->g());
-    ((ImpressionistUI*)(o->user_data()))->m_color3 =
-        float(((Fl_Color_Chooser*)o)->b());
-   
+void ImpressionistUI::cb_ManualColor(Fl_Widget *o, void *v) {
+  ((ImpressionistUI *)(o->user_data()))->m_color1 =
+      float(((Fl_Color_Chooser *)o)->r());
+  ((ImpressionistUI *)(o->user_data()))->m_color2 =
+      float(((Fl_Color_Chooser *)o)->g());
+  ((ImpressionistUI *)(o->user_data()))->m_color3 =
+      float(((Fl_Color_Chooser *)o)->b());
 }
 
 //---Display callbacks
-void ImpressionistUI::cb_display_original_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
-    pDoc->m_ucBitmap = pDoc->m_ucOriginal;
-    pDoc->m_pUI->m_origView->refresh();
+void ImpressionistUI::cb_display_original_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+  pDoc->m_ucBitmap = pDoc->m_ucOriginal;
+  pDoc->m_pUI->m_origView->refresh();
 }
 
-void ImpressionistUI::cb_display_another_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
-    pDoc->m_ucBitmap = pDoc->m_ucAnotherImage;
-    pDoc->m_pUI->m_origView->refresh();
+void ImpressionistUI::cb_display_another_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+  pDoc->m_ucBitmap = pDoc->m_ucAnotherImage;
+  pDoc->m_pUI->m_origView->refresh();
 }
-
 
 //---------------------------------- per instance functions
 //--------------------------------------
@@ -671,14 +668,14 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
     {"&Colors...", FL_ALT + 'k',
-     (Fl_Callback *)ImpressionistUI::cb_colorSelection},
+     (Fl_Callback *)ImpressionistUI::cb_colorSelection, 0, FL_MENU_DIVIDER},
     {"&Clear Canvas", FL_ALT + 'c',
-         (Fl_Callback*)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER},
+     (Fl_Callback *)ImpressionistUI::cb_clear_canvas},
     {"&Swap Canvas", FL_ALT + 'w',
      (Fl_Callback *)ImpressionistUI::cb_swap_canvas, 0, FL_MENU_DIVIDER},
 
     {"&Load Another Image...", FL_ALT + 'a',
-     (Fl_Callback*)ImpressionistUI::cb_load_another_image},
+     (Fl_Callback *)ImpressionistUI::cb_load_another_image},
 
     {"&Undo", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_undo, 0,
      FL_MENU_DIVIDER},
@@ -690,9 +687,9 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {0},
     {"&Display", 0, 0, 0, FL_SUBMENU},
     {"&Original Image...", FL_ALT + 'e',
-     (Fl_Callback*)ImpressionistUI::cb_display_original_image},
+     (Fl_Callback *)ImpressionistUI::cb_display_original_image},
     {"&Another Image...", FL_ALT + 'e',
-     (Fl_Callback*)ImpressionistUI::cb_display_another_image},
+     (Fl_Callback *)ImpressionistUI::cb_display_another_image},
     {0},
     {"&Help", 0, 0, 0, FL_SUBMENU},
     {"&About", FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about},
