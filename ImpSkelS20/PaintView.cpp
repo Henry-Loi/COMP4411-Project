@@ -309,6 +309,26 @@ void PaintView::SaveCurrentContent() {
                GL_RGB, GL_UNSIGNED_BYTE,
                m_pDoc->m_ucRawPainting +
                    3 * (m_pDoc->m_nPaintWidth * startrow) + 3 * scrollpos.x);
+
+  for (int i = m_nWindowHeight - m_nDrawHeight; i < m_nDrawHeight; i++) {
+    for (int j = 0; j < m_pDoc->m_nPaintWidth; j++) {
+      for (int k = 0; k < 3; k++) {
+        int index = i * m_pDoc->m_nPaintWidth * 3 + j * 3 + k;
+        if (m_pDoc->m_pUI->fadeAlpha != 100) {
+          unsigned char temp;
+          temp = m_pDoc->m_ucRawPainting[index] -
+                 m_pDoc->m_ucOriginal[index] * m_pDoc->m_pUI->fadeAlpha / 100;
+          m_pDoc->m_ucRawPainting[index] =
+              (temp >= 0 ? temp : 0) / (100 - m_pDoc->m_pUI->fadeAlpha) * 100;
+          m_pDoc->m_ucRawPainting[index] = m_pDoc->m_ucRawPainting[index]
+                                               ? m_pDoc->m_ucRawPainting[index]
+                                               : 0;
+        } else {
+          m_pDoc->m_ucRawPainting[index] = 0;
+        }
+      }
+    }
+  }
 }
 
 void PaintView::RestoreContent() {
