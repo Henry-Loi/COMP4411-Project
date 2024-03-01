@@ -34,7 +34,6 @@ public:
   int loadMuralImage(char *iname); // called by the UI to load mural image
   int dissolveImage(char *iname);
   int loadAnotherImage(char *iname); // called by the UI to load another image
-  int loadAnotherImage(char* iname); // called by the UI to load another image
   int loadEdgeImage(char* iname);// called by the UI to load another image
 
   int saveImage(char *iname); // called by the UI to save image
@@ -72,7 +71,6 @@ public:
   unsigned char *m_ucLastPainting;
   unsigned char* m_ucAnotherImage;
   unsigned char* m_ucEdgeImage;
-  unsigned char *m_ucAnotherImage;
 
   // The current active brush.
   ImpBrush *m_pCurrentBrush;

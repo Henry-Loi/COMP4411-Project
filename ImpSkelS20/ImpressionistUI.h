@@ -226,9 +226,7 @@ private:
   // fade window
   static void cb_fadeAlpha(Fl_Widget *o, void *v);
 
-  // display callback
-  static void cb_display_original_image(Fl_Menu_ *o, void *v);
-  static void cb_display_another_image(Fl_Menu_ *o, void *v);
+
   //display callback
   static void cb_display_original_image(Fl_Menu_* o, void* v);
   static void cb_display_another_image(Fl_Menu_* o, void* v);

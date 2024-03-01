@@ -702,7 +702,6 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
     {"&Load Another Image...", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_load_another_image},
-     (Fl_Callback*)ImpressionistUI::cb_load_another_image},
     {"&Load Edge Image...", FL_ALT + 'e',
      (Fl_Callback*)ImpressionistUI::cb_load_edge_image},
 
