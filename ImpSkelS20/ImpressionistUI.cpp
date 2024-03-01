@@ -243,6 +243,10 @@ void ImpressionistUI::cb_colorSelection(Fl_Menu_ *o, void *v) {
   whoami(o)->m_colorSelectionDialog->show();
 }
 
+void ImpressionistUI::cb_fade(Fl_Menu_ *o, void *) {
+  whoami(o)->m_fadeDialog->show();
+}
+
 void ImpressionistUI::cb_painterly(Fl_Menu_ *o, void *v) {
   whoami(o)->m_painterlyDialog->show();
 }
@@ -669,10 +673,14 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
     {"&Colors...", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_colorSelection, 0, FL_MENU_DIVIDER},
+
     {"&Clear Canvas", FL_ALT + 'c',
      (Fl_Callback *)ImpressionistUI::cb_clear_canvas},
     {"&Swap Canvas", FL_ALT + 'w',
      (Fl_Callback *)ImpressionistUI::cb_swap_canvas, 0, FL_MENU_DIVIDER},
+
+    {"&Fade image...", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_fade, 0,
+     FL_MENU_DIVIDER},
 
     {"&Load Another Image...", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_load_another_image},
@@ -696,6 +704,15 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {0},
 
     {0}};
+
+void ImpressionistUI::cb_fadeAlpha(Fl_Widget *o, void *v) {
+  ImpressionistUI *pUI = ((ImpressionistUI *)(o->user_data()));
+  ImpressionistDoc *pDoc = pUI->getDocument();
+
+  ((ImpressionistUI *)(o->user_data()))->fadeAlpha =
+      int(((Fl_Slider *)o)->value());
+  pDoc->fadeAlpha();
+}
 
 // Brush choice menu definition
 Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
@@ -1251,6 +1268,21 @@ ImpressionistUI::ImpressionistUI(ImpressionistDoc *pDoc) {
 
   m_colorSelectionDialog->end();
   // Manual Color Selection end
+
+  // dissolve dialog definition
+  m_fadeDialog = new Fl_Window(320, 100, "Dissolve...");
+
+  m_fadeOpacitySlider = new Fl_Value_Slider(10, 10, 300, 20, "Opacity");
+  m_fadeOpacitySlider->user_data(static_cast<void *>(this));
+  m_fadeOpacitySlider->type(FL_HOR_NICE_SLIDER);
+  m_fadeOpacitySlider->minimum(0);
+  m_fadeOpacitySlider->maximum(100);
+  m_fadeOpacitySlider->step(1);
+  m_fadeOpacitySlider->value(fadeAlpha);
+  m_fadeOpacitySlider->align(FL_ALIGN_BOTTOM);
+  m_fadeOpacitySlider->callback(cb_fadeAlpha);
+
+  m_fadeDialog->end();
 
   // painterly dialog definition
   m_painterlyDialog = new Fl_Window(400, 280, "Painterly Dialog");

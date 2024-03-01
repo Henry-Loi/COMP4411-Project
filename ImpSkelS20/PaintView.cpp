@@ -145,19 +145,18 @@ void PaintView::draw() {
         // coordinate of start point
         right_start.x = coord.x;
         right_start.y = coord.y;
-      }
-      else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
+      } else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
 
-          if (m_pDoc->m_pUI->isAnotherGradient )
-              m_pDoc->setGetPixel(ANOTHER_IMAGE);
-          else
-              m_pDoc->setGetPixel(ORIGINAL_IMAGE);
-          angle = RAD2DEG(GradientDirection(source, target)) +90 ;
-          if (angle < 0)
-              angle += 360;
-          else if (angle > 360)
-              angle -= 360;
-          m_pDoc->m_pUI->setLineAngle(angle);
+        if (m_pDoc->m_pUI->isAnotherGradient)
+          m_pDoc->setGetPixel(ANOTHER_IMAGE);
+        else
+          m_pDoc->setGetPixel(ORIGINAL_IMAGE);
+        angle = RAD2DEG(GradientDirection(source, target)) + 90;
+        if (angle < 0)
+          angle += 360;
+        else if (angle > 360)
+          angle -= 360;
+        m_pDoc->m_pUI->setLineAngle(angle);
       }
       m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
       break;
@@ -177,23 +176,23 @@ void PaintView::draw() {
         // coordiante for start point of next iteration
         right_start.x = cur.x;
         right_start.y = cur.y;
-      }
-      else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
+      } else if (m_pDoc->m_pCurrentDirection == GRADIENT) {
 
-          if (m_pDoc->m_pUI->isAnotherGradient)
-              m_pDoc->setGetPixel(ANOTHER_IMAGE);
-          else
-              m_pDoc->setGetPixel(ORIGINAL_IMAGE);
-          angle = RAD2DEG(GradientDirection(source, target)) + 90;
-          if (angle < 0)
-              angle += 360;
-          else if (angle > 360)
-              angle -= 360;
-          m_pDoc->m_pUI->setLineAngle(angle);
+        if (m_pDoc->m_pUI->isAnotherGradient)
+          m_pDoc->setGetPixel(ANOTHER_IMAGE);
+        else
+          m_pDoc->setGetPixel(ORIGINAL_IMAGE);
+        angle = RAD2DEG(GradientDirection(source, target)) + 90;
+        if (angle < 0)
+          angle += 360;
+        else if (angle > 360)
+          angle -= 360;
+        m_pDoc->m_pUI->setLineAngle(angle);
       }
-        m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-      /*std::cout << m_pDoc->m_pUI->get_m_R() << " " << m_pDoc->m_pUI->get_m_B() << " " << m_pDoc->m_pUI->get_m_G() << " " << std::endl;*/
-      
+      m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+      /*std::cout << m_pDoc->m_pUI->get_m_R() << " " << m_pDoc->m_pUI->get_m_B()
+       * << " " << m_pDoc->m_pUI->get_m_G() << " " << std::endl;*/
+
       break;
     case LEFT_MOUSE_UP:
       m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
@@ -286,19 +285,58 @@ void PaintView::resizeWindow(int width, int height) {
 void PaintView::SaveCurrentContent() {
   // Tell openGL to read from the front buffer when capturing
   // out paint strokes
+  Point scrollpos; // = GetScrollPosition();
+  scrollpos.x = 0;
+  scrollpos.y = 0;
+
+  m_nWindowWidth = w();
+  m_nWindowHeight = h();
+
+  int drawWidth, drawHeight;
+  drawWidth = min(m_nWindowWidth, m_pDoc->m_nPaintWidth);
+  drawHeight = min(m_nWindowHeight, m_pDoc->m_nPaintHeight);
+
+  int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
+  if (startrow < 0)
+    startrow = 0;
+
   glReadBuffer(GL_FRONT);
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth);
 
   glReadPixels(0, m_nWindowHeight - m_nDrawHeight, m_nDrawWidth, m_nDrawHeight,
-               GL_RGB, GL_UNSIGNED_BYTE, m_pPaintBitstart);
+               GL_RGB, GL_UNSIGNED_BYTE,
+               m_pDoc->m_ucRawPainting +
+                   3 * (m_pDoc->m_nPaintWidth * startrow) + 3 * scrollpos.x);
+
+  for (int i = m_nWindowHeight - m_nDrawHeight; i < m_nDrawHeight; i++) {
+    for (int j = 0; j < m_pDoc->m_nPaintWidth; j++) {
+      for (int k = 0; k < 3; k++) {
+        int index = i * m_pDoc->m_nPaintWidth * 3 + j * 3 + k;
+        if (m_pDoc->m_pUI->fadeAlpha != 100) {
+          unsigned char temp;
+          temp = m_pDoc->m_ucRawPainting[index] -
+                 m_pDoc->m_ucOriginal[index] * m_pDoc->m_pUI->fadeAlpha / 100;
+          m_pDoc->m_ucRawPainting[index] =
+              (temp >= 0 ? temp : 0) / (100 - m_pDoc->m_pUI->fadeAlpha) * 100;
+          m_pDoc->m_ucRawPainting[index] = m_pDoc->m_ucRawPainting[index]
+                                               ? m_pDoc->m_ucRawPainting[index]
+                                               : 0;
+        } else {
+          m_pDoc->m_ucRawPainting[index] = 0;
+        }
+      }
+    }
+  }
 }
 
 void PaintView::RestoreContent() {
   glDrawBuffer(GL_BACK);
 
   glClear(GL_COLOR_BUFFER_BIT);
+
+  m_pDoc->fadeAlpha();
 
   glRasterPos2i(0, m_nWindowHeight - m_nDrawHeight);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -459,22 +497,22 @@ void PaintView::RightClickBrushEnd(const Point source, const Point target) {
 // (x,y) color_origin[0]->(0,0); color_origin[1]->(0,-1);
 // color_origin[2]->(1,0);
 float PaintView::GradientDirection(const Point source, const Point target) {
-    int border[2] = { m_nDrawWidth,  m_nDrawHeight};
-    float* gradient = (m_pDoc->m_pCurrentBrush->getGradient(source, border));
-    //Point temp;
-    //GLubyte color_origin[3][3];
-    //float intensity[3] = {0};
-    //for (int i = 0; i < 3; i++) {
-    //    temp.y = source.y - i % 2;
-    //    temp.x = source.x + i / 2;
-    //    memcpy(color_origin[i], m_pDoc->GetOriginalPixel(temp), 3);
-    //    intensity[i] = 0.299 * (float)color_origin[i][0] + 0.587 * (float)color_origin[i][2] + 0.114 * (float)color_origin[i][1];
-    //}
+  int border[2] = {m_nDrawWidth, m_nDrawHeight};
+  float *gradient = (m_pDoc->m_pCurrentBrush->getGradient(source, border));
+  // Point temp;
+  // GLubyte color_origin[3][3];
+  // float intensity[3] = {0};
+  // for (int i = 0; i < 3; i++) {
+  //     temp.y = source.y - i % 2;
+  //     temp.x = source.x + i / 2;
+  //     memcpy(color_origin[i], m_pDoc->GetOriginalPixel(temp), 3);
+  //     intensity[i] = 0.299 * (float)color_origin[i][0] + 0.587 *
+  //     (float)color_origin[i][2] + 0.114 * (float)color_origin[i][1];
+  // }
 
-    //return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0])); 
-    return gradient[0];
-  }
-
+  // return atan((intensity[1] - intensity[0]) / (intensity[2] - intensity[0]));
+  return gradient[0];
+}
 
 void PaintView::applyKernel() {
   ImpressionistUI *dlg = m_pDoc->m_pUI;
