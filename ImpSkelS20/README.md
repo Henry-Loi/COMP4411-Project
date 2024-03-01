@@ -47,7 +47,7 @@
 - [X] [1] independent RGB Brush
 - [ ] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
 - [X] [1] Undo feature for brush and filtering effects (undo every mouse up & down pair)
-- [ ] [1] Dissolve one image into another (set alpha to around 0.5-0.6 and paste on original view + image size checking)
+- [X] [1] Dissolve one image into another (set alpha to around 0.5-0.6 and paste on original view + image size checking)
 - [ ] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (fade the original as background of paint view (Hint: save the faded image separately with the paint buffer))
 
 - [X] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas

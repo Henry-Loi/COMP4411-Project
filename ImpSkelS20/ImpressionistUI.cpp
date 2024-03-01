@@ -213,6 +213,15 @@ void ImpressionistUI::cb_save_image(Fl_Menu_ *o, void *v) {
   }
 }
 
+void ImpressionistUI::cb_dissolve_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+  if (newfile != NULL) {
+    pDoc->dissolveImage(newfile);
+  }
+}
+
 //-------------------------------------------------------------
 // Brings up the paint dialog
 // This is called by the UI when the brushes menu item
@@ -632,6 +641,9 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
      (Fl_Callback *)ImpressionistUI::cb_load_mural_image},
     {"&Save Image...", FL_ALT + 's',
      (Fl_Callback *)ImpressionistUI::cb_save_image},
+    {"&Dissolve Image...", FL_ALT + 'd',
+     (Fl_Callback *)ImpressionistUI::cb_dissolve_image, 0, FL_MENU_DIVIDER},
+
     {"&Brushes...", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes},
     {"&Colors...", FL_ALT + 'k',
      (Fl_Callback *)ImpressionistUI::cb_colorSelection},

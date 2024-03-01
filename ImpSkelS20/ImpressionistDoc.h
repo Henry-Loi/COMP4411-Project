@@ -30,6 +30,7 @@ public:
 
   int loadImage(char *iname);      // called by the UI to load image
   int loadMuralImage(char *iname); // called by the UI to load mural image
+  int dissolveImage(char *iname);
 
   int saveImage(char *iname); // called by the UI to save image
 

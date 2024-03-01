@@ -202,6 +202,49 @@ int ImpressionistDoc::loadMuralImage(char *iname) {
   return 1;
 }
 
+int ImpressionistDoc::dissolveImage(char *iname) {
+  // empty image prevention
+  if (!m_ucOriginal) {
+    fl_alert("Can't dissolve image when original image is empty");
+    return 0;
+  }
+
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
+
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    fl_alert("Can't load bitmap file");
+    return 0;
+  }
+
+  // in theory no need update window size
+  if (width > m_nWidth || height > m_nHeight || m_nPaintHeight > m_nHeight ||
+      m_nPaintWidth > m_nWidth) {
+    fl_alert("The dissolve image should have the same or smaller size than the "
+             "original image");
+    return 0;
+  }
+
+  // dissolve the image
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      for (int k = 0; k < 3; k++) {
+        m_ucOriginal[i * m_nWidth * 3 + j * 3 + k] =
+            (m_ucOriginal[i * m_nWidth * 3 + j * 3 + k] +
+             data[i * width * 3 + j * 3 + k]) /
+            2;
+      }
+    }
+  }
+
+  m_ucBitmap = m_ucOriginal;
+
+  m_pUI->m_origView->refresh();
+
+  return 1;
+}
+
 //----------------------------------------------------------------
 // Save the specified image
 // This is called by the UI when the save image menu button is
