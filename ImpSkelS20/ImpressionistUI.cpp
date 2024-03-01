@@ -511,7 +511,7 @@ void ImpressionistUI::cb_paint_button(Fl_Widget *o, void *v) {
 
 void ImpressionistUI::cb_do_it_button(Fl_Widget *o, void *v) {
   ImpressionistDoc *pDoc = ((ImpressionistUI *)(o->user_data()))->getDocument();
-
+  pDoc->m_pCurrentBrush->EdgeAutoPaint();
   pDoc->clearCanvas();
 }
 
@@ -760,6 +760,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CUSTOM_KERNEL},
     {"Curved", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_CURVED},
+    {"Blur", FL_ALT + 'b', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
+     (void*)BRUSH_BLUR},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {

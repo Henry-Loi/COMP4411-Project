@@ -54,6 +54,24 @@
     <ClCompile Include="ScatteredCirclesBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AlphaMappedBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KernelBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PainterlyBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvedBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BSplines.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BluringBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap.h">
@@ -96,6 +114,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScatteredLinesBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AlphaMappedBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KernelBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PainterlyBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvedBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSplines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BluringBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

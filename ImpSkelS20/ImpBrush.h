@@ -20,6 +20,7 @@ enum {
   BRUSH_ALPHA_MAPPED,
   BRUSH_CUSTOM_KERNEL,
   BRUSH_CURVED,
+  BRUSH_BLUR,
   NUM_BRUSH_TYPE, // Make sure this stays at the end!
   /* implicit brush here */
   BRUSH_PAINTERLY,
@@ -72,7 +73,7 @@ public:
 
   static int c_nBrushCount;     // How many brushes we have,
   static ImpBrush **c_pBrushes; // and what they are.
-  float kernelOperation(const Point Source, int arr[3][3], const int kernel_size); // Use kernel/mask on the image and get value from local 
+  float* kernelOperation(const Point Source, int arr[3][3], const int kernel_size); // Use kernel/mask on the image and get value from local 
   float* getGradient(const Point Source) ;
   void EdgeClipMove(const Point source, const Point target, const int size, const int angle);
   void EdgeAutoPaint();

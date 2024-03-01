@@ -58,6 +58,7 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l,
   m_nWindowWidth = w;
   m_nWindowHeight = h;
   m_pUndoBitstart = new unsigned char[m_nWindowWidth * m_nWindowHeight * 3];
+  m_pDoc->setGetPixel(ORIGINAL_IMAGE);
 };
 
 void PaintView::draw() {
