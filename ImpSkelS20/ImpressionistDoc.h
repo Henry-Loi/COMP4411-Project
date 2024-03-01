@@ -20,6 +20,8 @@ typedef enum {
   NUM_STROKE_DIRECTION
 } StrokeDirection;
 
+enum { ORIGINAL_IMAGE = 0, ANOTHER_IMAGE, EDGE_IMAGE };
+
 class ImpressionistUI;
 
 class ImpressionistDoc {
@@ -31,6 +33,7 @@ public:
   int loadImage(char *iname);      // called by the UI to load image
   int loadMuralImage(char *iname); // called by the UI to load mural image
   int dissolveImage(char *iname);
+  int loadAnotherImage(char *iname); // called by the UI to load another image
 
   int saveImage(char *iname); // called by the UI to save image
 
@@ -62,6 +65,7 @@ public:
   unsigned char *m_ucBitmap;
   unsigned char *m_ucPainting;
   unsigned char *m_ucLastPainting;
+  unsigned char *m_ucAnotherImage;
 
   // The current active brush.
   ImpBrush *m_pCurrentBrush;
@@ -85,6 +89,12 @@ public:
 
   void Undo(void);
   void saveUndo(void);
+
+  GLubyte *Get_AnotherImagePixel(int x, int y);
+  GLubyte *GetAnotherImagePixel(const Point p);
+  // function pointer
+  GLubyte *(ImpressionistDoc::*GetPixel)(const Point) = 0;
+  void setGetPixel(int u);
 
 private:
   char m_imageName[256];

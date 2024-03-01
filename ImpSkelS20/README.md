@@ -53,7 +53,7 @@
 - [X] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
 - [X] [1.5] Add "alpha-mapped" brush strokes
 - [X] [1.5] Auto paint image (with randomness)
-- [ ] [1.5] Brush direction by gradient from user-specified image
+- [x] [1.5] Brush direction by gradient from user-specified image
 - [ ] [1.5] Edge Clipping (cut the exceed edge when painting)
 
 - [X] [2] User-specified kernel (odd size matrix only)
