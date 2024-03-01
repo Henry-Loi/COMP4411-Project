@@ -79,9 +79,9 @@ void ImpBrush::getSourceRGB(const Point source, GLubyte color[3]) {
 }
 
 // input a int matrix as kernel, return array [0]->R, [1] ->G, [2] ->B
-double* ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_size) {
-    double sum[4] = { 0,0,0,0 };
-    double intensity = 0;
+float* ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_size) {
+    float sum[4] = { 0,0,0,0 };
+    float intensity = 0;
     GLubyte color_origin[3];
     int column = 0;
     int row = 0;
@@ -90,11 +90,11 @@ double* ImpBrush::kernelOperation(const Point Source, int arr[3][3], int kernel_
         row = 0;
         for (int j = Source.y - (kernel_size - 1) / 2; j <= Source.y + (kernel_size - 1) / 2; j++) {//row
             memcpy(color_origin, (m_pDoc->*(m_pDoc->GetPixel))(Point(abs(i),abs(j))), 3);
-            sum[0] += ((double)color_origin[0]* (double)arr[row][column]);
-            sum[1] += ((double)color_origin[1]* (double)arr[row][column]);
-            sum[2] += ((double)color_origin[2]* (double)arr[row][column]);
-            intensity = 0.299 * (double)color_origin[0] + 0.587 * (double)color_origin[1] + 0.114 * (double)color_origin[2];
-            sum[3] += intensity * (double)arr[row][column];
+            sum[0] += ((float)color_origin[0]* (float)arr[row][column]);
+            sum[1] += ((float)color_origin[1]* (float)arr[row][column]);
+            sum[2] += ((float)color_origin[2]* (float)arr[row][column]);
+            intensity = 0.299 * (float)color_origin[0] + 0.587 * (float)color_origin[1] + 0.114 * (float)color_origin[2];
+            sum[3] += intensity * (float)arr[row][column];
             row++;
         }
         column++;
@@ -109,8 +109,8 @@ float* ImpBrush::getGradient(const Point Source) {
     int o_sobelX[3][3] = { {-1,0,1},{-2,0,2},{-1,0,1} };
     int o_sobelY[3][3] = { {1,2,1},{0,0,0},{-1,-2,-1} };
     int kernel_size = 3;
-    double* raw_gradientX = kernelOperation(Source, o_sobelX, kernel_size);
-    double* raw_gradientY = kernelOperation(Source, o_sobelY, kernel_size);
+    float* raw_gradientX = kernelOperation(Source, o_sobelX, kernel_size);
+    float* raw_gradientY = kernelOperation(Source, o_sobelY, kernel_size);
     float gradientX = raw_gradientX[3];
     float gradientY = raw_gradientY[3];
 

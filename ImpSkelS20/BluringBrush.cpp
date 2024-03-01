@@ -41,7 +41,7 @@ void BluringBrush::BrushMove(const Point source, const Point target) {
                             {1,1,1},
                             {1,1,1} };
     float denominator = 9.0f;
-    double *rawColor = kernelOperation(source, blurMatrix, 3);
+    float*rawColor = kernelOperation(source, blurMatrix, 3);
     std::cout << "rawColor: " << rawColor[0] << " " << rawColor[1] << " " << rawColor[2] << std::endl;
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
