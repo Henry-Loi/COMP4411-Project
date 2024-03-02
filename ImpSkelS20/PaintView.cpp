@@ -523,56 +523,57 @@ void PaintView::apply_painterly(void) {
   */
 
   ImpressionistUI *dlg = m_pDoc->m_pUI;
-  PainterlyParam *param = get_painterly_param();
-  PainterlyBrush *m_pPainterlyBrush = m_pDoc->m_pUI->m_pPainterlyBrush;
+  //PainterlyParam *param = get_painterly_param();
+  //PainterlyBrush *m_pPainterlyBrush = m_pDoc->m_pUI->m_pPainterlyBrush;
 
-  if (m_pDoc->m_ucPainting == NULL) {
-    return;
-  }
-  if (m_pDoc->m_ucOriginal == NULL) {
-    return;
-  }
+  //if (m_pDoc->m_ucPainting == NULL) {
+  //  return;
+  //}
+  //if (m_pDoc->m_ucOriginal == NULL) {
+  //  return;
+  //}
 
-  int width = m_pDoc->m_nWidth;
-  int height = m_pDoc->m_nHeight;
+  //int width = m_pDoc->m_nWidth;
+  //int height = m_pDoc->m_nHeight;
 
-  int paint_width = m_pDoc->m_nPaintWidth;
-  int paint_height = m_pDoc->m_nPaintHeight;
+  //int paint_width = m_pDoc->m_nPaintWidth;
+  //int paint_height = m_pDoc->m_nPaintHeight;
 
-  // FIXME: is this a hack to make the painterly brush work?
-  // glColor3d(1, 1, 1);
-  // glBegin(GL_POLYGON);
-  // glVertex2d(0, 0);
-  // glVertex2d(0, height);
-  // glVertex2d(width, height);
-  // glVertex2d(width, 0);
-  // glEnd();
+  //// FIXME: is this a hack to make the painterly brush work?
+  //// glColor3d(1, 1, 1);
+  //// glBegin(GL_POLYGON);
+  //// glVertex2d(0, 0);
+  //// glVertex2d(0, height);
+  //// glVertex2d(width, height);
+  //// glVertex2d(width, 0);
+  //// glEnd();
 
-  unsigned char *canvas = new unsigned char[width * height * 3];
-  memset(canvas, 255, width * height * 3);
+  //unsigned char *canvas = new unsigned char[width * height * 3];
+  //memset(canvas, 255, width * height * 3);
 
-  // paint the canvas
-  for (int i = 0; i < param->Layer; i++) {
-    unsigned char *tmp = new unsigned char[width * height * 3];
-    // apply Gaussian blur
-    std::vector<std::vector<float>> GKernel =
-        gaussKernel(m_pPainterlyBrush->R[i], param->Blur * param->Blur *
-                                                 m_pPainterlyBrush->R[i] *
-                                                 m_pPainterlyBrush->R[i]);
-    std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
-    if (param->Blur != 0) {
-      m_pDoc->applyKernel(tmp, GKernel, m_pPainterlyBrush->R[i],
-                          m_pPainterlyBrush->R[i]);
-    } else {
-        std::cout << "Not apply blur" << std::endl;
-      memcpy(tmp, m_pDoc->m_ucOriginal, width * height * 3);
-    }
-    std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
-    // paint a layer
-    paintLayer(canvas, tmp, m_pPainterlyBrush->R[i]);
-    delete[] tmp;
-  }
-
+  //// paint the canvas
+  //for (int i = 0; i < param->Layer; i++) {
+  //  unsigned char *tmp = new unsigned char[width * height * 3];
+  //  // apply Gaussian blur
+  //  std::vector<std::vector<float>> GKernel =
+  //      gaussKernel(m_pPainterlyBrush->R[i], param->Blur * param->Blur *
+  //                                               m_pPainterlyBrush->R[i] *
+  //                                               m_pPainterlyBrush->R[i]);
+  //  std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
+  //  if (param->Blur != 0) {
+  //    m_pDoc->applyKernel(tmp, GKernel, m_pPainterlyBrush->R[i],
+  //                        m_pPainterlyBrush->R[i]);
+  //  } else {
+  //      std::cout << "Not apply blur" << std::endl;
+  //    memcpy(tmp, m_pDoc->m_ucOriginal, width * height * 3);
+  //  }
+  //  std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
+  //  // paint a layer
+  //  paintLayer(canvas, tmp, m_pPainterlyBrush->R[i]);
+  //  delete[] tmp;
+  //}
+  m_pDoc->setBrushType(BRUSH_CURVED);
+  autoPaint();
   SaveCurrentContent();
   RestoreContent();
 
