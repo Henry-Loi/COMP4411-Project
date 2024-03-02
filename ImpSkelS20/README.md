@@ -36,7 +36,7 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 19.5/41** \
+> **Total marks: 21.0/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
@@ -60,7 +60,7 @@
 - [x] [2] Edge detection + user-specified edge clipping (using sobal)
 - [ ] [2] Multiresolution automatic painting
 - [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
-- [ ] [2] Design curved brush following image gradient
+- [X] [2] Design curved brush following image gradient
 - [ ] [<=4] Construct Mosaic
 - [ ] [4] Impressionist video with temporal coherency
 - [ ] [8] Implement Bayesian matting
