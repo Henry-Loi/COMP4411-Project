@@ -692,7 +692,7 @@ PainterlyBrush::Stroke *PaintView::makeSplineStroke(unsigned char *ref, int x,
 
   for (int i = 0; i < param->MaxStrokeLength; ++i) {
     index = (cur.y * width + cur.x) * 3;
-    if (calDifference(ref + index, m_pDoc->m_ucPainting + index) <
+    if (calDifference(ref + index, m_pDoc->m_ucOriginal + index) <
         calDifference(ref + index, stroke->color)) {
       if (i >= param->MinStrokeLength)
         return stroke;

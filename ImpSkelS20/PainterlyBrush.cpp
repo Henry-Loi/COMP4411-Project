@@ -17,6 +17,7 @@
 #include <cmath>
 #include <random>
 #include <vector>
+#include <iostream>
 
 extern float frand();
 extern int irand(int max);
@@ -133,6 +134,7 @@ void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes,
 
       curved_brush->PainterlyBrushBegin(source, target, ref, stroke);
       curved_brush->PainterlyBrushMove(source, target, ref, stroke);
+
     }
   }
 }

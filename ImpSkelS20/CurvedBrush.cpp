@@ -6,6 +6,7 @@
 #include <cmath>
 #include <complex>
 #include <math.h>
+#include <iostream>
 
 CurvedBrush::CurvedBrush(ImpressionistDoc *pDoc, char *name)
     : ImpBrush(pDoc, name) {
@@ -34,7 +35,7 @@ void CurvedBrush::BrushMove(const Point source, const Point target) {
     size = 5 + (size - 5) / 10;
 
   auto *stroke = pDoc->m_pUI->m_paintView->makeSplineStroke(
-      pDoc->m_ucPainting, source.x, source.y, size);
+      pDoc->m_ucOriginal, source.x, source.y, size);
   renderStrokes(stroke);
 }
 
@@ -67,6 +68,7 @@ void CurvedBrush::PainterlyBrushMove(const Point source, const Point target,
     size = 5 + (size - 5) / 10;
 
   if (stroke == nullptr) {
+      std::cout << " makesplinePaintly" << std::endl;
     stroke = pDoc->m_pUI->m_paintView->makeSplineStroke(ref, source.x, source.y,
                                                         size);
   }
