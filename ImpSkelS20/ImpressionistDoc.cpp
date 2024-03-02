@@ -31,13 +31,16 @@
 
 // painterly brush
 #include "PainterlyBrush.h"
-//blur brush
-#include"BluringBrush.h"
-#include"SharpeningBrush.h"
+
+// blur brush
+#include "BluringBrush.h"
+#include "SharpeningBrush.h"
 
 // MY TODO: add other brushes
 #include "CurvedBrush.h"
-#include<iostream>
+#include "PixelizeBrush.h"
+
+#include <iostream>
 
 #define DESTROY(p)                                                             \
   {                                                                            \
@@ -79,8 +82,9 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
   ImpBrush::c_pBrushes[BRUSH_CURVED] = new CurvedBrush(this, "Curved");
   ImpBrush::c_pBrushes[BRUSH_BLUR] = new BluringBrush(this, "Blur");
-  ImpBrush::c_pBrushes[BRUSH_SHARPENING] = new SharpeningBrush(this, "Sharpening");
-
+  ImpBrush::c_pBrushes[BRUSH_SHARPENING] =
+      new SharpeningBrush(this, "Sharpening");
+  ImpBrush::c_pBrushes[BRUSH_PIXELIZE] = new PixelizeBrush(this, "Pixelize");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];
@@ -150,17 +154,17 @@ int ImpressionistDoc::loadImage(char *iname) {
     m_ucPainting = nullptr;
   }
   if (m_ucAnotherImage != nullptr) {
-      delete[] m_ucAnotherImage;
-      m_ucAnotherImage = nullptr;
+    delete[] m_ucAnotherImage;
+    m_ucAnotherImage = nullptr;
   }
   if (m_ucEdgeImage != nullptr) {
-      delete[] m_ucEdgeImage;
-      m_ucEdgeImage = nullptr;
+    delete[] m_ucEdgeImage;
+    m_ucEdgeImage = nullptr;
   }
 
   m_ucOriginal = data;
   m_ucBitmap = m_ucOriginal;
-  std::cout << "m_ucOriginal"<< m_ucOriginal << std::endl;
+  std::cout << "m_ucOriginal" << m_ucOriginal << std::endl;
   // allocate space for draw view
   m_ucPainting = new unsigned char[width * height * 3];
   memset(m_ucPainting, 0, width * height * 3);
@@ -183,13 +187,11 @@ int ImpressionistDoc::loadImage(char *iname) {
 
   m_pUI->m_paintView->resizeWindow(width, height);
 
-  std::cout << "Window Size:" << width<< " " << height << std::endl;
-  std::cout << "PaintPos:" << m_pUI->m_paintView->x() << " " << m_pUI->m_paintView->y() << std::endl;
+  std::cout << "Window Size:" << width << " " << height << std::endl;
+  std::cout << "PaintPos:" << m_pUI->m_paintView->x() << " "
+            << m_pUI->m_paintView->y() << std::endl;
   m_pUI->m_paintView->refresh();
-  //glDisable(GL_SCISSOR_TEST);
-
-  
-
+  // glDisable(GL_SCISSOR_TEST);
 
   return 1;
 }
@@ -400,36 +402,39 @@ GLubyte *ImpressionistDoc::GetAnotherImagePixel(const Point p) {
   return Get_AnotherImagePixel(p.x, p.y);
 }
 
-GLubyte* ImpressionistDoc::GetEdgeImagePixel(int x, int y) {
-    if (x < 0)
-        x = 0;
-    else if (x >= m_nWidth)
-        x = m_nWidth - 1;
+GLubyte *ImpressionistDoc::GetEdgeImagePixel(int x, int y) {
+  if (x < 0)
+    x = 0;
+  else if (x >= m_nWidth)
+    x = m_nWidth - 1;
 
-    if (y < 0)
-        y = 0;
-    else if (y >= m_nHeight)
-        y = m_nHeight - 1;
+  if (y < 0)
+    y = 0;
+  else if (y >= m_nHeight)
+    y = m_nHeight - 1;
 
-    return (GLubyte*)(m_ucEdgeImage + 3 * (y * m_nWidth + x));
+  return (GLubyte *)(m_ucEdgeImage + 3 * (y * m_nWidth + x));
 }
 
-GLubyte* ImpressionistDoc::GetEdgeImagePixel(const Point p) {
-    return GetEdgeImagePixel(p.x, p.y);
+GLubyte *ImpressionistDoc::GetEdgeImagePixel(const Point p) {
+  return GetEdgeImagePixel(p.x, p.y);
 }
 
 void ImpressionistDoc::setGetPixel(int u) {
-    switch (u)
-    {
-    case ORIGINAL_IMAGE: GetPixel = &ImpressionistDoc::GetOriginalPixel; break;
-    case ANOTHER_IMAGE: GetPixel = &ImpressionistDoc::GetAnotherImagePixel; break;
-    case EDGE_IMAGE:GetPixel = &ImpressionistDoc::GetEdgeImagePixel; break;
-    default:
-        break;
-    }
+  switch (u) {
+  case ORIGINAL_IMAGE:
+    GetPixel = &ImpressionistDoc::GetOriginalPixel;
+    break;
+  case ANOTHER_IMAGE:
+    GetPixel = &ImpressionistDoc::GetAnotherImagePixel;
+    break;
+  case EDGE_IMAGE:
+    GetPixel = &ImpressionistDoc::GetEdgeImagePixel;
+    break;
+  default:
+    break;
+  }
 }
-
-
 
 //---------------------------------------------------------
 // Load the specified image
@@ -467,35 +472,35 @@ int ImpressionistDoc::loadAnotherImage(char *iname) {
   return 1;
 }
 
-int ImpressionistDoc::loadEdgeImage(char* iname) {
-    // try to open the image to read
-    unsigned char* data;
-    int width, height;
+int ImpressionistDoc::loadEdgeImage(char *iname) {
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
 
-    if ((data = readBMP(iname, width, height)) == NULL) {
-        fl_alert("Can't load bitmap file");
-        return 0;
-    }
-    if (width != m_nWidth || height != m_nHeight) {
-        fl_alert("Loaded image does not match the height and weight");
-        return 0;
-    }
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    fl_alert("Can't load bitmap file");
+    return 0;
+  }
+  if (width != m_nWidth || height != m_nHeight) {
+    fl_alert("Loaded image does not match the height and weight");
+    return 0;
+  }
 
-    // reflect the fact of loading the new image
-    m_nWidth = width;
-    m_nPaintWidth = width;
-    m_nHeight = height;
-    m_nPaintHeight = height;
+  // reflect the fact of loading the new image
+  m_nWidth = width;
+  m_nPaintWidth = width;
+  m_nHeight = height;
+  m_nPaintHeight = height;
 
-    // release old storage
-    if (m_ucEdgeImage != nullptr) {
-        delete[] m_ucEdgeImage;
-        m_ucAnotherImage = nullptr;
-        m_ucBitmap = nullptr;
-    }
+  // release old storage
+  if (m_ucEdgeImage != nullptr) {
+    delete[] m_ucEdgeImage;
+    m_ucAnotherImage = nullptr;
+    m_ucBitmap = nullptr;
+  }
 
-    m_ucEdgeImage = data;
-    return 1;
+  m_ucEdgeImage = data;
+  return 1;
 }
 
 void ImpressionistDoc::applyKernel(GLubyte *target,
@@ -520,5 +525,3 @@ void ImpressionistDoc::applyKernel(GLubyte *target,
     }
   }
 }
-
-

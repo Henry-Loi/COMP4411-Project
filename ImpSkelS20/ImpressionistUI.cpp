@@ -209,15 +209,13 @@ void ImpressionistUI::cb_load_another_image(Fl_Menu_ *o, void *v) {
   }
 }
 
+void ImpressionistUI::cb_load_edge_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
 
-void ImpressionistUI::cb_load_edge_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
-
-    char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
-    if (newfile != NULL) {
-        pDoc->loadEdgeImage(newfile);
-    }
-
+  char *newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName());
+  if (newfile != NULL) {
+    pDoc->loadEdgeImage(newfile);
+  }
 }
 
 //------------------------------------------------------------------
@@ -593,17 +591,17 @@ void ImpressionistUI::cb_display_original_image(Fl_Menu_ *o, void *v) {
   pDoc->m_pUI->m_origView->refresh();
 }
 
-void ImpressionistUI::cb_display_another_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
-    if(pDoc->m_ucAnotherImage!=nullptr)
-        pDoc->m_ucBitmap = pDoc->m_ucAnotherImage;
-    pDoc->m_pUI->m_origView->refresh();
+void ImpressionistUI::cb_display_another_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+  if (pDoc->m_ucAnotherImage != nullptr)
+    pDoc->m_ucBitmap = pDoc->m_ucAnotherImage;
+  pDoc->m_pUI->m_origView->refresh();
 }
-void ImpressionistUI::cb_display_edge_image(Fl_Menu_* o, void* v) {
-    ImpressionistDoc* pDoc = whoami(o)->getDocument();
-    if (pDoc->m_ucEdgeImage != nullptr)
-        pDoc->m_ucBitmap = pDoc->m_ucEdgeImage;
-    pDoc->m_pUI->m_origView->refresh();
+void ImpressionistUI::cb_display_edge_image(Fl_Menu_ *o, void *v) {
+  ImpressionistDoc *pDoc = whoami(o)->getDocument();
+  if (pDoc->m_ucEdgeImage != nullptr)
+    pDoc->m_ucBitmap = pDoc->m_ucEdgeImage;
+  pDoc->m_pUI->m_origView->refresh();
 }
 
 //---------------------------------- per instance functions
@@ -632,9 +630,8 @@ void ImpressionistUI::show() {
 void ImpressionistUI::resize_windows(int w, int h) {
   m_paintView->size(w, h);
   m_origView->size(w, h);
-  std::cout << "PaintView_x:" << m_paintView->x() << " " << m_paintView->y() << std::endl;
-
-
+  std::cout << "PaintView_x:" << m_paintView->x() << " " << m_paintView->y()
+            << std::endl;
 }
 
 //------------------------------------------------
@@ -706,7 +703,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {"&Load Another Image...", FL_ALT + 'a',
      (Fl_Callback *)ImpressionistUI::cb_load_another_image},
     {"&Load Edge Image...", FL_ALT + 'e',
-     (Fl_Callback*)ImpressionistUI::cb_load_edge_image},
+     (Fl_Callback *)ImpressionistUI::cb_load_edge_image},
 
     {"&Undo", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_undo, 0,
      FL_MENU_DIVIDER},
@@ -718,11 +715,11 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
     {0},
     {"&Display", 0, 0, 0, FL_SUBMENU},
     {"&Original Image...", FL_ALT + 'o',
-     (Fl_Callback*)ImpressionistUI::cb_display_original_image},
+     (Fl_Callback *)ImpressionistUI::cb_display_original_image},
     {"&Edge Image...", FL_ALT + 'e',
-     (Fl_Callback*)ImpressionistUI::cb_display_edge_image},
+     (Fl_Callback *)ImpressionistUI::cb_display_edge_image},
     {"&Another Image...", FL_ALT + 'a',
-     (Fl_Callback*)ImpressionistUI::cb_display_another_image},
+     (Fl_Callback *)ImpressionistUI::cb_display_another_image},
     {0},
     {"&Help", 0, 0, 0, FL_SUBMENU},
     {"&About", FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about},
@@ -763,10 +760,12 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_CUSTOM_KERNEL},
     {"Curved", FL_ALT + 'u', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_CURVED},
-    {"Blur", FL_ALT + 'b', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-     (void*)BRUSH_BLUR},
-    {"Sharpening", FL_ALT + 's', (Fl_Callback*)ImpressionistUI::cb_brushChoice,
-     (void*)BRUSH_SHARPENING},
+    {"Blur", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_BLUR},
+    {"Sharpening", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_SHARPENING},
+    {"Pixelize", FL_ALT + 'z', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_PIXELIZE},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {
