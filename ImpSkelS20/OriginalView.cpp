@@ -19,6 +19,9 @@ OriginalView::OriginalView(int x, int y, int w, int h, const char *l)
 }
 
 void OriginalView::draw() {
+
+
+    
   if (!valid()) {
     glClearColor(0.7f, 0.7f, 0.7f, 1.0);
 

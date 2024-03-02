@@ -177,12 +177,19 @@ int ImpressionistDoc::loadImage(char *iname) {
                               m_pUI->m_mainWindow->y(), width * 2, height + 25);
 
   // display it on origView
+
   m_pUI->m_origView->resizeWindow(width, height);
   m_pUI->m_origView->refresh();
 
-  // refresh paint view as well
   m_pUI->m_paintView->resizeWindow(width, height);
+
+  std::cout << "Window Size:" << width<< " " << height << std::endl;
+  std::cout << "PaintPos:" << m_pUI->m_paintView->x() << " " << m_pUI->m_paintView->y() << std::endl;
   m_pUI->m_paintView->refresh();
+  //glDisable(GL_SCISSOR_TEST);
+
+  
+
 
   return 1;
 }

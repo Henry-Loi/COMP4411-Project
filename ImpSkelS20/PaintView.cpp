@@ -62,11 +62,13 @@ PaintView::PaintView(int x, int y, int w, int h, const char *l,
 };
 
 void PaintView::draw() {
+
+
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_FRONT_AND_BACK);
 #endif // !MESA
-
+ 
   if (!valid()) {
 
     glClearColor(0.7f, 0.7f, 0.7f, 1.0);
@@ -78,12 +80,6 @@ void PaintView::draw() {
 
     glClear(GL_COLOR_BUFFER_BIT);
   }
-
-  if (isUndo) {
-    isUndo = false;
-    return;
-  }
-
   Point scrollpos; // = GetScrollPosition();
   scrollpos.x = 0;
   scrollpos.y = 0;
@@ -96,11 +92,12 @@ void PaintView::draw() {
   drawHeight = min(m_nWindowHeight, m_pDoc->m_nPaintHeight);
 
   int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
+
   if (startrow < 0)
-    startrow = 0;
+      startrow = 0;
 
   m_pPaintBitstart = m_pDoc->m_ucPainting +
-                     3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+      3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
 
   m_nDrawWidth = drawWidth;
   m_nDrawHeight = drawHeight;
@@ -109,6 +106,16 @@ void PaintView::draw() {
   m_nEndRow = startrow + drawHeight;
   m_nStartCol = scrollpos.x;
   m_nEndCol = m_nStartCol + drawWidth;
+  glEnable(GL_SCISSOR_TEST);
+
+  glScissor(0, m_nWindowHeight - drawHeight, m_nDrawWidth, m_nDrawHeight);
+  
+  if (isUndo) {
+    isUndo = false;
+    return;
+  }
+
+
 
   if (m_pDoc->m_ucPainting && !isAnEvent) {
     RestoreContent();
@@ -124,19 +131,12 @@ void PaintView::draw() {
 
     Point cur; // current position of cursor after rite click
 
-    // if (m_pDoc->m_pCurrentDirection == BRUSH_DIRECTION) {
-    //   if (target.x - target.y != 0) {
-    //     m_pDoc->m_pUI->setLineAngle(
-    //         atan((target.y - last_target.x) / (target.x - target.y)));
-    //   } else {
-    //     m_pDoc->m_pUI->setLineAngle(0);
-    //   }
-    // }
-
     last_target = target;
     int angle = 0;
     int size = 0;
+
     // This is the event handler
+
     switch (eventToDo) {
     case LEFT_MOUSE_DOWN:
       if (coord.x > m_pDoc->m_nPaintWidth || coord.y > m_pDoc->m_nPaintHeight) {
@@ -173,8 +173,6 @@ void PaintView::draw() {
           GradientMove(source, target);
       }
       m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-      /*std::cout << m_pDoc->m_pUI->get_m_R() << " " << m_pDoc->m_pUI->get_m_B()
-       * << " " << m_pDoc->m_pUI->get_m_G() << " " << std::endl;*/
 
       break;
     case LEFT_MOUSE_UP:
@@ -182,6 +180,8 @@ void PaintView::draw() {
       m_pDoc->saveUndo();
       SaveCurrentContent();
       RestoreContent();
+  
+      std::cout << "x:" << coord.x << "y:" << coord.y << std::endl;
       break;
     case RIGHT_MOUSE_DOWN:
       RightClickBrushBegin(source, target);
@@ -203,11 +203,11 @@ void PaintView::draw() {
   }
 
   glFlush();
-
 #ifndef MESA
   // To avoid flicker on some machines.
   glDrawBuffer(GL_BACK);
 #endif // !MESA
+  glDisable(GL_SCISSOR_TEST);
 }
 
 int PaintView::handle(int event) {
@@ -262,7 +262,10 @@ int PaintView::handle(int event) {
 void PaintView::refresh() { redraw(); }
 
 void PaintView::resizeWindow(int width, int height) {
+    glDisable(GL_SCISSOR_TEST);
   resize(x(), y(), width, height);
+
+
 }
 
 void PaintView::SaveCurrentContent() {
@@ -454,9 +457,6 @@ void PaintView::PointerMove(const Point source, const Point target,
   right_size = sqrt(pow(cur.x - start.x, 2) + pow(cur.y - start.y, 2));
   right_angle = atan(((double)start.y - (double)cur.y) /
                      ((double)cur.x - (double)start.x));
-  std::cout << "angle:" << right_angle << std::endl;
-  std::cout << "start.x:" << start.x << "start.y" << start.y << std::endl;
-  std::cout << "cur.x:" << cur.x << "cur.y" << cur.y << std::endl;
   glVertex2f(new_target.x - (cos(right_angle) * right_size / 2),
              new_target.y - (sin(right_angle) * right_size / 2));
   glVertex2f(new_target.x + (cos(right_angle) * right_size / 2),
@@ -793,4 +793,18 @@ int PaintView::getDrawHeight() {
 }
 int PaintView::getDrawWidth() {
     return m_nDrawWidth;
+}
+
+void PaintView::clipPlane() {
+    glEnable(GL_CLIP_PLANE0);
+
+        glPolygonMode(GL_FRONT, GL_LINE);
+    glBegin(GL_POLYGON);
+    glEdgeFlag(GL_FALSE);
+
+    glVertex2i(m_nStartCol,m_nStartRow);
+    glVertex2i(m_nEndCol, m_nStartRow);
+    glVertex2i(m_nStartCol, m_nEndRow);
+    glVertex2i(m_nEndCol, m_nEndRow);
+    glEnd();
 }

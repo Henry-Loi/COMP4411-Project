@@ -66,6 +66,7 @@ public:
   std::pair<float, float> calGradient(int x, int y, unsigned char *src);
 
   ImpressionistDoc *m_pDoc;
+  void clipPlane();
 
 private:
   bool isUndo = false;

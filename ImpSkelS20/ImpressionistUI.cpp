@@ -632,6 +632,9 @@ void ImpressionistUI::show() {
 void ImpressionistUI::resize_windows(int w, int h) {
   m_paintView->size(w, h);
   m_origView->size(w, h);
+  std::cout << "PaintView_x:" << m_paintView->x() << " " << m_paintView->y() << std::endl;
+
+
 }
 
 //------------------------------------------------
