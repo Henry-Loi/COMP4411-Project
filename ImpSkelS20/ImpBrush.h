@@ -22,6 +22,7 @@ enum {
   BRUSH_CURVED,
   BRUSH_BLUR,
   BRUSH_SHARPENING,
+  BRUSH_TRIANGLE,
   NUM_BRUSH_TYPE, // Make sure this stays at the end!
   /* implicit brush here */
   BRUSH_PAINTERLY,
