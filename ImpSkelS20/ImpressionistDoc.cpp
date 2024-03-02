@@ -352,6 +352,7 @@ int ImpressionistDoc::swapCanvas() {
   m_ucOriginal = m_ucPainting;
   m_ucBitmap = m_ucOriginal;
   m_ucPainting = temp;
+  m_ucRawPainting = m_ucPainting;
 
   m_pUI->m_origView->refresh();
   m_pUI->m_paintView->refresh();
