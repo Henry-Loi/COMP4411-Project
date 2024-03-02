@@ -107,9 +107,9 @@ void PainterlyBrush::StartPaint(std::vector<Stroke *> strokes,
 
     // Create a vector of pairs for all possible (i, j) values
     std::vector<std::pair<float, float>> ij_pairs;
-    for (float i = original_size / 4; i < m_nDrawWidth + spacing;
+    for (float i = original_size / 2; i < m_nDrawWidth + spacing;
          i += spacing) {
-      for (float j = original_size / 4; j < m_nDrawHeight + spacing;
+      for (float j = original_size / 2; j < m_nDrawHeight + spacing;
            j += spacing) {
         ij_pairs.push_back(std::make_pair(i, j));
       }

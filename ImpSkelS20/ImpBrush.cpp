@@ -138,10 +138,8 @@ float* ImpBrush::getGradient(const Point Source) {
 
 void ImpBrush::EdgeClipMove(const Point source, const Point target, const int size, const int angle) {
 
-    std::cout << "edgerun" << std::endl;
     ImpressionistDoc* pDoc = GetDocument();
     if (pDoc->m_ucEdgeImage == NULL) {
-     std::cout << "edgeAuto" << std::endl;
         EdgeAutoPaint();
     }
     float start_x = target.x - (cos(DEG2RAD(angle)) * size / 2);

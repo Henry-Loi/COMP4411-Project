@@ -559,13 +559,15 @@ void PaintView::apply_painterly(void) {
         gaussKernel(m_pPainterlyBrush->R[i], param->Blur * param->Blur *
                                                  m_pPainterlyBrush->R[i] *
                                                  m_pPainterlyBrush->R[i]);
+    std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
     if (param->Blur != 0) {
       m_pDoc->applyKernel(tmp, GKernel, m_pPainterlyBrush->R[i],
                           m_pPainterlyBrush->R[i]);
     } else {
+        std::cout << "Not apply blur" << std::endl;
       memcpy(tmp, m_pDoc->m_ucOriginal, width * height * 3);
     }
-
+    std::cout << GKernel[0][0] << GKernel[0][1] << std::endl;
     // paint a layer
     paintLayer(canvas, tmp, m_pPainterlyBrush->R[i]);
     delete[] tmp;
@@ -665,8 +667,8 @@ void PaintView::paintLayer(unsigned char *canvas, unsigned char *referenceImage,
     }
   }
 
-  // painterly brush
-  m_pDoc->m_pUI->m_pPainterlyBrush->StartPaint(strokes, canvas);
+
+  m_pDoc->m_pUI->m_pPainterlyBrush->StartPaint(strokes, m_pDoc->m_ucOriginal);
 
   delete[] zBuffer;
   delete[] D;
