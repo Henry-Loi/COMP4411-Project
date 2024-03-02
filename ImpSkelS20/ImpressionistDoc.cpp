@@ -23,6 +23,7 @@
 #include "ScatteredLinesBrush.h"
 #include "ScatteredPointsBrush.h"
 
+#include "TriangleBrush.h"
 // alpha mapped brush
 #include "AlphaMappedBrush.h"
 
@@ -85,6 +86,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_SHARPENING] =
       new SharpeningBrush(this, "Sharpening");
   ImpBrush::c_pBrushes[BRUSH_PIXELIZE] = new PixelizeBrush(this, "Pixelize");
+  ImpBrush::c_pBrushes[BRUSH_TRIANGLE] = new TriangleBrush(this, "Triangle");
 
   // make one of the brushes current
   m_pCurrentBrush = ImpBrush::c_pBrushes[0];

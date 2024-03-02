@@ -160,6 +160,7 @@
     <ClCompile Include="PainterlyBrush.cpp" />
     <ClCompile Include="CurvedBrush.cpp" />
     <ClCompile Include="BSplines.cpp" />
+    <ClCompile Include="TriangleBrush.cpp" />
     <ClCompile Include="PixelizeBrush.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +186,7 @@
     <ClInclude Include="CurvedBrush.h" />
     <ClInclude Include="BSplines.h" />
     <ClInclude Include="PixelizeBrush.h" />
+    <ClInclude Include="TriangleBrush.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

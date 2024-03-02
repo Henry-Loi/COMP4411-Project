@@ -766,6 +766,8 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
      (void *)BRUSH_SHARPENING},
     {"Pixelize", FL_ALT + 'z', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
      (void *)BRUSH_PIXELIZE},
+    {"Triangle", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_brushChoice,
+     (void *)BRUSH_TRIANGLE},
     {0}};
 
 Fl_Menu_Item ImpressionistUI::strokeDirectionMenu[NUM_STROKE_DIRECTION + 1] = {
