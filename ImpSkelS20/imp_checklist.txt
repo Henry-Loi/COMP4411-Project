@@ -5,22 +5,22 @@ HKUST login(s): ykkok, hchloi
 
 Delete yes/no when appropriate
 
-W per new brush						yes/no
-W border clipping					yes/no
+W per new brush						yes
+W border clipping					yes
 W (red) marker						yes
-W swap							yes/no
-B RGB scale						yes/no
-B blur/sharp brush					yes/no
-B 1 level undo						yes/no
-B dissolve						yes/no 
-BW fade in/out input on output canvas			yes/no
+W swap							yes
+B RGB scale						yes
+B blur/sharp brush					yes
+B 1 level undo						yes
+B dissolve						yes 
+BW fade in/out input on output canvas			yes
 BW mural (blending)					yes
 BW alpha brush						yes
 BW automatic paint whole image				yes
-BW gradient from user-specified image			yes/no
-BW edge clipping					yes/no
+BW gradient from user-specified image			yes
+BW edge clipping					yes
 2B user-specified kernel				yes
-2B edge detection + user-specified edge clipping	yes/no
+2B edge detection + user-specified edge clipping	yes
 2B multiresolution					yes/no
 2B warp brush						yes/no
 2B curved brush following image gradient		yes/no
