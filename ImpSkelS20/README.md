@@ -36,7 +36,7 @@
 - [X] brush alpha value control
 
 ## Bells and Whistles
-> **Total marks: 16.5/41** \
+> **Total marks: 19.5/41** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
 
@@ -45,7 +45,7 @@
 - [X] [0.5] Add a marker cursor to the original image
 - [X] [0.5] swap contents of painting window and original image window
 - [X] [1] independent RGB Brush
-- [ ] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
+- [X] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
 - [X] [1] Undo feature for brush and filtering effects (undo every mouse up & down pair)
 - [X] [1] Dissolve one image into another (set alpha to around 0.5-0.6 and paste on original view + image size checking)
 - [X] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (fade the original as background of paint view (Hint: save the faded image separately with the paint buffer))
@@ -54,7 +54,7 @@
 - [X] [1.5] Add "alpha-mapped" brush strokes
 - [X] [1.5] Auto paint image (with randomness)
 - [x] [1.5] Brush direction by gradient from user-specified image
-- [ ] [1.5] Edge Clipping (cut the exceed edge when painting)
+- [x] [1.5] Edge Clipping (cut the exceed edge when painting)
 
 - [X] [2] User-specified kernel (odd size matrix only)
 - [x] [2] Edge detection + user-specified edge clipping (using sobal)
