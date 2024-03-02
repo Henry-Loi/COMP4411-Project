@@ -22,8 +22,7 @@ void BluringBrush::BrushBegin(const Point source, const Point target) {
 
     int size = pDoc->getSize();
 
-    glPointSize((float)size);
-
+        glPointSize((float)size);
     BrushMove(source, target);
 }
 
@@ -37,22 +36,27 @@ void BluringBrush::BrushMove(const Point source, const Point target) {
         printf("PointBrush::BrushMove  document is NULL\n");
         return;
     }
+
+
     int blurMatrix[3][3] = { {1,1,1},
                             {1,1,1},
                             {1,1,1} };
-    float denominator = 9.0f;
-    float*rawColor = kernelOperation(source, blurMatrix, 3);
-    std::cout << "rawColor: " << rawColor[0] << " " << rawColor[1] << " " << rawColor[2] << std::endl;
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4f((GLfloat)(rawColor[0] / (255.0*denominator)), (GLfloat)(rawColor[1] / (255.0 * denominator)), (GLfloat)(rawColor[2] / (255.0 * denominator)), pDoc->getAlpha());
-    std::cout << "rawColor: " << (GLfloat)(rawColor[0] / (255.0 * denominator)) << " " << (GLfloat)(rawColor[1] / (255.0 * denominator)) << " " << (GLfloat)(rawColor[2] / (255.0 * denominator)) << std::endl;
-    //SetColorAlpha(source, pDoc->getAlpha());
-    glBegin(GL_POINTS);
+    float denominator = 9.0*255.0;
 
-    glVertex2d(target.x, target.y);
+    for (int i = 0; i < 9; i++) {
+        glBegin(GL_POINTS);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        float* rawColor = kernelOperation(source, blurMatrix, 3);
+        glColor4f((GLfloat)(rawColor[0] / (denominator)),
+            (GLfloat)(rawColor[1] / (denominator)), (GLfloat)(rawColor[2] / denominator), pDoc->getAlpha());
+        delete[]rawColor;
+        glVertex2d(target.x, target.y);
+        glEnd();
 
-    glEnd();
+    }
+
+
 }
 
 

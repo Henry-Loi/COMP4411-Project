@@ -33,6 +33,7 @@
 #include "PainterlyBrush.h"
 //blur brush
 #include"BluringBrush.h"
+#include"SharpeningBrush.h"
 
 // MY TODO: add other brushes
 #include "CurvedBrush.h"
@@ -78,6 +79,7 @@ ImpressionistDoc::ImpressionistDoc() {
   ImpBrush::c_pBrushes[BRUSH_CUSTOM_KERNEL] = new KernelBrush(this, "Kernel");
   ImpBrush::c_pBrushes[BRUSH_CURVED] = new CurvedBrush(this, "Curved");
   ImpBrush::c_pBrushes[BRUSH_BLUR] = new BluringBrush(this, "Blur");
+  ImpBrush::c_pBrushes[BRUSH_SHARPENING] = new SharpeningBrush(this, "Sharpening");
 
 
   // make one of the brushes current
