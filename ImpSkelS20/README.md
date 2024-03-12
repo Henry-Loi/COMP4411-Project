@@ -46,7 +46,7 @@
 - [X] [0.5] swap contents of painting window and original image window
 - [X] [1] independent RGB Brush
 - [X] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
-- [X] [1] Undo feature for brush and filtering effects (undo every mouse up & down pair)
+- [ ] [1] Undo feature for brush and filtering effects (undo every mouse up & down pair)
 - [X] [1] Dissolve one image into another (set alpha to around 0.5-0.6 and paste on original view + image size checking)
 - [X] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (fade the original as background of paint view (Hint: save the faded image separately with the paint buffer))
 
@@ -58,7 +58,7 @@
 
 - [X] [2] User-specified kernel (odd size matrix only)
 - [x] [2] Edge detection + user-specified edge clipping (using sobal)
-- [ ] [2] Multiresolution automatic painting
+- [X] [2] Multiresolution automatic painting (1B)
 - [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
 - [X] [2] Design curved brush following image gradient
 - [ ] [<=4] Construct Mosaic
