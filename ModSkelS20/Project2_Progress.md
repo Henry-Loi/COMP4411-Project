@@ -32,31 +32,26 @@
 
 
 ## Bells and Whistles
-> **Total marks: 21.5/41** \
+> **Total marks: /30** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
-> I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/impressionist/index.html) before start working on it due to my poor english orz.
+> I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/index.html) before start working on it due to my poor english orz.
 
-- [X] [0.5] More Brushes (1. Pixelize Brush 2. Triangle Brush)
-- [X] [0.5] Clip brush strokes to the painted region
-- [X] [0.5] Add a marker cursor to the original image
-- [X] [0.5] swap contents of painting window and original image window
-- [X] [1] independent RGB Brush
-- [X] [1] Design Brush hat selectively applies one or more filters (e.g. blurring and sharpening). 
-- [ ] [1] Undo feature for brush and filtering effects (undo every mouse up & down pair)
-- [X] [1] Dissolve one image into another (set alpha to around 0.5-0.6 and paste on original view + image size checking)
-- [X] [1.5] Add a slider that allows the user to fade in or fade out the original image beneath the user's brush strokes on the canvas. (fade the original as background of paint view (Hint: save the faded image separately with the paint buffer))
+- [ ] [0.5] Change the default light source to illuminate your scene more dramatically.
+- [ ] [0.5] Allow for adjustable levels of detail for your character. You will need to add a UI control for this.
+- [ ] [0.5] Come up with another whistle and implement it.  A whistle is something that extends the use of one of the things you are already doing.  It is part of the basic model construction, but extended or cloned and modified in an interesting way.
+- [ ] [1] Use a texture map on all or part of your character. (The safest way to do this is to implement your own primitives inside your model file that do texture mapping.)
+- [ ] [1] Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them.
+- [ ] [1] Make an additional "animated" sequence your character can perform.
 
-- [X] [1.5] Add a "mural" load in different images while preserving what has been drawn on the canvas
-- [X] [1.5] Add "alpha-mapped" brush strokes
-- [X] [1.5] Auto paint image (with randomness)
-- [x] [1.5] Brush direction by gradient from user-specified image
-- [x] [1.5] Edge Clipping (cut the exceed edge when painting)
+- [ ] [1] Add some widgets that control adjustable parameters to your model so that you can create individual-looking instances of your character. 
+- [ ] [1] Add a "Frame All" feature that would change the position of the camera such that your model is entirely visible in the model window, regardless of the pose and location of your model. 
+- [ ] [1.5] The camera code has a constrained up vector -- modify the code to (1) handle camera twists (the framework is already there) and (2) to come up with an intuitive way for the user to twist the camera via mouse control.
+- [ ] [2] Add a function in your model file for drawing a new type of primitive.
 
-- [X] [2] User-specified kernel (odd size matrix only)
-- [x] [2] Edge detection + user-specified edge clipping (using sobal)
-- [X] [2] Multiresolution automatic painting (1B)
-- [ ] [2] Design a brush that can be used to stretch and pull the image as if it were rubber
-- [X] [2] Design curved brush following image gradient
-- [ ] [<=4] Construct Mosaic
-- [ ] [4] Impressionist video with temporal coherency
-- [ ] [8] Implement Bayesian matting
+- [ ] [2] Use some sort of procedural modeling (such as an L-system) to generate all or part of your character.
+- [ ] [2] Have your character react differently to UI controls depending on what mood they are in.
+
+- [ ] [4] Implement your hierarchical model and "skin" it with metaballs.
+- [ ] [8] "goal-oriented" motion
+- [ ] [+4] add all angle constraints (Additional)
+
