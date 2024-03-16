@@ -174,28 +174,25 @@ void Camera::applyViewingTransform() {
 
 // basic requirement: create a equivalent function to gluLookAt
 void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up) {
-  Vec3f eyeVec = Vec3f(eye[0], eye[1], eye[2]);
-  Vec3f atVec = Vec3f(at[0], at[1], at[2]);
-  Vec3f upVec = Vec3f(up[0], up[1], up[2]);
-
-  Vec3f forward = atVec - eyeVec;
+  Vec3f forward = at - eye;
   forward.normalize();
 
-  Vec3f right = upVec.cross(forward);
+  Vec3f right = forward.cross(up);
   right.normalize();
 
-  Vec3f actualUp = forward.cross(right);
+  Vec3f actualUp = right.cross(forward);
   actualUp.normalize();
 
-  Mat4f lookAtMatrix = Mat4f(right[0], right[1], right[2], 0, actualUp[0],
-                             actualUp[1], actualUp[2], 0, -forward[0],
-                             -forward[1], -forward[2], 0, 0, 0, 0, 1);
+  float lookAtMatrix[16] = {right[0], actualUp[0], -forward[0], 0,
+                            right[1], actualUp[1], -forward[1], 0,
+                            right[2], actualUp[2], -forward[2], 0,
+                            0,        0,           0,           1};
 
   // Apply the lookAt transformation to the camera's current transformation with
   // convertion to GL matrix
-  glMultMatrixf(&lookAtMatrix);
+  glMultMatrixf(lookAtMatrix);
   // Translate the camera to the origin
-  glTranslatef(-eyeVec[0], -eyeVec[1], -eyeVec[2]);
+  glTranslatef(-eye[0], -eye[1], -eye[2]);
 }
 
 #pragma warning(pop)
