@@ -202,6 +202,7 @@
     <ClInclude Include="modelerui.h" />
     <ClInclude Include="modelerview.h" />
     <ClInclude Include="vec.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
