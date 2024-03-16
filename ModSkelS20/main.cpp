@@ -23,6 +23,12 @@ void RobotModel::set_model_lighting(void) {
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
 }
 
+void RobotModel::initTextureMap() {
+  for (int i = 0; i < NUM_OF_TERXTURES; i++) {
+    textureMaps[i] = new TextureMap(texture_list[i]);
+  }
+}
+
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out RobotModel
 void RobotModel::draw() {
@@ -65,7 +71,7 @@ void RobotModel::draw() {
   glPushMatrix();
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
   glTranslated(-1, 3, -0.7);
-  drawBox(2, 2, 1.4);
+  drawTextureBox(textureMaps[TEXTURE_TEST]->texImageId, 2, 2, 1.4);
 
   // draw eyes
   glPushMatrix();

@@ -3,7 +3,8 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include "modelerview.h"
-#include <FL/gl.h>
+
+#include "texturedraw.h"
 
 #include "modelerglobals.h"
 
@@ -11,9 +12,15 @@
 class RobotModel : public ModelerView {
 public:
   RobotModel(int x, int y, int w, int h, char *label)
-      : ModelerView(x, y, w, h, label) {}
+      : ModelerView(x, y, w, h, label) {
+    initTextureMap();
+  }
 
   void set_model_lighting(void);
+
+  void initTextureMap(void);
+
+  TextureMap *textureMaps[NUM_OF_TERXTURES];
 
   virtual void draw();
 };
