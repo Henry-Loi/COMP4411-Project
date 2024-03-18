@@ -28,11 +28,11 @@
 - [X] Implement own LookAt
 
 #### Task 4 - At least 2 Bells
-- [ ] 2 bells or equivalent
+- [X] 2 bells or equivalent
 
 
 ## Bells and Whistles
-> **Total marks: 1.5/30** \
+> **Total marks: 2.5/30** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/index.html) before start working on it due to my poor english orz.
 
@@ -44,7 +44,7 @@
 - [ ] [1] Make an additional "animated" sequence your character can perform.
 
 - [ ] [1] Add some widgets that control adjustable parameters to your model so that you can create individual-looking instances of your character. 
-- [ ] [1] Add a "Frame All" feature that would change the position of the camera such that your model is entirely visible in the model window, regardless of the pose and location of your model. 
+- [X] [1] Add a "Frame All" feature that would change the position of the camera such that your model is entirely visible in the model window, regardless of the pose and location of your model. 
 - [ ] [1.5] The camera code has a constrained up vector -- modify the code to (1) handle camera twists (the framework is already there) and (2) to come up with an intuitive way for the user to twist the camera via mouse control.
 - [ ] [2] Add a function in your model file for drawing a new type of primitive.
 

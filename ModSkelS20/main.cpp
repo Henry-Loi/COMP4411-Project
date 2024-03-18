@@ -54,6 +54,8 @@ void RobotModel::draw() {
   glPushMatrix();
   glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
+  glScaled(VAL(XSCALE), VAL(YSCALE), VAL(ZSCALE));
+
   // draw head
   glPushMatrix();
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
@@ -206,6 +208,10 @@ int main() {
   controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
   controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
+
+  controls[XSCALE] = ModelerControl("X Scale", 0.1, 2, 0.1f, 1);
+  controls[YSCALE] = ModelerControl("Y Scale", 0.1, 2, 0.1f, 1);
+  controls[ZSCALE] = ModelerControl("Z Scale", 0.1, 2, 0.1f, 1);
 
   // light controls
   controls[LIGHT_X] = ModelerControl("Light X", -5, 5, 0.1f, 0);
