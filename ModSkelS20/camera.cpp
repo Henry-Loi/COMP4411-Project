@@ -1,5 +1,6 @@
 #include <Fl/gl.h>
 #include <cmath>
+#include <corecrt_math.h>
 #include <gl/glu.h>
 
 #include "camera.h"
@@ -87,6 +88,8 @@ void Camera::calculateViewingTransformParameters() {
   MakeDiagonal(twistXform, 1.0f);
   MakeHTrans(originXform, mLookAt);
 
+  float m_twist = getTwist();
+
   mPosition = Vec3f(0, 0, 0);
   // grouped for (mat4 * vec3) ops instead of (mat4 * mat4) ops
   mPosition =
@@ -94,9 +97,9 @@ void Camera::calculateViewingTransformParameters() {
 
   if (fmod((double)mElevation, 2.0 * M_PI) < 3 * M_PI / 2 &&
       fmod((double)mElevation, 2.0 * M_PI) > M_PI / 2)
-    mUpVector = Vec3f(0, -1, 0);
+    mUpVector = Vec3f(sin(m_twist), -cos(m_twist), 0);
   else
-    mUpVector = Vec3f(0, 1, 0);
+    mUpVector = Vec3f(sin(m_twist), cos(m_twist), 0);
 
   mDirtyTransform = false;
 }
@@ -153,8 +156,11 @@ void Camera::dragMouse(int x, int y) {
     setDolly(getDolly() + dDolly);
     break;
   }
-  case kActionTwist:
-    // Not implemented
+  case kActionTwist: {
+    float dTwist = -mouseDelta[0] * kMouseRotationSensitivity;
+    setTwist(getTwist() + dTwist);
+    break;
+  }
   default:
     break;
   }
