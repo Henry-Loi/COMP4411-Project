@@ -20,7 +20,7 @@ public:
 
   void initTextureMap(void);
 
-  TextureMap *textureMaps[NUM_OF_TERXTURES];
+  TextureMap *textureMaps[NUM_OF_TEXTURES];
 
   virtual void draw();
 };

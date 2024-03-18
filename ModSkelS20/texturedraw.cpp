@@ -1,6 +1,8 @@
 #include "texturedraw.h"
 
 #include "bitmap.h"
+#include "modelerdraw.h"
+#include <FL/fl_ask.H>
 
 void TextureMap::loadTexture(char *filename) {
   // Load the texture file
@@ -8,19 +10,34 @@ void TextureMap::loadTexture(char *filename) {
   // Seek to the beginning of the file and read the header (assuming BMP format)
   texImage = readBMP(filename, texImageWidth, texImageHeight);
 
-  printf("TextureMap::loadTexture: %s %d %d\n", filename, texImageWidth,
-         texImageHeight);
-
+  if (texImage == NULL) {
+    // pop alert
+    fl_alert("Error reading texture file");
+    return;
+  }
   // Generate a new texture ID
-  glGenTextures(1, &texImageId);
+  glGenTextures(3, &texImageId);
 }
 
-void drawTextureBox(GLuint texImageId, float height, float width,
-                    float length) {
-  // Enable texture mapping
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, texImageId);
+void drawTextureBox(TextureMap *map, float height, float width, float length) {
 
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&map->texImageId);
+  glBindTexture(GL_TEXTURE_2D, map->texImageId);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, map->texImageWidth,
+               map->texImageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, map->texImage);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  glEnable(GL_TEXTURE_2D);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+            GL_MODULATE); // default is GL_MODULATE for interacting with light
+  glBindTexture(GL_TEXTURE_2D, map->texImageId); // repeat?
+
+  glPushMatrix();
+
+  glTranslated(width / 2, height / 2, length / 2);
   // Draw a textured box
   glBegin(GL_QUADS);
 
@@ -86,40 +103,29 @@ void drawTextureBox(GLuint texImageId, float height, float width,
 
   glEnd();
 
+  glPopMatrix();
+
   // Disable texture mapping
   glDisable(GL_TEXTURE_2D);
 }
 
-void drawTextureCylinder(GLuint texImageId, float radius, float height,
-                         int sides) {
-  // Enable texture mapping
+void drawTextureCylinder(TextureMap *map, float height, float radius1,
+                         float radius2) {
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&map->texImageId);
+  glBindTexture(GL_TEXTURE_2D, map->texImageId);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, map->texImageWidth,
+               map->texImageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, map->texImage);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, texImageId);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+            GL_MODULATE); // default is GL_MODULATE for interacting with light
+  glBindTexture(GL_TEXTURE_2D, map->texImageId); // repeat?
 
-  // Draw a textured cylinder
-  glBegin(GL_QUAD_STRIP);
+  drawCylinder(height, radius1, radius2);
 
-  // Calculate the angle between each segment
-  float angleStep = 2.0f * 3.14159f / sides;
-
-  for (int i = 0; i <= sides; ++i) {
-    float angle = i * angleStep;
-    float x = radius * cos(angle);
-    float y = radius * sin(angle);
-
-    // Calculate the texture coordinates
-    float u = static_cast<float>(i) / sides;
-    float v = 0.0f;
-
-    // Draw the vertices and apply texture coordinates
-    glTexCoord2f(u, v);
-    glVertex3f(x, y, 0.0f);
-    glTexCoord2f(u, 1.0f);
-    glVertex3f(x, y, height);
-  }
-
-  glEnd();
-
-  // Disable texture mapping
   glDisable(GL_TEXTURE_2D);
 }

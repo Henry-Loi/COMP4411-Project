@@ -2,7 +2,7 @@
 
 #include <FL/gl.h>
 
-typedef enum { TEXTURE_TEST, NUM_OF_TERXTURES } TextureType;
+typedef enum { TEXTURE_DOT, TEXTURE_BRICK, NUM_OF_TEXTURES } TextureType;
 
 class TextureMap {
 public:
@@ -18,10 +18,8 @@ public:
   GLuint texImageId;
 };
 
-static char *texture_list[NUM_OF_TERXTURES] = {
-    "texture/test.bmp",
-};
+static char *texture_list[NUM_OF_TEXTURES] = {"dot.bmp", "brick.bmp"};
 
-void drawTextureBox(GLuint, float height, float width, float length);
+void drawTextureBox(TextureMap *, float height, float width, float length);
 
-void drawTextureCylinder(GLuint, float radius, float height, int sides);
+void drawTextureCylinder(TextureMap *, float, float, float);
