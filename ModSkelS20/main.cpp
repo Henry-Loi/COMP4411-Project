@@ -1,6 +1,7 @@
 // The sample model.  You should build a file
 // very similar to this for when you make your model.
 #include "main.h"
+#include "texturedraw.h"
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -21,6 +22,12 @@ void RobotModel::set_model_lighting(void) {
   glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
   glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
+}
+
+void RobotModel::initTextureMap() {
+  for (int i = 0; i < NUM_OF_TEXTURES; i++) {
+    textureMaps[i] = new TextureMap(texture_list[i]);
+  }
 }
 
 // We are going to override (is that the right word?) the draw()
@@ -47,25 +54,11 @@ void RobotModel::draw() {
   glPushMatrix();
   glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
-  // // draw cannon
-  // glPushMatrix();
-  // glRotated(VAL(ROTATE), 0.0, 1.0, 0.0);
-  // glRotated(-90, 1.0, 0.0, 0.0);
-  // drawCylinder(VAL(HEIGHT), 0.1, 0.1);
-
-  // glTranslated(0.0, 0.0, VAL(HEIGHT));
-  // drawCylinder(1, 1.0, 0.9);
-
-  // glTranslated(0.0, 0.0, 0.5);
-  // glRotated(90, 1.0, 0.0, 0.0);
-  // drawCylinder(4, 0.1, 0.2);
-  // glPopMatrix();
-
   // draw head
   glPushMatrix();
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
   glTranslated(-1, 3, -0.7);
-  drawBox(2, 2, 1.4);
+  drawTextureBox(textureMaps[TEXTURE_DOT], 2, 2, 1.4);
 
   // draw eyes
   glPushMatrix();
@@ -101,7 +94,7 @@ void RobotModel::draw() {
   setDiffuseColor(COLOR_RED);
   glRotated(90, 1.0, 0.0, 0.0);
   glTranslated(0, 0, 0.7);
-  drawCylinder(2, 1.0 / 2, 1.5 / 2);
+  drawTextureCylinder(textureMaps[TEXTURE_BRICK], 2, 1.0 / 2, 1.5 / 2);
 
   glPopMatrix();
   glPopMatrix();
@@ -117,7 +110,7 @@ void RobotModel::draw() {
   setDiffuseColor(COLOR_RED);
   glRotated(90, 1.0, 0.0, 0.0);
   glTranslated(0, 0, 0.7);
-  drawCylinder(2, 1.0 / 2, 1.5 / 2);
+  drawTextureCylinder(textureMaps[TEXTURE_BRICK], 2, 1.0 / 2, 1.5 / 2);
 
   glPopMatrix();
   glPopMatrix();
