@@ -119,7 +119,7 @@ void Camera::clickMouse(MouseAction_t action, int x, int y) {
   mLastMousePosition[1] = y;
 }
 
-void Camera::dragMouse(int x, int y) {
+void Camera::dragMouse(int x, int y, bool twist_enabled = false) {
   Vec3f mouseDelta = Vec3f(x, y, 0.0f) - mLastMousePosition;
   mLastMousePosition = Vec3f(x, y, 0.0f);
 
@@ -153,8 +153,11 @@ void Camera::dragMouse(int x, int y) {
     setDolly(getDolly() + dDolly);
     break;
   }
-  case kActionTwist:
-    // Not implemented
+  case kActionTwist: {
+    float dTwist = -mouseDelta[0] * kMouseRotationSensitivity;
+    setTwist(getTwist() + dTwist);
+    break;
+  }
   default:
     break;
   }
