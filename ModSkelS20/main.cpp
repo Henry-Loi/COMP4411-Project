@@ -196,6 +196,8 @@ void RobotModel::draw() {
   //   drawBox(1, 1, 1);
 
   glPopMatrix();
+
+  DrawTorus(50, 10, 20, 30);
 }
 
 int main() {
