@@ -1,8 +1,12 @@
 #include <Fl/gl.h>
+#include <cmath>
 #include <gl/glu.h>
 
 #include "camera.h"
 #include "mat.h"
+
+#include "modelerapp.h"
+#include "modelerglobals.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4244)
@@ -154,6 +158,12 @@ void Camera::dragMouse(int x, int y) {
   default:
     break;
   }
+}
+
+void Camera::frameAll(void) {
+  mDolly = -25.0f * max(VAL(ZSCALE), max(VAL(XSCALE), VAL(YSCALE)));
+
+  setLookAt(Vec3f(VAL(XPOS), VAL(YPOS), VAL(ZPOS)));
 }
 
 void Camera::releaseMouse(int x, int y) { mCurrentMouseAction = kActionNone; }
