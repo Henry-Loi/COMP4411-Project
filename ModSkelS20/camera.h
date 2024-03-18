@@ -84,7 +84,7 @@ public:
   // endX on mouse up.
   //-----------------------------------------------------
   void clickMouse(MouseAction_t action, int x, int y);
-  void dragMouse(int x, int y, bool);
+  void dragMouse(int x, int y);
   void releaseMouse(int x, int y);
 
   //---[ Viewing Transform ]--------------------------------

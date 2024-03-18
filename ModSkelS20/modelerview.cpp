@@ -3,6 +3,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Gl_Window.h>
+#include <FL/fl_ask.H>
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>
@@ -10,6 +11,7 @@
 static const int kMouseRotationButton = FL_LEFT_MOUSE;
 static const int kMouseTranslationButton = FL_MIDDLE_MOUSE;
 static const int kMouseZoomButton = FL_RIGHT_MOUSE;
+static const int kKeybordTwistButton = 't';
 
 ModelerView::ModelerView(int x, int y, int w, int h, char *label)
     : Fl_Gl_Window(x, y, w, h, label) {
@@ -22,29 +24,29 @@ int ModelerView::handle(int event) {
   unsigned eventCoordY = Fl::event_y();
   unsigned eventButton = Fl::event_button();
   unsigned eventState = Fl::event_state();
+  unsigned twist_enabled = Fl::event_alt();
 
   switch (event) {
   case FL_PUSH: {
     if (twist_enabled) {
       m_camera->clickMouse(kActionTwist, eventCoordX, eventCoordY);
-      break;
-    }
-
-    switch (eventButton) {
-    case kMouseRotationButton:
-      m_camera->clickMouse(kActionRotate, eventCoordX, eventCoordY);
-      break;
-    case kMouseTranslationButton:
-      m_camera->clickMouse(kActionTranslate, eventCoordX, eventCoordY);
-      break;
-    case kMouseZoomButton:
-      m_camera->clickMouse(kActionZoom, eventCoordX, eventCoordY);
-      break;
+    } else {
+      switch (eventButton) {
+      case kMouseRotationButton:
+        m_camera->clickMouse(kActionRotate, eventCoordX, eventCoordY);
+        break;
+      case kMouseTranslationButton:
+        m_camera->clickMouse(kActionTranslate, eventCoordX, eventCoordY);
+        break;
+      case kMouseZoomButton:
+        m_camera->clickMouse(kActionZoom, eventCoordX, eventCoordY);
+        break;
+      }
     }
     // printf("push %d %d\n", eventCoordX, eventCoordY);
   } break;
   case FL_DRAG: {
-    m_camera->dragMouse(eventCoordX, eventCoordY, twist_enabled);
+    m_camera->dragMouse(eventCoordX, eventCoordY);
     // printf("drag %d %d\n", eventCoordX, eventCoordY);
   } break;
   case FL_RELEASE: {
@@ -57,20 +59,6 @@ int ModelerView::handle(int event) {
     }
     //  printf("release %d %d\n", eventCoordX, eventCoordY);
   } break;
-  case FL_KEYDOWN: {
-    switch (eventButton) {
-    case 't':
-      twist_enabled = true;
-    }
-    break;
-  }
-  case FL_KEYUP: {
-    switch (eventButton) {
-    case 't':
-      twist_enabled = false;
-    }
-    break;
-  }
   default:
     return 0;
   }

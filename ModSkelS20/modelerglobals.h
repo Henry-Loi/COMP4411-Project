@@ -16,6 +16,7 @@ enum SampleModelControls {
   HEAD_ROTATE,
   XSCALE,
   YSCALE,
+  ZSCALE,
   LIGHT_X,
   LIGHT_Y,
   LIGHT_Z,
