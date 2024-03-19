@@ -70,49 +70,129 @@ void RobotModel::draw() {
   //    z------x
  
   //draw torso and waist (root)
-  setDiffuseColor(COLOR_YELLOW);
-  glRotated(90, 0.0, 1.0, 0.0);
-  glTranslated(-2, 2, -0.7);
-  drawBox(4, 1.5, 1.4);
-  glTranslated(0.5, -1.5, 0);
-  drawBox(3, 1.5, 1.4);
-  setDiffuseColor(COLOR_BLUE);
-  glTranslated(0, -0.5, 0);
-  drawBox(3, 0.5, 1.4);
-  glTranslated(1, -1.5, 0);
-  drawBox(1, 1.5, 1.4);
-  glTranslated(0.5, 3.5, 0.7);
+  //------------------------------------------------//
+  setAmbientColor(0.8f, 0.8f, 0.8f);
 
-
-  // draw head
+  setDiffuseColor(1.0f,1.0f,1.0f);
+ 
+  glRotated(90, 1.0, 0.0, 0.0);
+  glTranslated(0, 0, -2);
+  drawCylinder(4, 2, 2);
+  setDiffuseColor(0.3f, 0.3f, 0.3f);
+  drawCylinder(0.5, 2.1, 2.1);
+  glTranslated(0, 0, 4);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawCylinder(0.5, 1.9, 1.5);
+  glTranslated(0, 0, -2);
+  glRotated(-90, 1.0, 0.0, 0.0);
+  //------------------------------------------------//
+ 
+  //draw head
+  //------------------------------------------------//
   glPushMatrix();
+
+  glTranslated(0, 2, 0);
   setDiffuseColor(COLOR_BLUE);
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
-  glTranslated(-1, 1.5, -0.7);
-  drawBox(2, 2, 1.4);
-
-  // draw eyes
+  drawSphere(2);
+  //draw eyes
+  glTranslated(0, 0.3, 0);
+  glRotated(5, 0.0, 1.0, 0.0);
+  glTranslated(0, 0, 1.5);
   setDiffuseColor(COLOR_RED);
-  glTranslated(0.5, 1, 1.4);
-  drawSphere(0.2);
-  glTranslated(1, 0, 0);
-  drawSphere(0.2);
+  drawCylinder(0.5, 0.2, 0.2);
+  glTranslated(0, 0, -1.5);
+
+  glRotated(15, 0.0, 1.0, 0.0);
+  setDiffuseColor(0.2f,0.2f,0.2f);
+  glTranslated(0, 0.1, 1.5);
+  drawCylinder(0.8, 0.2, 0.2);
+  
+  glPopMatrix();
+  //------------------------------------------------//
+  
+
+  //draw front leg
+  //------------------------------------------------//
+  glPushMatrix();
+  glRotated(180, 1.0, 0.0, 0.0);
+  glRotated(90, 0.0, 1.0, 0.0);
+  glTranslated(1.0, 2.75, -0.5);
+  glRotated(VAL(HEAD_ROTATE), 0.0, 0.0, 1.0);
+  setDiffuseColor(COLOR_BLUE);
+  drawCylinder(1.0, 0.5, 0.5);
+  glTranslated(-0.75, 0.25, -0.25);
+  setDiffuseColor(1.0f,1.0f,1.0f);
+  drawBox(1.5,0.9,1.5);
+
+
+  glPopMatrix();
+  //------------------------------------------------//
+  
+  //draw side leg
+  //------------------------------------------------//
+  glPushMatrix();
+  glRotated(90, 0.0, 1.0, 0.0);
+  glTranslated(0.0, 1.0, 2);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawCylinder(1, 1.0, 1.0);
+  glRotated(180, 0.0, 0.0, 1.0);
+  glTranslated(-1.0, 0.0, 0.25);
+  drawBox(2, 1.5, 0.75);
+  setDiffuseColor(COLOR_BLUE);
+  glTranslated(0.25, 0.5, 0.15);
+  drawBox(1.5, 3.5, 0.5);
+  glTranslated(0.75, 3.5, 0.0);
+
+  glTranslated(-0.75, 0.0, -0.5);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
 
-  ////draw leg
+  //setDiffuseColor(COLOR_YELLOW);
+  //glRotated(90, 0.0, 1.0, 0.0);
+  //glTranslated(-2, 2, -0.7);
+  //drawBox(4, 1.5, 1.4);
+  //glTranslated(0.5, -1.5, 0);
+  //drawBox(3, 1.5, 1.4);
+  //setDiffuseColor(COLOR_BLUE);
+  //glTranslated(0, -0.5, 0);
+  //drawBox(3, 0.5, 1.4);
+  //glTranslated(1, -1.5, 0);
+  //drawBox(1, 1.5, 1.4);
+  //glTranslated(0.5, 3.5, 0.7);
+
+
+  //// draw head
   //glPushMatrix();
+  //setDiffuseColor(COLOR_BLUE);
+  //glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
+  //glTranslated(-1, 1.5, -0.7);
+  //drawBox(2, 2, 1.4);
+
+  //// draw eyes
+  //setDiffuseColor(COLOR_RED);
+  //glTranslated(0.5, 1, 1.4);
+  //drawSphere(0.2);
+  //glTranslated(1, 0, 0);
+  //drawSphere(0.2);
+  //glPopMatrix();
+
+  //////draw leg
+  //glPushMatrix();
+  //glTranslated(-0.75, -3.5, 0);
   //setDiffuseColor(COLOR_GREY);
-  //glTranslated(-0.5, 0.75, 0.7);
+  //glTranslated(-0.5, 0.75, -0.7);
   //drawSphere(1.5 / 2);
 
-  //glPushMatrix();
+
   //setDiffuseColor(COLOR_RED);
   //glRotated(90, 1.0, 0.0, 0.0);
   //glTranslated(0, 0, 0.7);
   //drawCylinder(2, 1.0 / 2, 1.5 / 2);
 
   //glPopMatrix();
-  //glPopMatrix();
+
   ////end draw leg
 
   ////draw 2nd leg
