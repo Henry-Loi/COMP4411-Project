@@ -1,5 +1,7 @@
 #include "modelerdraw.h"
+
 #include <FL/gl.h>
+#include <FL/glut.h>
 #include <GL/glu.h>
 #include <cstdio>
 #include <math.h>
@@ -399,38 +401,26 @@ void drawTriangle(double x1, double y1, double z1, double x2, double y2,
   }
 }
 
-void DrawTorus(double Radius = 50, double TubeRadius = 10, int Sides = 20,
-               int Rings = 30) {
-  double sideDelta = 2.0 * M_PI / Sides;
-  double ringDelta = 2.0 * M_PI / Rings;
-  double theta = 0;
-  double cosTheta = 1.0;
-  double sinTheta = 0.0;
+void DrawTorus(double innerRadius, double outerRadius) {
 
-  double phi, sinPhi, cosPhi;
-  double dist;
+  ModelerDrawState *mds = ModelerDrawState::Instance();
+  int divisions;
 
-  glColor3f(1.00f, 0.0f, 0.0f);
+  _setupOpenGl();
 
-  for (int i = 0; i < Rings; i++) {
-    double theta = theta + ringDelta;
-    double cosTheta1 = cos(theta);
-    double sinTheta1 = sin(theta);
-    glBegin(GL_QUADS);
-    phi = 0;
-    for (int j = 0; j <= Sides; j++) {
-      phi = phi + sideDelta;
-    }
+  switch (mds->m_quality) {
+  case HIGH:
+    divisions = 32;
+    break;
+  case MEDIUM:
+    divisions = 20;
+    break;
+  case LOW:
+    divisions = 12;
+    break;
+  case POOR:
+    divisions = 8;
+    break;
   }
-  cosPhi = cos(phi);
-  sinPhi = sin(phi);
-  dist = Radius + (TubeRadius * cosPhi);
-  glNormal3d(cosTheta * cosPhi, sinTheta * cosPhi, sinPhi);
-  glVertex3d(cosTheta * dist, sinTheta * dist, TubeRadius * sinPhi);
-  glNormal3d(cosTheta * cosPhi, sinTheta * cosPhi, sinPhi);
-  glVertex3d(cosTheta * dist, sinTheta * dist, TubeRadius * sinPhi);
-  glEnd();
-  theta = theta;
-  cosTheta = cosTheta;
-  sinTheta = sinTheta;
+  glutSolidTorus(innerRadius, outerRadius, divisions, divisions);
 }
