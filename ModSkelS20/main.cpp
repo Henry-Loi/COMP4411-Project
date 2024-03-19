@@ -75,7 +75,7 @@ void RobotModel::draw() {
 
   setDiffuseColor(1.0f,1.0f,1.0f);
  
-  glRotated(90, 1.0, 0.0, 0.0);
+  glRotated(90+VAL(BODY_ROTATE), 1.0, 0.0, 0.0);
   glTranslated(0, 0, -2);
   drawCylinder(4, 2, 2);
   setDiffuseColor(0.3f, 0.3f, 0.3f);
@@ -118,7 +118,7 @@ void RobotModel::draw() {
   glRotated(180, 1.0, 0.0, 0.0);
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(1.0, 2.75, -0.5);
-  glRotated(VAL(HEAD_ROTATE), 0.0, 0.0, 1.0);
+  glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
   setDiffuseColor(COLOR_BLUE);
   drawCylinder(1.0, 0.5, 0.5);
   glTranslated(-0.75, 0.25, -0.25);
@@ -129,136 +129,53 @@ void RobotModel::draw() {
   glPopMatrix();
   //------------------------------------------------//
   
-  //draw side leg
+  //draw left side leg
   //------------------------------------------------//
   glPushMatrix();
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(0.0, 1.0, 2);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   drawCylinder(1, 1.0, 1.0);
-  glRotated(180, 0.0, 0.0, 1.0);
+  glRotated(180+VAL(LEFTSIDELEG_ROTATE), 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   drawBox(2, 1.5, 0.75);
   setDiffuseColor(COLOR_BLUE);
   glTranslated(0.25, 0.5, 0.15);
   drawBox(1.5, 3.5, 0.5);
   glTranslated(0.75, 3.5, 0.0);
-
+  drawCylinder(0.5, 0.75, 0.75);
+  glRotated(VAL(LEFTSIDEFEET_ROTATE), 0.0, 0.0, 1.0);
   glTranslated(-0.75, 0.0, -0.5);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
+  //------------------------------------------------//
 
-  //setDiffuseColor(COLOR_YELLOW);
-  //glRotated(90, 0.0, 1.0, 0.0);
-  //glTranslated(-2, 2, -0.7);
-  //drawBox(4, 1.5, 1.4);
-  //glTranslated(0.5, -1.5, 0);
-  //drawBox(3, 1.5, 1.4);
-  //setDiffuseColor(COLOR_BLUE);
-  //glTranslated(0, -0.5, 0);
-  //drawBox(3, 0.5, 1.4);
-  //glTranslated(1, -1.5, 0);
-  //drawBox(1, 1.5, 1.4);
-  //glTranslated(0.5, 3.5, 0.7);
-
-
-  //// draw head
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_BLUE);
-  //glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
-  //glTranslated(-1, 1.5, -0.7);
-  //drawBox(2, 2, 1.4);
-
-  //// draw eyes
-  //setDiffuseColor(COLOR_RED);
-  //glTranslated(0.5, 1, 1.4);
-  //drawSphere(0.2);
-  //glTranslated(1, 0, 0);
-  //drawSphere(0.2);
-  //glPopMatrix();
-
-  //////draw leg
-  //glPushMatrix();
-  //glTranslated(-0.75, -3.5, 0);
-  //setDiffuseColor(COLOR_GREY);
-  //glTranslated(-0.5, 0.75, -0.7);
-  //drawSphere(1.5 / 2);
-
-
-  //setDiffuseColor(COLOR_RED);
-  //glRotated(90, 1.0, 0.0, 0.0);
-  //glTranslated(0, 0, 0.7);
-  //drawCylinder(2, 1.0 / 2, 1.5 / 2);
-
-  //glPopMatrix();
-
-  ////end draw leg
-
-  ////draw 2nd leg
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_GREY);
-  //glTranslated(1.5, 0.75, 0.7);
-  //drawSphere(1.5 / 2);
-
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_RED);
-  //glRotated(90, 1.0, 0.0, 0.0);
-  //glTranslated(0, 0, 0.7);
-  //drawCylinder(2, 1.0 / 2, 1.5 / 2);
-
-  //glPopMatrix();
-  //glPopMatrix();
-  ////end draw 2nd leg
-
-
-  //glPopMatrix();
-  ////draw arm
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_GREY);
-  //glTranslated(-1.2, 2.25, 0.7);
-  //drawSphere(1.5/2);
-
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_RED);
-  //glRotated(90, 1.0, 0.0, 0.0);
-  //glTranslated(0, 0, 0.7);
-  //drawCylinder(3,1.0/2,1.5/2);
-  //
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_YELLOW);
-  //glTranslated(-0.25, -0.5, 3);
-  //drawBox(0.5, 1, 1);
-
-  //glPopMatrix();
-  //glPopMatrix();
-  //glPopMatrix();
-  ////end draw arm
-
-  ////draw 2nd arm
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_GREY);
-  //glTranslated(4.2, 2.25, 0.7);
-  //drawSphere(1.5 / 2);
-
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_RED);
-  //glRotated(90, 1.0, 0.0, 0.0);
-  //glTranslated(0, 0, 0.7);
-  //drawCylinder(3, 1.0 / 2, 1.5 / 2);
- 
-  //glPushMatrix();
-  //setDiffuseColor(COLOR_YELLOW);
-  //glTranslated(-0.25, -0.5, 3);
-  //drawBox(0.5, 1, 1);
-  //glPopMatrix();
-  //glPopMatrix();
-  //glPopMatrix();
-  //end draw 2nd arm
-
+    //draw right side leg
+  //------------------------------------------------//
+  glPushMatrix();
+  glRotated(-90, 0.0, 1.0, 0.0);
+  glTranslated(0.0, 1.0, 2);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawCylinder(1, 1.0, 1.0);
+  glRotated(180 - VAL(RIGHTSIDELEG_ROTATE), 0.0, 0.0, 1.0);
+  glTranslated(-1.0, 0.0, 0.25);
+  drawBox(2, 1.5, 0.75);
+  setDiffuseColor(COLOR_BLUE);
+  glTranslated(0.25, 0.5, 0.15);
+  drawBox(1.5, 3.5, 0.5);
+  glTranslated(0.75, 3.5, 0.0);
+  drawCylinder(0.5, 0.75, 0.75);
+  glRotated(-VAL(RIGHTSIDEFEET_ROTATE), 0.0, 0.0, 1.0);
+  glTranslated(-0.75, 0.0, -0.5);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
+  //------------------------------------------------//
+  
 
-  glPopMatrix();
+
+  
 
   // draw mouth
   //   setDiffuseColor(COLOR_GREEN);
@@ -302,7 +219,13 @@ int main() {
   controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
   controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
-
+  controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
+  controls[LEFTSIDELEG_ROTATE] = ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_ROTATE] = ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
+  controls[LEFTSIDEFEET_ROTATE] = ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[BODY_ROTATE] = ModelerControl("Body Rotate", -60, 60, 1, 0);
   controls[XSCALE] = ModelerControl("X Scale", 0.1, 2, 0.1f, 1);
   controls[YSCALE] = ModelerControl("Y Scale", 0.1, 2, 0.1f, 1);
   controls[ZSCALE] = ModelerControl("Z Scale", 0.1, 2, 0.1f, 1);
