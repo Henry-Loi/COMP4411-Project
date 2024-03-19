@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <math.h>
 
+#include "modelerapp.h"
+#include "modelerglobals.h"
+
 // ********************************************************
 // Support functions from previous version of modeler
 // ********************************************************
@@ -285,11 +288,6 @@ void drawBox(double x, double y, double z) {
   }
 }
 
-// void drawTextureBox( double x, double y, double z )
-// {
-//     // NOT IMPLEMENTED, SORRY (ehsu)
-// }
-
 void drawCylinder(double h, double r1, double r2) {
   ModelerDrawState *mds = ModelerDrawState::Instance();
   int divisions;
@@ -401,7 +399,7 @@ void drawTriangle(double x1, double y1, double z1, double x2, double y2,
   }
 }
 
-void DrawTorus(double innerRadius, double outerRadius) {
+void drawTorus(double innerRadius, double outerRadius) {
 
   ModelerDrawState *mds = ModelerDrawState::Instance();
   int divisions;
@@ -423,4 +421,64 @@ void DrawTorus(double innerRadius, double outerRadius) {
     break;
   }
   glutSolidTorus(innerRadius, outerRadius, divisions, divisions);
+}
+
+void LSystem::draw_system(int generations) {
+  if (generations == 1) {
+    glPushMatrix();
+    glBegin(GL_LINES);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, distance, 0);
+    glEnd();
+
+    glTranslated(0, distance, 0);
+    drawSphere(radius);
+    glTranslated(0, -distance, 0);
+
+    glBegin(GL_LINES);
+    glVertex3f(0, distance, 0);
+    glVertex3f(distance, distance * 2, 0);
+    glEnd();
+
+    glTranslated(0, distance, 0);
+    drawSphere(radius);
+    glTranslated(0, -distance, 0);
+
+    glBegin(GL_LINES);
+    glVertex3f(0, distance, 0);
+    glVertex3f(-distance, distance * 2, 0);
+    glEnd();
+
+    glTranslated(0, distance, 0);
+    drawSphere(radius);
+    glTranslated(0, -distance, 0);
+    glPopMatrix();
+  } else {
+    glPushMatrix();
+
+    glBegin(GL_LINES);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, distance, 0);
+    glEnd();
+
+    glTranslated(0, distance, 0);
+    drawSphere(radius);
+    glRotated(-angle / generations, 0.0, 0.0, 1.0);
+    this->draw_system(generations - 1);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslated(0, distance, 0);
+    drawSphere(radius);
+    glRotated(angle / generations, 0.0, 0.0, 1.0);
+    this->draw_system(generations - 1);
+    glPopMatrix();
+  }
+}
+
+void drawLSystemTree(float angle, float distance, float radius) {
+  LSystem tree(angle, distance, radius);
+  // Draw the L-system tree
+  glLineWidth((GLfloat)4);
+  tree.draw_system(VAL(L_SYSTEM_GENERATION));
 }
