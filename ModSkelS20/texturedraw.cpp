@@ -1,7 +1,10 @@
 #include "texturedraw.h"
 
 #include "bitmap.h"
+#include "modelerapp.h"
 #include "modelerdraw.h"
+#include "modelerglobals.h"
+
 #include <FL/fl_ask.H>
 
 void TextureMap::loadTexture(char *filename) {
@@ -20,6 +23,11 @@ void TextureMap::loadTexture(char *filename) {
 }
 
 void drawTextureBox(TextureMap *map, float height, float width, float length) {
+
+  if (!VAL(TEXTURE_MAPPING)) {
+    drawBox(height, width, length);
+    return;
+  }
 
   glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&map->texImageId);
   glBindTexture(GL_TEXTURE_2D, map->texImageId);
@@ -111,6 +119,11 @@ void drawTextureBox(TextureMap *map, float height, float width, float length) {
 
 void drawTextureCylinder(TextureMap *map, float height, float radius1,
                          float radius2) {
+  if (!VAL(TEXTURE_MAPPING)) {
+    drawCylinder(height, radius1, radius2);
+    return;
+  }
+
   glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&map->texImageId);
   glBindTexture(GL_TEXTURE_2D, map->texImageId);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, map->texImageWidth,
