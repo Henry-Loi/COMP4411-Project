@@ -8,8 +8,6 @@
 #include <FL/gl.h>
 #include <cstdio>
 
-#include "modelerglobals.h"
-
 enum DrawModeSetting_t {
   NONE = 0,
   NORMAL,
@@ -97,5 +95,26 @@ void drawCylinder(double h, double r1, double r2);
 // Driangle with three given vertices.  Specify in counterclockwise direction
 void drawTriangle(double x1, double y1, double z1, double x2, double y2,
                   double z2, double x3, double y3, double z3);
-void DrawTorus(double, double);
+
+void drawTorus(double, double);
+
+#include <string>
+class LSystem {
+public:
+  LSystem() : angle(60), distance(1), radius(0.1f){};
+  LSystem(float angle, float distance, float radius = 0.1f)
+      : angle(angle), distance(distance), radius(radius){};
+  ~LSystem() = default;
+
+  void draw_system(int generations);
+
+  std::string sys_string;
+
+  float angle;
+  float distance;
+  float radius;
+};
+
+void drawLSystemTree(float angle, float distance, float radius);
+
 #endif

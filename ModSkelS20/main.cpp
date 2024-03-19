@@ -1,6 +1,7 @@
 // The sample model.  You should build a file
 // very similar to this for when you make your model.
 #include "main.h"
+#include "modelerdraw.h"
 #include "texturedraw.h"
 
 // We need to make a creator function, mostly because of
@@ -62,10 +63,10 @@ void RobotModel::draw() {
   glTranslated(-1, 3, -0.7);
   drawTextureBox(textureMaps[TEXTURE_DOT], 2, 2, 1.4);
 
-  setDiffuseColor(COLOR_GREEN);
+  setDiffuseColor(COLOR_RED);
   glPushMatrix();
   glTranslated(1, -1.5, 0);
-  DrawTorus(0.2, 1.0);
+  drawTorus(0.1, 1.0);
   glPopMatrix();
 
   // draw eyes
@@ -85,6 +86,16 @@ void RobotModel::draw() {
   drawBox(4, 1.5, 1.4);
   glTranslated(0.5, -1.5, 0);
   drawBox(3, 1.5, 1.4);
+
+  if (VAL(L_SYSTEM_DISPLAY)) {
+    // draw L System
+    glPushMatrix();
+    setDiffuseColor(COLOR_GREEN);
+    glTranslated(1.5, 0.8, 0);
+    drawLSystemTree(45, 0.2, 0.005f);
+    glPopMatrix();
+  }
+
   // draw waist
   glPushMatrix();
   setDiffuseColor(COLOR_BLUE);
@@ -221,6 +232,11 @@ int main() {
 
   // texture mapping control
   controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 0);
+
+  // L System control
+  controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);
+  controls[L_SYSTEM_GENERATION] =
+      ModelerControl("L System Generation", 1, 5, 1, 5);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);

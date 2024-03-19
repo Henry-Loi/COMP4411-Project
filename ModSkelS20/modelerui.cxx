@@ -19,6 +19,8 @@
 #include <fstream>
 #include <string>
 
+#include "modelerglobals.h"
+
 using namespace std;
 
 inline void ModelerUserInterface::cb_m_controlsWindow_i(Fl_Window *, void *) {
