@@ -21,7 +21,7 @@ B animation       					yes/no
 B individual looking (not just red/green) 		yes/no
 B frame all						yes
 BW up vector 						yes
-2B new primitives for each 				yes/no
+2B new primitives for each 				yes
 2B L-system						yes/no
 2B mood cycling 					yes/no
 4B metaballs						yes/no

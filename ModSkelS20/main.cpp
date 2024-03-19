@@ -62,6 +62,12 @@ void RobotModel::draw() {
   glTranslated(-1, 3, -0.7);
   drawTextureBox(textureMaps[TEXTURE_DOT], 2, 2, 1.4);
 
+  setDiffuseColor(COLOR_GREEN);
+  glPushMatrix();
+  glTranslated(1, -1.5, 0);
+  DrawTorus(0.2, 1.0);
+  glPopMatrix();
+
   // draw eyes
   glPushMatrix();
   setDiffuseColor(COLOR_RED);
@@ -196,8 +202,6 @@ void RobotModel::draw() {
   //   drawBox(1, 1, 1);
 
   glPopMatrix();
-
-  DrawTorus(50, 10, 20, 30);
 }
 
 int main() {
