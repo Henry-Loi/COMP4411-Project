@@ -482,3 +482,9 @@ void drawLSystemTree(float angle, float distance, float radius) {
   glLineWidth((GLfloat)4);
   tree.draw_system(VAL(L_SYSTEM_GENERATION));
 }
+
+#include "metaballs.h"
+void drawMetaBall(void) {
+  Metaball mb(20);
+  mb.draw();
+}

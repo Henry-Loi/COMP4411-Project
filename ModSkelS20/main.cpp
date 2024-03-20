@@ -49,6 +49,8 @@ void RobotModel::draw() {
   drawBox(10, 0.01f, 10);
   glPopMatrix();
 
+  drawMetaBall();
+
   // draw a robot model
   setAmbientColor(.1f, .1f, .1f);
   setDiffuseColor(COLOR_BLUE);
