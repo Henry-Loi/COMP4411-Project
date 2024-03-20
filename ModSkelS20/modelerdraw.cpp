@@ -421,7 +421,7 @@ void drawTorus(double innerRadius, double outerRadius) {
     break;
   }
   glutSolidTorus(innerRadius, outerRadius, divisions, divisions);
-}
+}//modify
 
 void LSystem::draw_system(int generations) {
   if (generations == 1) {
@@ -481,7 +481,7 @@ void drawLSystemTree(float angle, float distance, float radius) {
   // Draw the L-system tree
   glLineWidth((GLfloat)4);
   tree.draw_system(VAL(L_SYSTEM_GENERATION));
-}
+}//modify
 
 
 

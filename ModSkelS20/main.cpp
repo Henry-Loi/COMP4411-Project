@@ -63,11 +63,7 @@ void RobotModel::draw() {
   // drawCylinder(4, 0.1, 0.2);
   // glPopMatrix();
 
-  // draw eyes
-  glPushMatrix();
-  setDiffuseColor(COLOR_RED);
-  glTranslated(0.5, 1, 0);
-  drawSphere(0.2);
+
 
 
   //currentCoordinates
@@ -100,7 +96,8 @@ void RobotModel::draw() {
   glRotated(VAL(BODY_ROTATE), 0.0, 1.0, 0.0);
   glRotated(90+ torsoAngle, 1.0, 0.0, 0.0);
   glTranslated(0, 0, -2);
-  drawCylinder(4, 2, 2);
+  //drawCylinder(4, 2, 2);
+  drawTextureCylinder(textureMaps[TEXTURE_BRICK], 4, 2.05, 2.05);
   setDiffuseColor(0.3f, 0.3f, 0.3f);
   drawCylinder(0.5, 2.1, 2.1);
   glTranslated(0, 0, 4);
@@ -110,6 +107,11 @@ void RobotModel::draw() {
   glRotated(-90, 1.0, 0.0, 0.0);
   //------------------------------------------------//
  
+  setDiffuseColor(COLOR_GREEN);
+  glPushMatrix();
+  glTranslated(0, -0.5, 2.0);
+  drawTorus(0.2, 1.0);
+  glPopMatrix();
   //draw head
   //------------------------------------------------//
   glPushMatrix();
@@ -158,8 +160,11 @@ void RobotModel::draw() {
   //------------------------------------------------//
   glPushMatrix();
   glRotated(90, 0.0, 1.0, 0.0);
+
   glTranslated(0.0, 1.0, 2);
+  glRotated(-VAL(LEFTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
+
   drawCylinder(1, 1.0, 1.0);
   //glRotated(180+VAL(LEFTSIDELEG_ROTATE), 0.0, 0.0, 1.0);
   glRotated(180 + sideLeftLegangle, 0.0, 0.0, 1.0);
@@ -181,7 +186,9 @@ void RobotModel::draw() {
   //------------------------------------------------//
   glPushMatrix();
   glRotated(-90, 0.0, 1.0, 0.0);
+  
   glTranslated(0.0, 1.0, 2);
+  glRotated(-VAL(RIGHTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   drawCylinder(1, 1.0, 1.0);
   glRotated(180 + sideRightLegangle, 0.0, 0.0, 1.0);
@@ -198,42 +205,12 @@ void RobotModel::draw() {
   drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
   //------------------------------------------------//
-  
 
-
-  
-
-  // draw mouth
-  //   setDiffuseColor(COLOR_GREEN);
-  //   glPushMatrix();
-  //   glTranslated(0, -0.5, 0.5);
-  //   glScaled(1, 0.5, 0.5);
-  //   drawBox(0.5, 0.5, 0.5);
-  //   glPopMatrix();
-
-  //   // draw body
-  //   glPushMatrix();
-  //   glTranslated(0.0, 0.0, -1.5);
-  //   glScaled(1, 1, 2);
-  //   drawSphere(1);
-  //   glPopMatrix();
-
-  //   // draw arms
-  //   glPushMatrix();
-  //   glTranslated(0.0, 0.0, -1.5);
-  //   glRotated(VAL(ROTATE), 0.0, 1.0, 0.0);
-  //   glTranslated(0.0, 0.0, -1.5);
-  //   glScaled(0.5, 0.5, 3);
-  //   drawBox(1, 1, 1);
-
-  //   glTranslated(0.0, 0.0, 3);
-  //   glRotated(-VAL(ROTATE), 0.0, 1.0, 0.0);
-  //   glTranslated(0.0, 0.0, -1.5);
-  //   glScaled(0.5, 0.5, 3);
-  //   drawBox(1, 1, 1);
-
-  glPopMatrix();
+    
 }
+//texture animation torus
+
+
 
 int main() {
   // Initialize the controls
@@ -250,7 +227,8 @@ int main() {
   controls[RIGHTSIDELEG_ROTATE] = ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
   controls[LEFTSIDEFEET_ROTATE] = ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
   controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_YAWROTATE] = ModelerControl("Right Side Yaw Rotate", 0, 90, 1, 0);
+  controls[LEFTSIDELEG_YAWROTATE] = ModelerControl("LEFT Side Yaw Rotate", 0, 90, 1, 0);
   controls[FULL_MOVEMENT] = ModelerControl("Full Movement", -30, 45, 1, 0);
   
   controls[BODY_ROTATE] = ModelerControl("Body Rotate", -180, 180, 1, 0);
@@ -259,7 +237,7 @@ int main() {
   controls[ZSCALE] = ModelerControl("Z Scale", 0.1, 2, 0.1f, 1);
 
   // texture mapping control
-  controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 0);
+  controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 1);
 
   // L System control
   controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);

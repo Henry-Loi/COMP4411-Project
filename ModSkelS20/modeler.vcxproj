@@ -211,6 +211,10 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="texturedraw.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="brick.bmp" />
+    <Image Include="dot.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
