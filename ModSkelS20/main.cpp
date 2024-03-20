@@ -49,8 +49,6 @@ void RobotModel::draw() {
   drawBox(10, 0.01f, 10);
   glPopMatrix();
 
-  drawMetaBall();
-
   // draw a robot model
   setAmbientColor(.1f, .1f, .1f);
   setDiffuseColor(COLOR_BLUE);
@@ -215,6 +213,9 @@ void RobotModel::draw() {
   //   drawBox(1, 1, 1);
 
   glPopMatrix();
+
+  glTranslated(4, 4, 0);
+  drawMetaBall();
 }
 
 int main() {
@@ -239,6 +240,11 @@ int main() {
   controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);
   controls[L_SYSTEM_GENERATION] =
       ModelerControl("L System Generation", 1, 5, 1, 5);
+
+  // Metaballs control
+  controls[METABALLS_THRESHOLD] =
+      ModelerControl("Metaballs Threshold", 0.1, 1, 0.1f, 0.5);
+  controls[METABALLS_STEP] = ModelerControl("Metaballs Step", -10, 10, 0.5f, 0);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);

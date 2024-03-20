@@ -485,6 +485,10 @@ void drawLSystemTree(float angle, float distance, float radius) {
 
 #include "metaballs.h"
 void drawMetaBall(void) {
-  Metaball mb(20);
+  glScaled(0.3, 0.3, 0.3);
+  MetaBalls mb;
+  mb.setUpGrid();
+  mb.setUpMetaballs();
+  mb.evalScalarField();
   mb.draw();
 }
