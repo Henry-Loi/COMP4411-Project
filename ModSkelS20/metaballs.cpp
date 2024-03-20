@@ -3,6 +3,10 @@
 #include "modelerapp.h"
 #include "modelerglobals.h"
 
+/**
+ * Reference: https://paulbourke.net/geometry/polygonise/
+ */
+
 MetaBalls::MetaBalls() {
   gridSize = 20;
   threshold = 0.35f;
