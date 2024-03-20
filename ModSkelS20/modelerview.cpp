@@ -68,6 +68,9 @@ int ModelerView::handle(int event) {
   return 1;
 }
 
+#include "modelerapp.h"
+#include "modelerglobals.h"
+
 static GLfloat lightPosition0[] = {4, 2, -4, 0};
 static GLfloat lightDiffuse0[] = {1, 1, 1, 1};
 static GLfloat lightPosition1[] = {-2, 1, 5, 0};
@@ -92,6 +95,24 @@ void ModelerView::draw() {
   glLoadIdentity();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_camera->applyViewingTransform();
+
+  lightPosition0[0] = VAL(LIGHT0_X);
+  lightPosition0[1] = VAL(LIGHT0_Y);
+  lightPosition0[2] = VAL(LIGHT0_Z);
+
+  lightDiffuse0[0] = VAL(LIGHT0_INTENSITY);
+  lightDiffuse0[1] = VAL(LIGHT0_INTENSITY);
+  lightDiffuse0[2] = VAL(LIGHT0_INTENSITY);
+  lightDiffuse0[3] = 1.0;
+
+  lightPosition1[0] = VAL(LIGHT1_X);
+  lightPosition1[1] = VAL(LIGHT1_Y);
+  lightPosition1[2] = VAL(LIGHT1_Z);
+
+  lightDiffuse1[0] = VAL(LIGHT1_INTENSITY);
+  lightDiffuse1[1] = VAL(LIGHT1_INTENSITY);
+  lightDiffuse1[2] = VAL(LIGHT1_INTENSITY);
+  lightDiffuse1[3] = 1.0;
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPosition0);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse0);

@@ -1,6 +1,7 @@
 // The sample model.  You should build a file
 // very similar to this for when you make your model.
 #include "main.h"
+#include "modelerdraw.h"
 #include "texturedraw.h"
 
 // We need to make a creator function, mostly because of
@@ -11,9 +12,9 @@ ModelerView *createRobotModel(int x, int y, int w, int h, char *label) {
 
 void RobotModel::set_model_lighting(void) {
   // set light2 for the model
-  float light2_position[] = {VAL(LIGHT_X), VAL(LIGHT_Y), VAL(LIGHT_Z), 1.0};
-  float light2_diffuse[] = {VAL(LIGHT_INTENSITY), VAL(LIGHT_INTENSITY),
-                            VAL(LIGHT_INTENSITY), 1.0};
+  float light2_position[] = {VAL(LIGHT2_X), VAL(LIGHT2_Y), VAL(LIGHT2_Z), 1.0};
+  float light2_diffuse[] = {VAL(LIGHT2_INTENSITY), VAL(LIGHT2_INTENSITY),
+                            VAL(LIGHT2_INTENSITY), 1.0};
   float light2_specular[] = {1.0, 1.0, 1.0, 1.0};
   float light2_ambient[] = {0.0, 0.0, 0.0, 1.0};
 
@@ -61,6 +62,11 @@ void RobotModel::draw() {
   // drawCylinder(4, 0.1, 0.2);
   // glPopMatrix();
 
+  // draw eyes
+  glPushMatrix();
+  setDiffuseColor(COLOR_RED);
+  glTranslated(0.5, 1, 0);
+  drawSphere(0.2);
 
 
   //currentCoordinates
@@ -76,6 +82,8 @@ void RobotModel::draw() {
   drawBox(4, 1.5, 1.4);
   glTranslated(0.5, -1.5, 0);
   drawBox(3, 1.5, 1.4);
+  // draw waist
+  glPushMatrix();
   setDiffuseColor(COLOR_BLUE);
   glTranslated(0, -0.5, 0);
   drawBox(3, 0.5, 1.4);
@@ -227,11 +235,32 @@ int main() {
   controls[YSCALE] = ModelerControl("Y Scale", 0.1, 2, 0.1f, 1);
   controls[ZSCALE] = ModelerControl("Z Scale", 0.1, 2, 0.1f, 1);
 
+  // texture mapping control
+  controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 0);
+
+  // L System control
+  controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);
+  controls[L_SYSTEM_GENERATION] =
+      ModelerControl("L System Generation", 1, 5, 1, 5);
+
   // light controls
-  controls[LIGHT_X] = ModelerControl("Light X", -5, 5, 0.1f, 0);
-  controls[LIGHT_Y] = ModelerControl("Light Y", -5, 5, 0.1f, 0);
-  controls[LIGHT_Z] = ModelerControl("Light Z", -5, 5, 0.1f, 0);
-  controls[LIGHT_INTENSITY] = ModelerControl("Light Intensity", 0, 1, 0.1f, 0);
+  controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);
+  controls[LIGHT0_Y] = ModelerControl("Light0 Y", -5, 5, 0.1f, 2);
+  controls[LIGHT0_Z] = ModelerControl("Light0 Z", -5, 5, 0.1f, -4);
+  controls[LIGHT0_INTENSITY] =
+      ModelerControl("Light 0 Intensity", 0, 1, 0.1f, 1);
+
+  controls[LIGHT1_X] = ModelerControl("Light1 X", -5, 5, 0.1f, -2);
+  controls[LIGHT1_Y] = ModelerControl("Light1 Y", -5, 5, 0.1f, 1);
+  controls[LIGHT1_Z] = ModelerControl("Light1 Z", -5, 5, 0.1f, 5);
+  controls[LIGHT1_INTENSITY] =
+      ModelerControl("Light 1 Intensity", 0, 1, 0.1f, 1);
+
+  controls[LIGHT2_X] = ModelerControl("Light2 X", -5, 5, 0.1f, 0);
+  controls[LIGHT2_Y] = ModelerControl("Light2 Y", -5, 5, 0.1f, 0);
+  controls[LIGHT2_Z] = ModelerControl("Light2 Z", -5, 5, 0.1f, 0);
+  controls[LIGHT2_INTENSITY] =
+      ModelerControl("Light 2 Intensity", 0, 1, 0.1f, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
