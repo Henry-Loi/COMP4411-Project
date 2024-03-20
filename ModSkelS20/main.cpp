@@ -53,7 +53,6 @@ void RobotModel::draw() {
   // draw a robot model
   setAmbientColor(.1f, .1f, .1f);
 
-
   glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
   glScaled(VAL(XSCALE), VAL(YSCALE), VAL(ZSCALE));
@@ -69,36 +68,34 @@ void RobotModel::draw() {
   glTranslated(0.5, 1, 0);
   drawSphere(0.2);
 
+  // currentCoordinates
+  //     y
+  //     |
+  //     |
+  //     z------x
 
-  //currentCoordinates
-  //    y
-  //    |
-  //    |
-  //    z------x
- 
   int sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
   int sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
   int sideLeftFeetangle = VAL(LEFTSIDELEG_ROTATE);
   int sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
   int frontLegangle = VAL(FRONTLEG_ROTATE);
   int torsoAngle = 0;
-  if (VAL(FULL_MOVEMENT)!=0) {
-      sideLeftFeetangle = VAL(FULL_MOVEMENT) / 2;
-      sideRightFeetangle = -VAL(FULL_MOVEMENT) / 2;
-      frontLegangle = -VAL(FULL_MOVEMENT);
-      torsoAngle = VAL(FULL_MOVEMENT);
-      sideLeftLegangle = (sideLeftFeetangle+ torsoAngle)*-1;
-      sideRightLegangle = (sideRightFeetangle - torsoAngle) * -1;
-
+  if (VAL(FULL_MOVEMENT) != 0) {
+    sideLeftFeetangle = VAL(FULL_MOVEMENT) / 2;
+    sideRightFeetangle = -VAL(FULL_MOVEMENT) / 2;
+    frontLegangle = -VAL(FULL_MOVEMENT);
+    torsoAngle = VAL(FULL_MOVEMENT);
+    sideLeftLegangle = (sideLeftFeetangle + torsoAngle) * -1;
+    sideRightLegangle = (sideRightFeetangle - torsoAngle) * -1;
   }
 
-  //draw torso and waist (root)
+  // draw torso and waist (root)
   //------------------------------------------------//
   setAmbientColor(0.8f, 0.8f, 0.8f);
 
-  setDiffuseColor(1.0f,1.0f,1.0f);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
   glRotated(VAL(BODY_ROTATE), 0.0, 1.0, 0.0);
-  glRotated(90+ torsoAngle, 1.0, 0.0, 0.0);
+  glRotated(90 + torsoAngle, 1.0, 0.0, 0.0);
   glTranslated(0, 0, -2);
   drawCylinder(4, 2, 2);
   setDiffuseColor(0.3f, 0.3f, 0.3f);
@@ -109,8 +106,8 @@ void RobotModel::draw() {
   glTranslated(0, 0, -2);
   glRotated(-90, 1.0, 0.0, 0.0);
   //------------------------------------------------//
- 
-  //draw head
+
+  // draw head
   //------------------------------------------------//
   glPushMatrix();
 
@@ -118,7 +115,7 @@ void RobotModel::draw() {
   setDiffuseColor(COLOR_BLUE);
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
   drawSphere(2);
-  //draw eyes
+  // draw eyes
   glTranslated(0, 0.3, 0);
   glRotated(5, 0.0, 1.0, 0.0);
   glTranslated(0, 0, 1.5);
@@ -127,48 +124,45 @@ void RobotModel::draw() {
   glTranslated(0, 0, -1.5);
 
   glRotated(15, 0.0, 1.0, 0.0);
-  setDiffuseColor(0.2f,0.2f,0.2f);
+  setDiffuseColor(0.2f, 0.2f, 0.2f);
   glTranslated(0, 0.1, 1.5);
   drawCylinder(0.8, 0.2, 0.2);
-  
+
   glPopMatrix();
   //------------------------------------------------//
-  
 
-
-  //draw front leg
+  // draw front leg
   //------------------------------------------------//
   glPushMatrix();
   glRotated(180, 1.0, 0.0, 0.0);
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(1.0, 2.75, -0.5);
-  //glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
-    glRotated(frontLegangle, 0.0, 0.0, 1.0);
+  // glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
+  glRotated(frontLegangle, 0.0, 0.0, 1.0);
   setDiffuseColor(COLOR_BLUE);
   drawCylinder(1.0, 0.5, 0.5);
   glTranslated(-0.75, 0.25, -0.25);
-  setDiffuseColor(1.0f,1.0f,1.0f);
-  drawBox(1.5,0.9,1.5);
-
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawBox(1.5, 0.9, 1.5);
 
   glPopMatrix();
   //------------------------------------------------//
-  
-  //draw left side leg
+
+  // draw left side leg
   //------------------------------------------------//
   glPushMatrix();
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(0.0, 1.0, 2);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   drawCylinder(1, 1.0, 1.0);
-  //glRotated(180+VAL(LEFTSIDELEG_ROTATE), 0.0, 0.0, 1.0);
+  // glRotated(180+VAL(LEFTSIDELEG_ROTATE), 0.0, 0.0, 1.0);
   glRotated(180 + sideLeftLegangle, 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   drawBox(2, 1.5, 0.75);
   setDiffuseColor(COLOR_BLUE);
   glTranslated(0.25, 0.5, 0.15);
-  drawBox(1.5, 3.5*cos(torsoAngle/1.75/180.0*3.142), 0.5);
-  glTranslated(0.75, 3.5*cos(torsoAngle/1.75 / 180.0 * 3.142), 0.0);
+  drawBox(1.5, 3.5 * cos(torsoAngle / 1.75 / 180.0 * 3.142), 0.5);
+  glTranslated(0.75, 3.5 * cos(torsoAngle / 1.75 / 180.0 * 3.142), 0.0);
   drawCylinder(0.5, 0.75, 0.75);
   glRotated(sideLeftFeetangle, 0.0, 0.0, 1.0);
   glTranslated(-0.75, 0.0, -0.5);
@@ -177,7 +171,7 @@ void RobotModel::draw() {
   glPopMatrix();
   //------------------------------------------------//
 
-    //draw right side leg
+  // draw right side leg
   //------------------------------------------------//
   glPushMatrix();
   glRotated(-90, 0.0, 1.0, 0.0);
@@ -189,8 +183,8 @@ void RobotModel::draw() {
   drawBox(2, 1.5, 0.75);
   setDiffuseColor(COLOR_BLUE);
   glTranslated(0.25, 0.5, 0.15);
-  drawBox(1.5, 3.5 * cos(sideRightLegangle/1.75 / 180.0 * 3.142), 0.5);
-  glTranslated(0.75, 3.5*cos(sideRightLegangle/1.75 / 180.0 * 3.142), 0.0);
+  drawBox(1.5, 3.5 * cos(sideRightLegangle / 1.75 / 180.0 * 3.142), 0.5);
+  glTranslated(0.75, 3.5 * cos(sideRightLegangle / 1.75 / 180.0 * 3.142), 0.0);
   drawCylinder(0.5, 0.75, 0.75);
   glRotated(sideRightFeetangle, 0.0, 0.0, 1.0);
   glTranslated(-0.75, 0.0, -0.5);
@@ -198,10 +192,6 @@ void RobotModel::draw() {
   drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
   //------------------------------------------------//
-  
-
-
-  
 
   // draw mouth
   //   setDiffuseColor(COLOR_GREEN);
@@ -233,6 +223,9 @@ void RobotModel::draw() {
   //   drawBox(1, 1, 1);
 
   glPopMatrix();
+
+  glTranslated(4, 4, 0);
+  drawMetaBall();
 }
 
 int main() {
@@ -246,13 +239,18 @@ int main() {
   controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
-  controls[LEFTSIDELEG_ROTATE] = ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDELEG_ROTATE] = ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
-  controls[LEFTSIDEFEET_ROTATE] = ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[LEFTSIDELEG_ROTATE] =
+      ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_ROTATE] =
+      ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
+  controls[LEFTSIDEFEET_ROTATE] =
+      ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] =
+      ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] =
+      ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
   controls[FULL_MOVEMENT] = ModelerControl("Full Movement", -30, 45, 1, 0);
-  
+
   controls[BODY_ROTATE] = ModelerControl("Body Rotate", -180, 180, 1, 0);
   controls[XSCALE] = ModelerControl("X Scale", 0.1, 2, 0.1f, 1);
   controls[YSCALE] = ModelerControl("Y Scale", 0.1, 2, 0.1f, 1);
@@ -265,6 +263,11 @@ int main() {
   controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);
   controls[L_SYSTEM_GENERATION] =
       ModelerControl("L System Generation", 1, 5, 1, 5);
+
+  // Metaballs control
+  controls[METABALLS_THRESHOLD] =
+      ModelerControl("Metaballs Threshold", 0.1, 10, 0.1f, 2.0);
+  controls[METABALLS_STEP] = ModelerControl("Metaballs Step", -10, 10, 0.5f, 0);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);
