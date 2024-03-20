@@ -98,6 +98,8 @@ void drawTriangle(double x1, double y1, double z1, double x2, double y2,
 
 void drawTorus(double, double);
 
+void drawMetaBall(void);
+
 #include <string>
 class LSystem {
 public:
