@@ -62,6 +62,11 @@ void RobotModel::draw() {
   // drawCylinder(4, 0.1, 0.2);
   // glPopMatrix();
 
+  // currentCoordinates
+  //     y
+  //     |
+  //     |
+  //     z------x
 
   // currentCoordinates
   //     y
@@ -69,15 +74,9 @@ void RobotModel::draw() {
   //     |
   //     z------x
 
-  //currentCoordinates
-  //    y
-  //    |
-  //    |
-  //    z------x
- 
   int sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
   int sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
-  int sideLeftFeetangle = VAL(LEFTSIDELEG_ROTATE);
+  int sideLeftFeetangle = VAL(LEFTSIDEFEET_ROTATE);
   int sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
   int frontLegangle = VAL(FRONTLEG_ROTATE);
   int torsoAngle = 0;
@@ -98,7 +97,7 @@ void RobotModel::draw() {
   glRotated(VAL(BODY_ROTATE), 0.0, 1.0, 0.0);
   glRotated(90 + torsoAngle, 1.0, 0.0, 0.0);
   glTranslated(0, 0, -2);
-  //drawCylinder(4, 2, 2);
+  // drawCylinder(4, 2, 2);
   drawTextureCylinder(textureMaps[TEXTURE_BRICK], 4, 2.05, 2.05);
   setDiffuseColor(0.3f, 0.3f, 0.3f);
   drawCylinder(0.5, 2.1, 2.1);
@@ -108,13 +107,13 @@ void RobotModel::draw() {
   glTranslated(0, 0, -2);
   glRotated(-90, 1.0, 0.0, 0.0);
   //------------------------------------------------//
- 
+
   setDiffuseColor(COLOR_GREEN);
   glPushMatrix();
   glTranslated(0, -0.5, 2.0);
   drawTorus(0.2, 1.0);
   glPopMatrix();
-  //draw head
+  // draw head
   //------------------------------------------------//
   glPushMatrix();
 
@@ -144,13 +143,13 @@ void RobotModel::draw() {
   glRotated(180, 1.0, 0.0, 0.0);
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(1.0, 2.75, -0.5);
-  //glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
-    glRotated(frontLegangle, 0.0, 0.0, 1.0);
+  // glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
+  glRotated(frontLegangle, 0.0, 0.0, 1.0);
   setDiffuseColor(COLOR_BLUE);
   drawCylinder(1.0, 0.5, 0.5);
   glTranslated(-0.75, 0.25, -0.25);
-  setDiffuseColor(1.0f,1.0f,1.0f);
-  drawBox(1.5,0.9,1.5);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
+  drawBox(1.5, 0.9, 1.5);
 
   glPopMatrix();
   //------------------------------------------------//
@@ -185,7 +184,7 @@ void RobotModel::draw() {
   //------------------------------------------------//
   glPushMatrix();
   glRotated(-90, 0.0, 1.0, 0.0);
-  
+
   glTranslated(0.0, 1.0, 2);
   glRotated(-VAL(RIGHTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
@@ -204,10 +203,6 @@ void RobotModel::draw() {
   drawBox(1.5, 0.9, 1.5);
   glPopMatrix();
   //------------------------------------------------//
-  
-
-
-  
 
   // draw mouth
   //   setDiffuseColor(COLOR_GREEN);
@@ -216,8 +211,6 @@ void RobotModel::draw() {
   //   glScaled(1, 0.5, 0.5);
   //   drawBox(0.5, 0.5, 0.5);
   //   glPopMatrix();
-
-
 
   //   glTranslated(0.0, 0.0, 3);
   //   glRotated(-VAL(ROTATE), 0.0, 1.0, 0.0);
@@ -242,12 +235,18 @@ int main() {
   controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
-  controls[LEFTSIDELEG_ROTATE] = ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDELEG_ROTATE] = ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
-  controls[LEFTSIDEFEET_ROTATE] = ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDELEG_YAWROTATE] = ModelerControl("Right Side Yaw Rotate", 0, 90, 1, 0);
-  controls[LEFTSIDELEG_YAWROTATE] = ModelerControl("LEFT Side Yaw Rotate", 0, 90, 1, 0);
+  controls[LEFTSIDELEG_ROTATE] =
+      ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_ROTATE] =
+      ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
+  controls[LEFTSIDEFEET_ROTATE] =
+      ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] =
+      ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_YAWROTATE] =
+      ModelerControl("Right Side Yaw Rotate", 0, 120, 1, 0);
+  controls[LEFTSIDELEG_YAWROTATE] =
+      ModelerControl("Left Side Yaw Rotate", 0, 120, 1, 0);
   controls[FULL_MOVEMENT] = ModelerControl("Full Movement", -30, 45, 1, 0);
 
   controls[BODY_ROTATE] = ModelerControl("Body Rotate", -180, 180, 1, 0);
