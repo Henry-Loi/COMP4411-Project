@@ -115,6 +115,8 @@ void RobotModel::draw() {
       setDiffuseColor(COLOR_GREEN);
       glTranslated(0, -0.5, 2.0);
       drawTorus(0.2, 1.0);
+      glTranslated(0, -0.5, 0.1);
+      drawLSystemTree(40,0.2,0.01);
       glPopMatrix();
   }
   //draw head
@@ -231,7 +233,7 @@ int main() {
   // Constructor is ModelerControl(name, minimumvalue, maximumvalue,
   // stepsize, defaultvalue)
   ModelerControl controls[NUMCONTROLS];
-  controls[LEVELOF_DETAILS] = ModelerControl("Change Level of Detail", 0, 6, 1, 0);
+  controls[LEVELOF_DETAILS] = ModelerControl("Change Level of Detail", 0, 6, 1, 6);
 
 
   controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
@@ -254,7 +256,7 @@ int main() {
   controls[ZSCALE] = ModelerControl("Z Scale", 0.1, 2, 0.1f, 1);
 
   // texture mapping control
-  controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 1);
+  controls[TEXTURE_MAPPING] = ModelerControl("Texture Mapping", 0, 1, 1, 0);
 
   // L System control
   controls[L_SYSTEM_DISPLAY] = ModelerControl("L System Display", 0, 1, 1, 1);
