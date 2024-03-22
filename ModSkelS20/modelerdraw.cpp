@@ -216,7 +216,8 @@ void drawSphere(double r) {
     gluQuadricDrawStyle(gluq, GLU_FILL);
     gluQuadricTexture(gluq, GL_TRUE);
     gluSphere(gluq, r, divisions, divisions);
-    gluDeleteQuadric(gluq);
+    if(gluq)
+        gluDeleteQuadric(gluq);
   }
 }
 
