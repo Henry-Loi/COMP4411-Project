@@ -220,6 +220,19 @@ void RobotModel::draw() {
 
   glPopMatrix();
 
+  // goal display
+  if (VAL(DISPLAY_GOAL)) {
+    glPushMatrix();
+    setDiffuseColor(COLOR_RED);
+    glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
+    drawSphere(0.2);
+    glPopMatrix();
+
+    ModelerApplication::Instance()->SetControlValue(GOAL_X, 4);
+    ModelerApplication::Instance()->SetControlValue(GOAL_Y, 0);
+    ModelerApplication::Instance()->SetControlValue(GOAL_Z, 0);
+  }
+
   glTranslated(4, 4, 0);
   drawMetaBall();
 }
@@ -285,6 +298,12 @@ int main() {
   controls[LIGHT2_Z] = ModelerControl("Light2 Z", -5, 5, 0.1f, 0);
   controls[LIGHT2_INTENSITY] =
       ModelerControl("Light 2 Intensity", 0, 1, 0.1f, 0);
+
+  // goal-oriented control
+  controls[DISPLAY_GOAL] = ModelerControl("Display Goal", 0, 1, 1, 0);
+  controls[GOAL_X] = ModelerControl("Goal X", -8, 8, 0.1f, 4);
+  controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
+  controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
