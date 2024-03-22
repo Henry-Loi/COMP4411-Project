@@ -219,7 +219,7 @@ void RobotModel::draw() {
       glTranslated(0, -0.5, 2.0);
       drawTorus(0.2, 1.0);
       glTranslated(0, -0.5, 0.1);
-      //drawLSystemTree(30, 0.2, 0.01);
+      drawLSystemTree(30, 0.2, 0.01);
       glPopMatrix();
   }
 
