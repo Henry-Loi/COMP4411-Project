@@ -469,8 +469,7 @@ void RobotModel::draw() {
   
 
 
-  SETVAL(LEFTSIDELEG_YAWROTATE, ((60.0)) );
-  drawComplexShape();
+
 
   if (forest_flag) {
     // set yellow color
