@@ -5,13 +5,15 @@
 #include "texturedraw.h"
 #include <cmath>
 
+#include <GL/gl.h>
+
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
 ModelerView *createRobotModel(int x, int y, int w, int h, char *label) {
   return new RobotModel(x, y, w, h, label);
 }
 
-void RobotModel::set_model_lighting(void) {
+void RobotModel::set_model_lighting(int mood) {
   // set light2 for the model
   float light2_position[] = {VAL(LIGHT2_X), VAL(LIGHT2_Y), VAL(LIGHT2_Z), 1.0};
   float light2_diffuse[] = {VAL(LIGHT2_INTENSITY), VAL(LIGHT2_INTENSITY),
@@ -19,11 +21,93 @@ void RobotModel::set_model_lighting(void) {
   float light2_specular[] = {1.0, 1.0, 1.0, 1.0};
   float light2_ambient[] = {0.0, 0.0, 0.0, 1.0};
 
+  switch (mood) {
+  case HAPPY:
+    light2_diffuse[0] = 1.0;
+    light2_diffuse[1] = 1.0;
+    light2_diffuse[2] = 0.3;
+
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light2_diffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light2_diffuse);
+    ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 1.0);
+    break;
+  case SAD:
+    light2_diffuse[0] = 0.3;
+    light2_diffuse[1] = 0.3;
+    light2_diffuse[2] = 1.0;
+
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light2_diffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light2_diffuse);
+    ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 1.0);
+    break;
+  case ANGRY:
+    light2_diffuse[0] = 1.0;
+    light2_diffuse[1] = 0.3;
+    light2_diffuse[2] = 0.3;
+
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light2_diffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light2_diffuse);
+    ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 1.0);
+    break;
+  default:
+    ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 0);
+    break;
+  }
+
   glEnable(GL_LIGHT2);
   glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
   glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
   glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
+}
+
+void RobotModel::set_mood(int state) {
+
+  switch (state) {
+  case ANGRY:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  case SAD:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
+    break;
+  case HAPPY:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
+    break;
+  case NONE:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  default:
+    break;
+  }
 }
 
 void RobotModel::initTextureMap() {
@@ -40,7 +124,9 @@ void RobotModel::draw() {
   // projection matrix, don't bother with this ...
   ModelerView::draw();
 
-  set_model_lighting();
+  set_model_lighting(VAL(MOOD));
+
+  set_mood(VAL(MOOD));
 
   // draw the floor
   setAmbientColor(.1f, .1f, .1f);
@@ -75,11 +161,11 @@ void RobotModel::draw() {
   //     z------x
 
   if (VAL(FULL_MOVEMENT) != 0) {
-      SETVAL(LEFTSIDEFEET_ROTATE, VAL(BODY_PITCH)/2);
-      SETVAL(RIGHTSIDEFEET_ROTATE, VAL(BODY_PITCH)/2);
-      SETVAL(FRONTLEG_ROTATE, -VAL(BODY_PITCH));
-      SETVAL(LEFTSIDELEG_ROTATE, VAL(BODY_PITCH)*-3/2);
-      SETVAL(RIGHTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
+    SETVAL(LEFTSIDEFEET_ROTATE, VAL(BODY_PITCH) / 2);
+    SETVAL(RIGHTSIDEFEET_ROTATE, VAL(BODY_PITCH) / 2);
+    SETVAL(FRONTLEG_ROTATE, -VAL(BODY_PITCH));
+    SETVAL(LEFTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
+    SETVAL(RIGHTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
   }
 
   int sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
@@ -89,7 +175,6 @@ void RobotModel::draw() {
   int frontLegangle = VAL(FRONTLEG_ROTATE);
   int torsoAngle = VAL(BODY_PITCH);
 
-
   // draw torso and waist (root)
   //------------------------------------------------//
   setAmbientColor(0.8f, 0.8f, 0.8f);
@@ -98,10 +183,10 @@ void RobotModel::draw() {
   glRotated(VAL(BODY_ROTATE), 0.0, 1.0, 0.0);
   glRotated(90 + torsoAngle, 1.0, 0.0, 0.0);
   glTranslated(0, 0, -2);
-  //drawCylinder(4, 2, 2);
+  // drawCylinder(4, 2, 2);
   drawTextureCylinder(textureMaps[TEXTURE_BRICK], 4, 2.05, 2.05);
   setDiffuseColor(0.3f, 0.3f, 0.3f);
-  if(VAL(LEVELOF_DETAILS) > 0)
+  if (VAL(LEVELOF_DETAILS) > 0)
     drawCylinder(0.5, 2.1, 2.1);
   glTranslated(0, 0, 4);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
@@ -110,13 +195,13 @@ void RobotModel::draw() {
   glTranslated(0, 0, -2);
   glRotated(-90, 1.0, 0.0, 0.0);
   //------------------------------------------------//
- 
+
   setDiffuseColor(COLOR_GREEN);
   glPushMatrix();
   glTranslated(0, -0.5, 2.0);
   drawTorus(0.2, 1.0);
   glPopMatrix();
-  //draw head
+  // draw head
   //------------------------------------------------//
   glPushMatrix();
 
@@ -148,15 +233,15 @@ void RobotModel::draw() {
   glRotated(180, 1.0, 0.0, 0.0);
   glRotated(90, 0.0, 1.0, 0.0);
   glTranslated(1.0, 2.75, -0.5);
-  //glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
+  // glRotated(VAL(FRONTLEG_ROTATE), 0.0, 0.0, 1.0);
   glRotated(frontLegangle, 0.0, 0.0, 1.0);
   setDiffuseColor(COLOR_BLUE);
   if (VAL(LEVELOF_DETAILS) > 1)
     drawCylinder(1.0, 0.5, 0.5);
   glTranslated(-0.75, 0.25, -0.25);
-  setDiffuseColor(1.0f,1.0f,1.0f);
+  setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 2)
-    drawBox(1.5,0.9,1.5);
+    drawBox(1.5, 0.9, 1.5);
 
   glPopMatrix();
   //------------------------------------------------//
@@ -219,13 +304,13 @@ void RobotModel::draw() {
   glPopMatrix();
   //------------------------------------------------//
   if (VAL(LEVELOF_DETAILS) > 5) {
-      glPushMatrix();
-      setDiffuseColor(COLOR_GREEN);
-      glTranslated(0, -0.5, 2.0);
-      drawTorus(0.2, 1.0);
-      glTranslated(0, -0.5, 0.1);
-      drawLSystemTree(30, 0.2, 0.01);
-      glPopMatrix();
+    glPushMatrix();
+    setDiffuseColor(COLOR_GREEN);
+    glTranslated(0, -0.5, 2.0);
+    drawTorus(0.2, 1.0);
+    glTranslated(0, -0.5, 0.1);
+    drawLSystemTree(30, 0.2, 0.01);
+    glPopMatrix();
   }
 
   glTranslated(4, 4, 0);
@@ -238,8 +323,8 @@ int main() {
   // Constructor is ModelerControl(name, minimumvalue, maximumvalue,
   // stepsize, defaultvalue)
   ModelerControl controls[NUMCONTROLS];
-  controls[LEVELOF_DETAILS] = ModelerControl("Change Level of Detail", 0, 6, 1, 6);
-
+  controls[LEVELOF_DETAILS] =
+      ModelerControl("Change Level of Detail", 0, 6, 1, 6);
 
   controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
   controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
@@ -247,14 +332,22 @@ int main() {
   controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
-  controls[LEFTSIDELEG_ROTATE] = ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDELEG_ROTATE] = ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
-  controls[LEFTSIDELEG_LENGTH] = ModelerControl("Left Side Leg Length", 1, 3.5, 0.1f, 3.5);
-  controls[RIGHTSIDELEG_LENGTH] = ModelerControl("Right Side Leg Length", 1, 3.5, 0.1f, 3.5);
-  controls[LEFTSIDEFEET_ROTATE] = ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
-  controls[RIGHTSIDELEG_YAWROTATE] = ModelerControl("Right Side Yaw Rotate", 0, 90, 1, 0);
-  controls[LEFTSIDELEG_YAWROTATE] = ModelerControl("LEFT Side Yaw Rotate", 0, 90, 1, 0);
+  controls[LEFTSIDELEG_ROTATE] =
+      ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_ROTATE] =
+      ModelerControl("Right Side Leg Rotate", -60, 60, 1, 0);
+  controls[LEFTSIDELEG_LENGTH] =
+      ModelerControl("Left Side Leg Length", 1, 3.5, 0.1f, 3.5);
+  controls[RIGHTSIDELEG_LENGTH] =
+      ModelerControl("Right Side Leg Length", 1, 3.5, 0.1f, 3.5);
+  controls[LEFTSIDEFEET_ROTATE] =
+      ModelerControl("Left Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] =
+      ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
+  controls[RIGHTSIDELEG_YAWROTATE] =
+      ModelerControl("Right Side Yaw Rotate", 0, 180, 1, 0);
+  controls[LEFTSIDELEG_YAWROTATE] =
+      ModelerControl("Left Side Yaw Rotate", 0, 180, 1, 0);
   controls[BODY_PITCH] = ModelerControl("Body Pitch Angle", -30, 45, 1, 0);
   controls[FULL_MOVEMENT] = ModelerControl("Full Movement", 0, 1, 1, 0);
 
@@ -275,6 +368,10 @@ int main() {
   controls[METABALLS_THRESHOLD] =
       ModelerControl("Metaballs Threshold", 0.1, 10, 0.1f, 2.0);
   controls[METABALLS_STEP] = ModelerControl("Metaballs Step", -10, 10, 0.5f, 0);
+
+  // mood
+  controls[MOOD] =
+      ModelerControl("Mood (Normal, HAPPY, SAD, ANGRY)", 0, 3, 1, 0);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);
