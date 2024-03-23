@@ -68,6 +68,12 @@ void RobotModel::set_mood(int state) {
 
   switch (state) {
   case ANGRY:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
     break;
   case SAD:
     break;
