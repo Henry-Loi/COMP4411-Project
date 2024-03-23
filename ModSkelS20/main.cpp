@@ -353,7 +353,103 @@ void RobotModel::draw() {
     glPopMatrix();
   }
 
-  glPushMatrix();
+  // goal display
+  if (VAL(DISPLAY_GOAL)) {
+    glPushMatrix();
+    setDiffuseColor(COLOR_RED);
+    glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
+    drawSphere(0.2);
+    glPopMatrix();
+
+    //offset from the leg joint
+    float off_x = VAL(XPOS);
+    float off_y = VAL(YPOS);
+    float off_z = VAL(ZPOS);
+    // calculate the direction vector
+    float direction[3] = {(VAL(GOAL_Z) - VAL(ZPOS))*-1, (VAL(GOAL_Y) - VAL(YPOS)-1),
+                          VAL(GOAL_X) - VAL(XPOS)-2};
+
+
+
+    float angle3 = 0;
+        float angle4 = M_PI / 2; 
+        float right_leg_length = 3.5;
+        float angle5 = 0;
+
+    // inverse kinematics
+    float angle1 = acos((-direction[1] /
+        (sqrt(direction[1] * direction[1] +
+            direction[2] * direction[2]))));
+    float angle2 = acos((direction[0] /
+        (sqrt(direction[2] * direction[2] + direction[1] * direction[1]+
+            direction[0] * direction[0]))));;
+    float left_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+        direction[0] * direction[0])-1.5;
+    // float angle3 = atan2(direction[2], direction[1]);
+
+    if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+        direction[0] * direction[0]) - 1.5 > 3.5) {
+        left_leg_length = 3.5;
+
+    }
+    else if (left_leg_length < 0.5) {
+        left_leg_length = 0.5;
+    }
+    if (direction[2] < 0) {
+        angle1 = 0;
+        angle2 = M_PI / 2;
+        left_leg_length = 3.5;
+        direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)) * -1;
+        direction[1] = (VAL(GOAL_Y) - VAL(YPOS) - 1);
+        direction[2] = VAL(GOAL_X) - VAL(XPOS) + 2;
+        if (direction[2] < 0) {
+            angle3 = acos((-direction[1] /
+                (sqrt(direction[1] * direction[1] +
+                    direction[2] * direction[2]))));
+            angle4 = acos((direction[0] /
+                (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+                    direction[0] * direction[0]))));;
+            right_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+                direction[0] * direction[0]) - 1.5;
+            if (right_leg_length > 3.5)
+                right_leg_length = 3.5;
+            if (right_leg_length < 0.5)
+                right_leg_length = 0.5;
+        }
+        else {
+            direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)-1) * -1;
+            direction[1] = (VAL(GOAL_Y) - VAL(YPOS) +2.75 );
+            angle5 = acos((-direction[0] /
+                (sqrt(direction[0] * direction[0] +
+                    direction[1] * direction[1]))))-M_PI/2;
+            if (angle5 > M_PI / 3)
+                angle5 = M_PI / 3;
+            else if (angle5 < -M_PI / 6)
+                angle5 = -M_PI / 6;
+        }
+
+    }
+
+    
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE,
+        (((angle1)* 180.0)) / M_PI);
+
+     ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE,
+                                                     90-1*( angle2 * 180)/ M_PI);
+     ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH,left_leg_length
+         );
+     ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+         (((angle3) * 180.0)) / M_PI);
+
+     ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE,
+         90 - 1 * (angle4 * 180) / M_PI);
+     ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, right_leg_length
+     );     
+     ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, (((angle5) * 180.0)) / M_PI
+     );
+  }
+
   glTranslated(4, 4, 0);
   drawMetaBall();
   glPopMatrix();
@@ -382,6 +478,23 @@ int main() {
   controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
+  controls[LEFTSIDELEG_ROTATE] =
+      ModelerControl("Left Side Leg Rotate", -180, 180, 1, 0);
+  controls[RIGHTSIDELEG_ROTATE] =
+      ModelerControl("Right Side Leg Rotate", -180, 180, 1, 0);
+  controls[LEFTSIDELEG_LENGTH] =
+      ModelerControl("Left Side Leg Length", 1, 3.5, 0.1f, 3.5);
+  controls[RIGHTSIDELEG_LENGTH] =
+      ModelerControl("Right Side Leg Length", 1, 3.5, 0.1f, 3.5);
+  controls[LEFTSIDEFEET_ROTATE] =
+      ModelerControl("Left Side Feet Rotate", -180, 180, 1, 0);
+  controls[RIGHTSIDEFEET_ROTATE] =
+      ModelerControl("Right Side Feet Rotate", -180, 180, 1, 0);
+  controls[RIGHTSIDELEG_YAWROTATE] =
+      ModelerControl("Right Side Yaw Rotate", -180, 180, 1, 0);
+  controls[LEFTSIDELEG_YAWROTATE] =
+      ModelerControl("Left Side Yaw Rotate", -180, 180, 1, 0);
+  controls[FULL_MOVEMENT] = ModelerControl("Full Movement", -30, 45, 1, 0);
   controls[LEFTSIDELEG_ROTATE] =
       ModelerControl("Left Side Leg Rotate", -60, 60, 1, 0);
   controls[RIGHTSIDELEG_ROTATE] =
@@ -445,6 +558,13 @@ int main() {
       ModelerControl("SHOCKWAVE", 0, 1, 1, 0);
   controls[CHARACTER] =
       ModelerControl("Character", 1, 2, 1, 1);
+
+  // goal-oriented control
+  controls[DISPLAY_GOAL] = ModelerControl("Display Goal", 0, 1, 1, 0);
+  controls[GOAL_X] = ModelerControl("Goal X", -8, 8, 0.1f, 4);
+  controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
+  controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
+
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
   return ModelerApplication::Instance()->Run();
