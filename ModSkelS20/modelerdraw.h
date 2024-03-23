@@ -175,4 +175,5 @@ public:
 
 void drawLSystemTree(float angle, float distance, float radius);
 void drawComplexShape();
+void setDiffuseColorwithAlpha(float r, float g, float b, float opacity);
 #endif

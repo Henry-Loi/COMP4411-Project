@@ -550,3 +550,24 @@ void drawComplexShape() {
         }
     }
 }
+
+void setDiffuseColorwithAlpha(float r, float g, float b, float opacity) {
+    ModelerDrawState* mds = ModelerDrawState::Instance();
+
+    mds->m_diffuseColor[0] = (GLfloat)r;
+    mds->m_diffuseColor[1] = (GLfloat)g;
+    mds->m_diffuseColor[2] = (GLfloat)b;
+    mds->m_diffuseColor[3] = (GLfloat)opacity; // Set the opacity
+
+    if (mds->m_drawMode == NORMAL) {
+        glEnable(GL_BLEND); // Enable blending for transparency
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Set blending function
+
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mds->m_diffuseColor);
+
+       
+    }
+    else {
+        glColor4f(r, g, b, opacity); // Use glColor4f for setting color with opacity
+    }
+}

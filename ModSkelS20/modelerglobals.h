@@ -47,6 +47,7 @@ enum SampleModelControls {
   METABALLS_STEP,
   LEVELOF_DETAILS,
   BODY_PITCH,
+  SHOCKWAVE,
   NUMCONTROLS,
 };
 

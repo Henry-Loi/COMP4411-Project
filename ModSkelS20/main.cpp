@@ -228,9 +228,20 @@ void RobotModel::draw() {
       glPopMatrix();
   }
 
+  glPushMatrix();
   glTranslated(4, 4, 0);
   drawMetaBall();
-  drawComplexShape();
+  glPopMatrix();
+  
+  if (VAL(SHOCKWAVE) == 1) {
+      glPushMatrix();
+      setDiffuseColorwithAlpha(0.3f, 0.8f, 1.0f, 0.5);
+      glRotated(180, 0.0, 1.0, 0.0);
+      glTranslated(0.0, 2.25, -4.0);
+      drawComplexShape();
+      glDisable(GL_BLEND); // Disable blending after rendering
+      glPopMatrix();
+  }
 }
 
 int main() {
@@ -294,6 +305,8 @@ int main() {
   controls[LIGHT2_Z] = ModelerControl("Light2 Z", -5, 5, 0.1f, 0);
   controls[LIGHT2_INTENSITY] =
       ModelerControl("Light 2 Intensity", 0, 1, 0.1f, 0);
+  controls[SHOCKWAVE] =
+      ModelerControl("SHOCKWAVE", 0, 1, 1, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
