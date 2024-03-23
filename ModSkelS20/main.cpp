@@ -62,9 +62,6 @@ void RobotModel::set_model_lighting(int mood) {
 }
 
 void RobotModel::set_mood(int state) {
-  if (!state) {
-    return;
-  }
 
   switch (state) {
   case ANGRY:
@@ -74,8 +71,18 @@ void RobotModel::set_mood(int state) {
 
     ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
     ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
     break;
   case SAD:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
     break;
   case HAPPY:
     ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
@@ -83,6 +90,20 @@ void RobotModel::set_mood(int state) {
                                                     125);
     ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
     ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
+    break;
+  case NONE:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
     break;
   default:
     break;
@@ -349,7 +370,8 @@ int main() {
   controls[METABALLS_STEP] = ModelerControl("Metaballs Step", -10, 10, 0.5f, 0);
 
   // mood
-  controls[MOOD] = ModelerControl("Mood (None, HAPPY, SAD, ANGRY)", 0, 3, 1, 0);
+  controls[MOOD] =
+      ModelerControl("Mood (Normal, HAPPY, SAD, ANGRY)", 0, 3, 1, 0);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);
