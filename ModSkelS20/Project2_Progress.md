@@ -32,7 +32,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 12.0/30** \
+> **Total marks: 14.0/30** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/index.html) before start working on it due to my poor english orz.
 
@@ -49,7 +49,7 @@
 - [X] [2] Add a function in your model file for drawing a new type of primitive. (any of three can get two balls) (3: toras)
 
 - [X] [2] Use some sort of procedural modeling (such as an L-system) to generate all or part of your character. (need slide bar, type, angle, iterator, display toggle)
-- [ ] [2] Have your character react differently to UI controls depending on what mood they are in. (just movement is ok)
+- [X] [2] Have your character react differently to UI controls depending on what mood they are in. (just movement is ok)
 
 - [X] [4] Implement your hierarchical model and "skin" it with metaballs. (add a adjustable metaball with the model)
 - [ ] [8] "goal-oriented" motion (add and display a target point, make the hand always points to the target)

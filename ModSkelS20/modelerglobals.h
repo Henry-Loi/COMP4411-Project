@@ -12,7 +12,6 @@ enum SampleModelControls {
   XPOS,
   YPOS,
   ZPOS,
-  HEIGHT,
   HEAD_ROTATE,
   FRONTLEG_ROTATE,
   LEFTSIDELEG_ROTATE,
@@ -49,6 +48,7 @@ enum SampleModelControls {
   BODY_PITCH,
   SHOCKWAVE,
   CHARACTER,
+  MOOD,
   NUMCONTROLS,
 };
 
@@ -62,6 +62,6 @@ enum SampleModelControls {
 // We'll be getting the instance of the application a lot;
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
-#define SETVAL(x,y) (ModelerApplication::Instance()->SetControlValue(x,y))
+#define SETVAL(x, y) (ModelerApplication::Instance()->SetControlValue(x, y))
 
 #endif
