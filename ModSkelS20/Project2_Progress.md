@@ -18,11 +18,11 @@
 ### Progress
 #### Task 1 - Model
 - [X] at least ten primitives
-- [ ] at least four levels of hierarchy
+- [X] at least four levels of hierarchy
 
 #### Task 2 - Control Knob
-- [ ] Add at least one of these as a control knob
-- [ ] Tied to more than one joint/component
+- [X] Add at least one of these as a control knob
+- [X] Tied to more than one joint/component
 
 #### Task 3 - LookAt
 - [X] Implement own LookAt
