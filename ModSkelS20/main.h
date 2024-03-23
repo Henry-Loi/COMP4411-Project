@@ -19,7 +19,7 @@ public:
   void set_model_lighting(int);
   void set_mood(int);
 
-  enum MoodType { NONE, HAPPY, SAD, ANGRY, NUM_OF_MOODS };
+  enum MoodType { NONE, NORMAL, HAPPY, SAD, ANGRY, NUM_OF_MOODS };
 
   void initTextureMap(void);
 

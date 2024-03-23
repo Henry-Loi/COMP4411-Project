@@ -298,6 +298,7 @@ Fl_Menu_Item *ModelerUserInterface::m_controlsAnimOnMenu =
 extern int forest_flag;
 inline void ModelerUserInterface::cb_GenerateEffect_i(Fl_Menu_ *, void *) {
   forest_flag = !forest_flag;
+  m_modelerView->redraw();
 }
 
 void ModelerUserInterface::cb_GenerateEffect(Fl_Menu_ *o, void *v) {
