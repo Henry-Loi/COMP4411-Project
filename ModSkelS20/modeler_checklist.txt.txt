@@ -14,7 +14,7 @@ Delete yes/no when appropriate
 
 W dramatic light					yes
 W adjustable LoD					yes/no
-W your idea 						yes/no
+W your idea 						yes
 B texture map						yes
 B polygonal faces (triangles)				yes/no 
 B animation       					yes/no
