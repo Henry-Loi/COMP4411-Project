@@ -329,7 +329,6 @@ int main() {
   controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
   controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
   controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
-  controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
   controls[LEFTSIDELEG_ROTATE] =

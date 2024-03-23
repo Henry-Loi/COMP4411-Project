@@ -12,7 +12,6 @@ enum SampleModelControls {
   XPOS,
   YPOS,
   ZPOS,
-  HEIGHT,
   HEAD_ROTATE,
   FRONTLEG_ROTATE,
   LEFTSIDELEG_ROTATE,
