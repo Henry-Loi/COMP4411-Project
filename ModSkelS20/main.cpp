@@ -4,6 +4,7 @@
 #include "modelerdraw.h"
 #include "texturedraw.h"
 #include <cmath>
+#include <array>
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -41,7 +42,11 @@ void RobotModel::draw() {
   ModelerView::draw();
 
   set_model_lighting();
-
+  std::array<float, 3> COLOR1 = { 0.0,0.0,0.0 };
+  if (VAL(CHARACTER) == 1)
+      COLOR1= { 0.0,0.0,1.0 };
+  else
+      COLOR1 = { 223.0 / 255.0,89.0 / 255.0,0.0 };
   // draw the floor
   setAmbientColor(.1f, .1f, .1f);
   setDiffuseColor(COLOR_RED);
@@ -121,10 +126,17 @@ void RobotModel::draw() {
   glPushMatrix();
 
   glTranslated(0, 2, 0);
-  setDiffuseColor(COLOR_BLUE);
+  setDiffuseColor(COLOR1[0],COLOR1[1],COLOR1[2]);
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
   if (VAL(LEVELOF_DETAILS) > 1)
-    drawSphere(2);
+      if(VAL(CHARACTER)==1)
+        drawSphere(2);
+      else
+      {     
+          glRotated(-90.0, 1.0, 0.0, 0.0);
+          drawCylinder(2, 2, 1.5);
+          glRotated(90.0, 1.0, 0.0, 0.0);
+      }
   // draw eyes
   glTranslated(0, 0.3, 0);
   glRotated(5, 0.0, 1.0, 0.0);
@@ -170,12 +182,19 @@ void RobotModel::draw() {
   glRotated(-VAL(LEFTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 1)
-    drawCylinder(1, 1.0, 1.0);
+      if (VAL(CHARACTER) == 1)
+          drawCylinder(1, 1.0, 1.0);
+      else {
+          glTranslated(0.0, 0.0, 0.5);
+          drawSphere(1);
+          glTranslated(0.0, 0.0, -0.5);
+      }
   glRotated(180 + sideLeftLegangle, 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   if (VAL(LEVELOF_DETAILS) > 2)
-    drawBox(2, 1.5, 0.75);
-  setDiffuseColor(COLOR_BLUE);
+      if (VAL(CHARACTER) == 1)
+        drawBox(2, 1.5, 0.75);
+  setDiffuseColor(COLOR1[0], COLOR1[1], COLOR1[2]);
   glTranslated(0.25, 0.5, 0.15);
   if (VAL(LEVELOF_DETAILS) > 3)
     drawBox(1.5, VAL(LEFTSIDELEG_LENGTH), 0.5);
@@ -186,7 +205,13 @@ void RobotModel::draw() {
   glTranslated(-0.75, 0.0, -0.5);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 4)
-    drawBox(1.5, 0.9, 1.5);
+      if (VAL(CHARACTER) == 1)
+        drawBox(1.5, 0.9, 1.5);
+      else {
+          setDiffuseColor(0.2f, 0.2f, 0.2f);
+          glTranslated(0.75, 0.25, 0.25);
+          drawCylinder(0.9, 0.75, 0.75);
+      }
   glPopMatrix();
   //------------------------------------------------//
 
@@ -199,12 +224,19 @@ void RobotModel::draw() {
   glRotated(-VAL(RIGHTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 1)
-    drawCylinder(1, 1.0, 1.0);
+      if (VAL(CHARACTER) == 1)
+          drawCylinder(1, 1.0, 1.0);
+      else {
+          glTranslated(0.0, 0.0, 0.5);
+          drawSphere(1);
+          glTranslated(0.0, 0.0, -0.5);
+      }
   glRotated(180 + sideRightLegangle, 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   if (VAL(LEVELOF_DETAILS) > 2)
-    drawBox(2, 1.5, 0.75);
-  setDiffuseColor(COLOR_BLUE);
+      if (VAL(CHARACTER) == 1)
+        drawBox(2, 1.5, 0.75);
+  setDiffuseColor(COLOR1[0],COLOR1[1],COLOR1[2]);
   glTranslated(0.25, 0.5, 0.15);
   if (VAL(LEVELOF_DETAILS) > 3)
     drawBox(1.5, VAL(RIGHTSIDELEG_LENGTH), 0.5);
@@ -215,7 +247,13 @@ void RobotModel::draw() {
   glTranslated(-0.75, 0.0, -0.5);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 4)
-    drawBox(1.5, 0.9, 1.5);
+      if (VAL(CHARACTER) == 1)
+          drawBox(1.5, 0.9, 1.5);
+      else {
+          setDiffuseColor(0.2f, 0.2f, 0.2f);
+          glTranslated(0.75, 0.25, 0.25);
+          drawCylinder(0.9, 0.75, 0.75);
+      }
   glPopMatrix();
   //------------------------------------------------//
   if (VAL(LEVELOF_DETAILS) > 5) {
@@ -307,7 +345,8 @@ int main() {
       ModelerControl("Light 2 Intensity", 0, 1, 0.1f, 0);
   controls[SHOCKWAVE] =
       ModelerControl("SHOCKWAVE", 0, 1, 1, 0);
-
+  controls[CHARACTER] =
+      ModelerControl("Character", 1, 2, 1, 1);
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
   return ModelerApplication::Instance()->Run();

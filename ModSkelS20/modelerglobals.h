@@ -48,6 +48,7 @@ enum SampleModelControls {
   LEVELOF_DETAILS,
   BODY_PITCH,
   SHOCKWAVE,
+  CHARACTER,
   NUMCONTROLS,
 };
 
