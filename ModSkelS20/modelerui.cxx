@@ -283,6 +283,8 @@ Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
      0, 0, 14, 0},
     {"Frame All", 0, (Fl_Callback *)ModelerUserInterface::cb_FrameAll, 0, 0, 0,
      0, 14, 0},
+    {"Enable Effect", 0, (Fl_Callback *)ModelerUserInterface::cb_GenerateEffect,
+     0, 2, 0, 0, 14, 0},
     {0},
     {"Animate", 0, 0, 0, 64, 0, 0, 14, 0},
     {"Enable", 0, (Fl_Callback *)ModelerUserInterface::cb_m_controlsAnimOnMenu,
@@ -292,6 +294,16 @@ Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
 // 11-01-2001: fixed bug that caused animation problems
 Fl_Menu_Item *ModelerUserInterface::m_controlsAnimOnMenu =
     ModelerUserInterface::menu_m_controlsMenuBar + 18;
+
+extern int forest_flag;
+inline void ModelerUserInterface::cb_GenerateEffect_i(Fl_Menu_ *, void *) {
+  forest_flag = !forest_flag;
+}
+
+void ModelerUserInterface::cb_GenerateEffect(Fl_Menu_ *o, void *v) {
+  ((ModelerUserInterface *)(o->parent()->user_data()))
+      ->cb_GenerateEffect_i(o, v);
+}
 
 inline void ModelerUserInterface::cb_m_controlsBrowser_i(Fl_Browser *, void *) {
   for (int i = 0; i < ModelerApplication::Instance()->m_numControls; i++) {

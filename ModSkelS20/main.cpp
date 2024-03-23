@@ -117,6 +117,7 @@ void RobotModel::initTextureMap() {
   }
 }
 
+int forest_flag = 0;
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out RobotModel
 void RobotModel::draw() {
@@ -469,6 +470,22 @@ void RobotModel::draw() {
 
 
   SETVAL(LEFTSIDELEG_YAWROTATE, ((60.0)) );
+  drawComplexShape();
+
+  if (forest_flag) {
+    // set yellow color
+    setDiffuseColor(1.0f, 1.0f, 0.0f);
+    // random display of trees
+    glScaled(3, 3, 3);
+    glTranslated(-4, -5, 0);
+    for (int i = 0; i < 10; i++) {
+      glPushMatrix();
+      glTranslated(rand() % 10 - 5, rand() % 10 - 5, rand() % 10 - 5);
+      drawLSystemTree(120, 0.2, 0.01);
+      glPopMatrix();
+    }
+    // forest_flag = 0;
+  }
 }
 
 int main() {

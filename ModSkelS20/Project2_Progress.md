@@ -32,13 +32,13 @@
 
 
 ## Bells and Whistles
-> **Total marks: 14.0/30** \
+> **Total marks: 14.5/30** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/modeler/index.html) before start working on it due to my poor english orz.
 
 - [X] [0.5] Change the default light source to illuminate your scene more dramatically. (Include light0, light1)
 - [ ] [0.5] Allow for adjustable levels of detail for your character. You will need to add a UI control for this. (show and hide different level with slide bar)
-- [ ] [0.5] Come up with another whistle and implement it.  A whistle is something that extends the use of one of the things you are already doing.  It is part of the basic model construction, but extended or cloned and modified in an interesting way.
+- [X] [0.5] Come up with another whistle and implement it.  A whistle is something that extends the use of one of the things you are already doing.  It is part of the basic model construction, but extended or cloned and modified in an interesting way.
 - [X] [1] Use a texture map on all or part of your character. (The safest way to do this is to implement your own primitives inside your model file that do texture mapping.) (can toggle with slide bar)
 - [ ] [1] Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them. 
 - [ ] [1] Make an additional "animated" sequence your character can perform. (move the legs and hands continuously)
