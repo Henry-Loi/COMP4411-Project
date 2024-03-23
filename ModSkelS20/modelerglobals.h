@@ -46,6 +46,7 @@ enum SampleModelControls {
   METABALLS_THRESHOLD,
   METABALLS_STEP,
   LEVELOF_DETAILS,
+  BODY_PITCH,
   NUMCONTROLS,
 };
 
@@ -59,5 +60,6 @@ enum SampleModelControls {
 // We'll be getting the instance of the application a lot;
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
+#define SETVAL(x,y) (ModelerApplication::Instance()->SetControlValue(x,y))
 
 #endif

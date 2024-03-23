@@ -493,3 +493,60 @@ void drawMetaBall(void) {
   mb.evalScalarField();
   mb.draw();
 }
+
+
+void drawComplexShape() {
+    //int numTriangles = 100;
+    //float height = 3.0;
+    //float radius = 1.0;
+    //const float angleIncrement = 2 * M_PI / numTriangles;
+    //const Vector3 apex = { 0.0f, 0.0f, height };
+
+    //float currentAngle = 0.0f;
+
+    //for (int i = 0; i < numTriangles; i++) {
+    //    const float x1 = radius * cos(currentAngle);
+    //    const float y1 = radius * sin(currentAngle);
+    //    const float x2 = radius * cos(currentAngle + angleIncrement);
+    //    const float y2 = radius * sin(currentAngle + angleIncrement);
+
+    //    // Define the vertices of the base
+    //    const Vector3 baseVertex1 = { x1, y1, 0.0f }; // Current vertex
+    //    const Vector3 baseVertex2 = { x2, y2, 0.0f }; // Next vertex
+
+    //    drawTriangle(baseVertex1.x, baseVertex1.y, baseVertex1.z, baseVertex2.x, baseVertex2.y, baseVertex2.z,apex.x,apex.y,apex.z);
+
+    //    currentAngle += angleIncrement;
+    //}
+
+
+    const float radius = 1.0; // Radius of the base
+    const float height = 10.0; // Height of the cone
+    const int numSegments = 30; // Number of segments in the cone base
+    const int numGridPoints = 50; // Number of points on the grid
+    const float gridSize = 20.0; // Size of the grid in both x and y directions
+    const float increment = gridSize / numGridPoints;
+    const float halfGridSize = gridSize / 2.0;
+
+
+    for (int i = 0; i < numGridPoints - 1; i++) {
+        for (int j = 0; j < numGridPoints - 1; j++) {
+            // Calculate the (x, y) coordinates of the four corners of the current grid cell
+            float x1 = -halfGridSize + i * increment;
+            float y1 = -halfGridSize + j * increment;
+            float x2 = x1 + increment;
+            float y2 = y1 + increment;
+
+            // Calculate the z-values for the function z = cos(sqrt(x^2 + y^2)) - (1/5)sqrt(x^2 + y^2)
+            float z1 = cos(2 * sqrt(x1 * x1 + y1 * y1)) - (2.0 / 5.0) * sqrt(x1 * x1 + y1 * y1);
+            float z2 = cos(2 * sqrt(x2 * x2 + y1 * y1)) - (2.0 / 5.0) * sqrt(x2 * x2 + y1 * y1);
+            float z3 = cos(2 * sqrt(x1 * x1 + y2 * y2)) - (2.0 / 5.0) * sqrt(x1 * x1 + y2 * y2);
+            float z4 = cos(2 * sqrt(x2 * x2 + y2 * y2)) - (2.0 / 5.0) * sqrt(x2 * x2 + y2 * y2);
+
+            // Render the two triangles of the current grid cell
+            drawTriangle(x1, y1, z1, x2, y1, z2, x1, y2, z3);
+
+            drawTriangle(x1, y2, z3, x2, y1, z2, x2, y2, z4);
+        }
+    }
+}

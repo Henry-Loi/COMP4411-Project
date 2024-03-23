@@ -74,20 +74,21 @@ void RobotModel::draw() {
   //     |
   //     z------x
 
+  if (VAL(FULL_MOVEMENT) != 0) {
+      SETVAL(LEFTSIDEFEET_ROTATE, VAL(BODY_PITCH)/2);
+      SETVAL(RIGHTSIDEFEET_ROTATE, VAL(BODY_PITCH)/2);
+      SETVAL(FRONTLEG_ROTATE, -VAL(BODY_PITCH));
+      SETVAL(LEFTSIDELEG_ROTATE, VAL(BODY_PITCH)*-3/2);
+      SETVAL(RIGHTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
+  }
+
   int sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
   int sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
   int sideLeftFeetangle = VAL(LEFTSIDEFEET_ROTATE);
   int sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
   int frontLegangle = VAL(FRONTLEG_ROTATE);
-  int torsoAngle = 0;
-  if (VAL(FULL_MOVEMENT) != 0) {
-    sideLeftFeetangle = VAL(FULL_MOVEMENT) / 2;
-    sideRightFeetangle = -VAL(FULL_MOVEMENT) / 2;
-    frontLegangle = -VAL(FULL_MOVEMENT);
-    torsoAngle = VAL(FULL_MOVEMENT);
-    sideLeftLegangle = (sideLeftFeetangle + torsoAngle) * -1;
-    sideRightLegangle = (sideRightFeetangle - torsoAngle) * -1;
-  }
+  int torsoAngle = VAL(BODY_PITCH);
+
 
   // draw torso and waist (root)
   //------------------------------------------------//
@@ -229,6 +230,7 @@ void RobotModel::draw() {
 
   glTranslated(4, 4, 0);
   drawMetaBall();
+  drawComplexShape();
 }
 
 int main() {
@@ -253,7 +255,8 @@ int main() {
   controls[RIGHTSIDEFEET_ROTATE] = ModelerControl("Right Side Feet Rotate", -60, 60, 1, 0);
   controls[RIGHTSIDELEG_YAWROTATE] = ModelerControl("Right Side Yaw Rotate", 0, 90, 1, 0);
   controls[LEFTSIDELEG_YAWROTATE] = ModelerControl("LEFT Side Yaw Rotate", 0, 90, 1, 0);
-  controls[FULL_MOVEMENT] = ModelerControl("Full Movement", -30, 45, 1, 0);
+  controls[BODY_PITCH] = ModelerControl("Body Pitch Angle", -30, 45, 1, 0);
+  controls[FULL_MOVEMENT] = ModelerControl("Full Movement", 0, 1, 1, 0);
 
   controls[BODY_ROTATE] = ModelerControl("Body Rotate", -180, 180, 1, 0);
   controls[XSCALE] = ModelerControl("X Scale", 0.1, 2, 0.1f, 1);

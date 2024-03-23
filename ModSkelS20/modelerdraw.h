@@ -117,6 +117,62 @@ public:
   float radius;
 };
 
-void drawLSystemTree(float angle, float distance, float radius);
+class Vector3 {
+public:
+    float x, y, z;
 
+    // Default constructor
+    Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
+
+    // Constructor with initial values
+    Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+
+    // Copy constructor
+    Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z) {}
+
+    // Destructor
+    ~Vector3() {}
+
+    // Addition operator
+    Vector3 operator+(const Vector3& other) const {
+        return Vector3(x + other.x, y + other.y, z + other.z);
+    }
+
+    // Subtraction operator
+    Vector3 operator-(const Vector3& other) const {
+        return Vector3(x - other.x, y - other.y, z - other.z);
+    }
+
+    // Scalar multiplication operator
+    Vector3 operator*(float scalar) const {
+        return Vector3(x * scalar, y * scalar, z * scalar);
+    }
+
+    // Dot product
+    float dot(const Vector3& other) const {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    // Cross product
+    Vector3 cross(const Vector3& other) const {
+        return Vector3(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x
+        );
+    }
+
+    // Normalize the vector
+    void normalize() {
+        float length = sqrt(x * x + y * y + z * z);
+        if (length > 0.0f) {
+            x /= length;
+            y /= length;
+            z /= length;
+        }
+    }
+};
+
+void drawLSystemTree(float angle, float distance, float radius);
+void drawComplexShape();
 #endif
