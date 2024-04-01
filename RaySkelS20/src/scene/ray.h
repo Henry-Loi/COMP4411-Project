@@ -17,77 +17,71 @@ class SceneObject;
 
 class ray {
 public:
-	ray( const vec3f& pp, const vec3f& dd )
-		: p( pp ), d( dd ) {}
-	ray( const ray& other ) 
-		: p( other.p ), d( other.d ) {}
-	~ray() {}
+  ray(const vec3f &pp, const vec3f &dd) : p(pp), d(dd) {}
+  ray(const ray &other) : p(other.p), d(other.d) {}
+  ~ray() {}
 
-	ray& operator =( const ray& other ) 
-	{ p = other.p; d = other.d; return *this; }
+  ray &operator=(const ray &other) {
+    p = other.p;
+    d = other.d;
+    return *this;
+  }
 
-	vec3f at( double t ) const
-	{ return p + (t*d); }
+  vec3f at(double t) const { return p + (t * d); }
 
-	vec3f getPosition() const { return p; }
-	vec3f getDirection() const { return d; }
+  vec3f getPosition() const { return p; }
+  vec3f getDirection() const { return d; }
 
 protected:
-	vec3f p;
-	vec3f d;
+  vec3f p;
+  vec3f d;
 };
 
 // The description of an intersection point.
 
-class isect
-{
+class isect {
 public:
-    isect()
-        : obj( NULL ), t( 0.0 ), N(), material(0) {}
+  isect() : obj(NULL), t(0.0), N(), material(0) {}
 
-    ~isect()
-    {
-        delete material;
+  ~isect() { delete material; }
+
+  void setObject(SceneObject *o) { obj = o; }
+  void setT(double tt) { t = tt; }
+  void setN(const vec3f &n) { N = n; }
+  void setMaterial(Material *m) {
+    delete material;
+    material = m;
+  }
+
+  isect &operator=(const isect &other) {
+    if (this != &other) {
+      obj = other.obj;
+      t = other.t;
+      N = other.N;
+      //            material = other.material ? new Material( *(other.material)
+      //            ) : 0;
+      if (other.material) {
+        if (material)
+          *material = *other.material;
+        else
+          material = new Material(*other.material);
+      } else {
+        material = 0;
+      }
     }
-    
-    void setObject( SceneObject *o ) { obj = o; }
-    void setT( double tt ) { t = tt; }
-    void setN( const vec3f& n ) { N = n; }
-    void setMaterial( Material *m ) { delete material; material = m; }
-        
-    isect& operator =( const isect& other )
-    {
-        if( this != &other )
-        {
-            obj = other.obj;
-            t = other.t;
-            N = other.N;
-//            material = other.material ? new Material( *(other.material) ) : 0;
-			if( other.material )
-            {
-                if( material )
-                    *material = *other.material;
-                else
-                    material = new Material(*other.material );
-            }
-            else
-            {
-                material = 0;
-            }
-        }
-        return *this;
-    }
+    return *this;
+  }
 
 public:
-    const SceneObject 	*obj;
-    double t;
-    vec3f N;
-    Material *material;         // if this intersection has its own material
-                                // (as opposed to one in its associated object)
-                                // as in the case where the material was interpolated
+  const SceneObject *obj;
+  double t;
+  vec3f N;
+  Material *material; // if this intersection has its own material
+                      // (as opposed to one in its associated object)
+                      // as in the case where the material was interpolated
 
-    const Material &getMaterial() const;
-    // Other info here.
+  const Material &getMaterial() const;
+  // Other info here.
 };
 
 const double RAY_EPSILON = 0.00001;
