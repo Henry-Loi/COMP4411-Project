@@ -1,4 +1,4 @@
-# Project 3 : Modeler
+# Project 3 : Ray-Tracker
 > **Assigned : Mar 23** \
 > **Due : Apr 20**
 
@@ -16,7 +16,7 @@
 
 ### Progress
 #### Task 1
-- [ ] box intersections
+- [X] box intersections
 - [ ] expand ray-casting into ray-tracing
 
 #### Task 2 - Phong specular-reflection model
