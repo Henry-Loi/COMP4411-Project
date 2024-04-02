@@ -471,10 +471,8 @@ void RobotModel::draw() {
       float increment = 0.5;
       if (anim_index < 45) {
           if (anim_flag == 0) {
-              SETVAL(BODY_PITCH, anim_index);
-              anim_index += increment;
               ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
-
+              anim_flag = 1;
           }
           else {
               anim_index += increment;
@@ -482,9 +480,6 @@ void RobotModel::draw() {
 
           }
       }
-      else
-          anim_index = 0;
-      for(int i = 0; i<100;i++){}
   }
 
   
@@ -592,7 +587,7 @@ int main() {
   controls[GOAL_X] = ModelerControl("Goal X", -8, 8, 0.1f, 4);
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
-  controls[ANIMATION] = ModelerControl("Animation", 0, 1, 1, 0);
+  controls[ANIMATION] = ModelerControl("Animation", -8, 8, 0.1f, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);

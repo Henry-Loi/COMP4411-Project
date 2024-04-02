@@ -12,12 +12,13 @@ enum SampleModelControls {
   XPOS,
   YPOS,
   ZPOS,
+  HEIGHT,
   HEAD_ROTATE,
   FRONTLEG_ROTATE,
   LEFTSIDELEG_ROTATE,
   RIGHTSIDELEG_ROTATE,
-  LEFTSIDELEG_LENGTH,
-  RIGHTSIDELEG_LENGTH,
+  /*LEFTSIDELEG_LENGTH,
+  RIGHTSIDELEG_LENGTH,*/
   LEFTSIDEFEET_ROTATE,
   RIGHTSIDEFEET_ROTATE,
   LEFTSIDELEG_YAWROTATE,
@@ -27,15 +28,6 @@ enum SampleModelControls {
   XSCALE,
   YSCALE,
   ZSCALE,
-  TEXTURE_MAPPING,
-  L_SYSTEM_DISPLAY,
-  L_SYSTEM_GENERATION,
-  METABALLS_THRESHOLD,
-  METABALLS_STEP,
-  DISPLAY_GOAL,
-  GOAL_X,
-  GOAL_Y,
-  GOAL_Z,
   LIGHT0_X,
   LIGHT0_Y,
   LIGHT0_Z,
@@ -48,12 +40,12 @@ enum SampleModelControls {
   LIGHT2_Y,
   LIGHT2_Z,
   LIGHT2_INTENSITY,
+  TEXTURE_MAPPING,
+  L_SYSTEM_DISPLAY,
+  L_SYSTEM_GENERATION,
+  METABALLS_THRESHOLD,
+  METABALLS_STEP,
   LEVELOF_DETAILS,
-  BODY_PITCH,
-  SHOCKWAVE,
-  CHARACTER,
-  MOOD,
-  ANIMATION,
   NUMCONTROLS,
 };
 
@@ -67,6 +59,5 @@ enum SampleModelControls {
 // We'll be getting the instance of the application a lot;
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
-#define SETVAL(x, y) (ModelerApplication::Instance()->SetControlValue(x, y))
 
 #endif

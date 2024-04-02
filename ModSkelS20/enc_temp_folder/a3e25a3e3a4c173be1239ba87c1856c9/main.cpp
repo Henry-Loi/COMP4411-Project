@@ -3,11 +3,11 @@
 #include "main.h"
 #include "modelerdraw.h"
 #include "texturedraw.h"
+#include "modelerui.h"
 #include <cmath>
 #include <array>
 #include<iostream>
 #include <GL/gl.h>
-#include "modelerui.h"
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -62,64 +62,64 @@ void RobotModel::set_model_lighting(int mood) {
   glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
 }
-float anim_index = 0.0;
-int anim_flag = 0;
-//void RobotModel::set_mood(int state) {
-//
-//  switch (state) {
-//  case ANGRY:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  case SAD:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
-//    break;
-//  case HAPPY:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
-//    break;
-//  case NONE:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  default:
-//    break;
-//  }
-//}
+
+void RobotModel::set_mood(int state) {
+
+  switch (state) {
+  case ANGRY:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  case SAD:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
+    break;
+  case HAPPY:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
+    break;
+  case NONE:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  default:
+    break;
+  }
+}
 
 void RobotModel::initTextureMap() {
   for (int i = 0; i < NUM_OF_TEXTURES; i++) {
     textureMaps[i] = new TextureMap(texture_list[i]);
   }
 }
-
+int anime_index = 0;
 int forest_flag = 0;
+int recurse_flag = 0;
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out RobotModel
 void RobotModel::draw() {
@@ -135,7 +135,7 @@ void RobotModel::draw() {
       COLOR1 = { 223.0 / 255.0,89.0 / 255.0,0.0 };
   set_model_lighting(VAL(MOOD));
 
-  //set_mood(VAL(MOOD));
+  set_mood(VAL(MOOD));
 
   // draw the floor
   setAmbientColor(.1f, .1f, .1f);
@@ -465,27 +465,8 @@ void RobotModel::draw() {
       glDisable(GL_BLEND); // Disable blending after rendering
       glPopMatrix();
   }
-  // goal display
-  if (VAL(ANIMATION)==1) {
-      SETVAL(FULL_MOVEMENT, 1);
-      float increment = 0.5;
-      if (anim_index < 45) {
-          if (anim_flag == 0) {
-              SETVAL(BODY_PITCH, anim_index);
-              anim_index += increment;
-              ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
 
-          }
-          else {
-              anim_index += increment;
-              anim_flag = 0;
 
-          }
-      }
-      else
-          anim_index = 0;
-      for(int i = 0; i<100;i++){}
-  }
 
   
 
@@ -505,6 +486,21 @@ void RobotModel::draw() {
       glPopMatrix();
     }
     // forest_flag = 0;
+  }
+  if (VAL(ANIMATION)) {
+      SETVAL(FULL_MOVEMENT, 1);
+      if (anime_index < 45) {
+          SETVAL(BODY_PITCH, anime_index);
+          if (recurse_flag == 0) {
+              ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
+              recurse_flag = 1;
+          }
+          else {
+              anime_index++;
+              recurse_flag = 0;
+          }
+
+      }
   }
 }
 
@@ -593,7 +589,7 @@ int main() {
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
   controls[ANIMATION] = ModelerControl("Animation", 0, 1, 1, 0);
-
+  
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
   return ModelerApplication::Instance()->Run();

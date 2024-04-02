@@ -7,7 +7,6 @@
 #include <array>
 #include<iostream>
 #include <GL/gl.h>
-#include "modelerui.h"
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -62,56 +61,55 @@ void RobotModel::set_model_lighting(int mood) {
   glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
 }
-float anim_index = 0.0;
-int anim_flag = 0;
-//void RobotModel::set_mood(int state) {
-//
-//  switch (state) {
-//  case ANGRY:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  case SAD:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
-//    break;
-//  case HAPPY:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
-//    break;
-//  case NONE:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  default:
-//    break;
-//  }
-//}
+
+void RobotModel::set_mood(int state) {
+
+  switch (state) {
+  case ANGRY:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  case SAD:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
+    break;
+  case HAPPY:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
+    break;
+  case NONE:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  default:
+    break;
+  }
+}
 
 void RobotModel::initTextureMap() {
   for (int i = 0; i < NUM_OF_TEXTURES; i++) {
@@ -119,7 +117,6 @@ void RobotModel::initTextureMap() {
   }
 }
 
-int forest_flag = 0;
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out RobotModel
 void RobotModel::draw() {
@@ -135,7 +132,7 @@ void RobotModel::draw() {
       COLOR1 = { 223.0 / 255.0,89.0 / 255.0,0.0 };
   set_model_lighting(VAL(MOOD));
 
-  //set_mood(VAL(MOOD));
+  set_mood(VAL(MOOD));
 
   // draw the floor
   setAmbientColor(.1f, .1f, .1f);
@@ -176,111 +173,14 @@ void RobotModel::draw() {
     SETVAL(LEFTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
     SETVAL(RIGHTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
   }
-  if (VAL(DISPLAY_GOAL)) {
-      glPushMatrix();
-      setDiffuseColor(COLOR_RED);
-      glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
-      drawSphere(0.2);
-      glPopMatrix();
 
-      //offset from the leg joint
-      float off_x = VAL(XPOS);
-      float off_y = VAL(YPOS);
-      float off_z = VAL(ZPOS);
-      // calculate the direction vector
-      float direction[3] = { (VAL(GOAL_Z) - VAL(ZPOS)) * -1, (VAL(GOAL_Y) - VAL(YPOS) - 1),
-                            VAL(GOAL_X) - VAL(XPOS) - 2 };
+  int sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
+  int sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
+  int sideLeftFeetangle = VAL(LEFTSIDEFEET_ROTATE);
+  int sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
+  int frontLegangle = VAL(FRONTLEG_ROTATE);
+  int torsoAngle = VAL(BODY_PITCH);
 
-      std::cout << direction[1] << direction[2] << std::endl;
-
-      float angle3 = 0;
-      float angle4 = M_PI / 2;
-      float right_leg_length = 3.5;
-      float angle5 = 0;
-
-      // inverse kinematics
-      float angle1 = acos((-direction[1] /
-          (sqrt(direction[1] * direction[1] +
-              direction[2] * direction[2]))));
-      float angle2 = acos((direction[0] /
-          (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-              direction[0] * direction[0]))));;
-      float left_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-          direction[0] * direction[0]) - 1.5;
-      // float angle3 = atan2(direction[2], direction[1]);
-
-      if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-          direction[0] * direction[0]) - 1.5 > 3.5) {
-          left_leg_length = 3.5;
-
-      }
-      else if (left_leg_length < 0.5) {
-          left_leg_length = 0.5;
-      }
-      if (direction[2] < 0) {
-          angle1 = 0;
-          angle2 = M_PI / 2;
-          left_leg_length = 3.5;
-          direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)) * -1;
-          direction[1] = (VAL(GOAL_Y) - VAL(YPOS) - 1);
-          direction[2] = VAL(GOAL_X) - VAL(XPOS) + 2;
-          if (direction[2] < 0) {
-              angle3 = acos((-direction[1] /
-                  (sqrt(direction[1] * direction[1] +
-                      direction[2] * direction[2]))));
-              angle4 = acos((direction[0] /
-                  (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-                      direction[0] * direction[0]))));;
-              right_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-                  direction[0] * direction[0]) - 1.5;
-              if (right_leg_length > 3.5)
-                  right_leg_length = 3.5;
-              if (right_leg_length < 0.5)
-                  right_leg_length = 0.5;
-          }
-          else {
-              direction[0] = (VAL(GOAL_Z) - VAL(ZPOS) - 1) * -1;
-              direction[1] = (VAL(GOAL_Y) - VAL(YPOS) + 2.75);
-              angle5 = acos((-direction[0] /
-                  (sqrt(direction[0] * direction[0] +
-                      direction[1] * direction[1])))) - M_PI / 2;
-              if (angle5 > M_PI / 3)
-                  angle5 = M_PI / 3;
-              else if (angle5 < -M_PI / 6)
-                  angle5 = -M_PI / 6;
-          }
-
-      }
-
-
-      std::cout << ((angle1) * 180.0) / M_PI << "ANGLE1" << std::endl;
-
-      SETVAL(LEFTSIDELEG_YAWROTATE, (((angle1) * 180.0)) / M_PI);
-
-      SETVAL(LEFTSIDELEG_ROTATE,
-          90 - 1 * (angle2 * 180) / M_PI);
-      SETVAL(LEFTSIDELEG_LENGTH, left_leg_length
-      );
-      SETVAL(RIGHTSIDELEG_YAWROTATE,
-          (((angle3) * 180.0)) / M_PI);
-
-      SETVAL(RIGHTSIDELEG_ROTATE,
-          90 - 1 * (angle4 * 180) / M_PI);
-      SETVAL(RIGHTSIDELEG_LENGTH, right_leg_length
-      );
-      SETVAL(FRONTLEG_ROTATE, (((angle5) * 180.0)) / M_PI
-      );
-
-  }
-
-
-  float sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
-  float sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
-  float sideLeftFeetangle = VAL(LEFTSIDEFEET_ROTATE);
-  float sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
-  float frontLegangle = VAL(FRONTLEG_ROTATE);
-  float torsoAngle = VAL(BODY_PITCH);
-  std::cout << "initialvalue" << sideLeftLegangle << " " << sideRightLegangle << " " << std::endl;
   // draw torso and waist (root)
   //------------------------------------------------//
   setAmbientColor(0.8f, 0.8f, 0.8f);
@@ -455,7 +355,105 @@ void RobotModel::draw() {
   glTranslated(4, 4, 0);
   drawMetaBall();
   glPopMatrix();
+  // goal display
+  if (VAL(DISPLAY_GOAL)) {
+    glPushMatrix();
+    setDiffuseColor(COLOR_RED);
+    glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
+    drawSphere(0.2);
+    glPopMatrix();
 
+    //offset from the leg joint
+    float off_x = VAL(XPOS);
+    float off_y = VAL(YPOS);
+    float off_z = VAL(ZPOS);
+    // calculate the direction vector
+    float direction[3] = {(VAL(GOAL_Z) - VAL(ZPOS))*-1, (VAL(GOAL_Y) - VAL(YPOS)-1),
+                          VAL(GOAL_X) - VAL(XPOS)-2};
+
+    std::cout << direction[1]<<direction[2] << std::endl;
+
+    float angle3 = 0;
+        float angle4 = M_PI / 2; 
+        float right_leg_length = 3.5;
+        float angle5 = 0;
+
+    // inverse kinematics
+    float angle1 = acos((-direction[1] /
+        (sqrt(direction[1] * direction[1] +
+            direction[2] * direction[2]))));
+    float angle2 = acos((direction[0] /
+        (sqrt(direction[2] * direction[2] + direction[1] * direction[1]+
+            direction[0] * direction[0]))));;
+    float left_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+        direction[0] * direction[0])-1.5;
+    // float angle3 = atan2(direction[2], direction[1]);
+
+    if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+        direction[0] * direction[0]) - 1.5 > 3.5) {
+        left_leg_length = 3.5;
+
+    }
+    else if (left_leg_length < 0.5) {
+        left_leg_length = 0.5;
+    }
+    if (direction[2] < 0) {
+        angle1 = 0;
+        angle2 = M_PI / 2;
+        left_leg_length = 3.5;
+        direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)) * -1;
+        direction[1] = (VAL(GOAL_Y) - VAL(YPOS) - 1);
+        direction[2] = VAL(GOAL_X) - VAL(XPOS) + 2;
+        if (direction[2] < 0) {
+            angle3 = acos((-direction[1] /
+                (sqrt(direction[1] * direction[1] +
+                    direction[2] * direction[2]))));
+            angle4 = acos((direction[0] /
+                (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+                    direction[0] * direction[0]))));;
+            right_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+                direction[0] * direction[0]) - 1.5;
+            if (right_leg_length > 3.5)
+                right_leg_length = 3.5;
+            if (right_leg_length < 0.5)
+                right_leg_length = 0.5;
+        }
+        else {
+            direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)-1) * -1;
+            direction[1] = (VAL(GOAL_Y) - VAL(YPOS) +2.75 );
+            angle5 = acos((-direction[0] /
+                (sqrt(direction[0] * direction[0] +
+                    direction[1] * direction[1]))))-M_PI/2;
+            if (angle5 > M_PI / 3)
+                angle5 = M_PI / 3;
+            else if (angle5 < -M_PI / 6)
+                angle5 = -M_PI / 6;
+        }
+
+    }
+
+    
+    std::cout << ((angle1) * 180.0) / M_PI << "ANGLE1" << std::endl;
+
+    SETVAL(LEFTSIDELEG_YAWROTATE,(((angle1)* 180.0)) / M_PI);
+
+    SETVAL(LEFTSIDELEG_ROTATE,
+                                                     90-1*( angle2 * 180)/ M_PI);
+    SETVAL(LEFTSIDELEG_LENGTH,left_leg_length
+         );
+    SETVAL(RIGHTSIDELEG_YAWROTATE,
+         (((angle3) * 180.0)) / M_PI);
+
+    SETVAL(RIGHTSIDELEG_ROTATE,
+         90 - 1 * (angle4 * 180) / M_PI);
+    SETVAL(RIGHTSIDELEG_LENGTH, right_leg_length
+     );     
+    SETVAL(FRONTLEG_ROTATE, (((angle5) * 180.0)) / M_PI
+     ); 
+
+  }
+
+  
   if (VAL(SHOCKWAVE) == 1) {
       glPushMatrix();
       setDiffuseColorwithAlpha(0.3f, 0.8f, 1.0f, 0.5);
@@ -464,47 +462,6 @@ void RobotModel::draw() {
       drawComplexShape();
       glDisable(GL_BLEND); // Disable blending after rendering
       glPopMatrix();
-  }
-  // goal display
-  if (VAL(ANIMATION)==1) {
-      SETVAL(FULL_MOVEMENT, 1);
-      float increment = 0.5;
-      if (anim_index < 45) {
-          if (anim_flag == 0) {
-              SETVAL(BODY_PITCH, anim_index);
-              anim_index += increment;
-              ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
-
-          }
-          else {
-              anim_index += increment;
-              anim_flag = 0;
-
-          }
-      }
-      else
-          anim_index = 0;
-      for(int i = 0; i<100;i++){}
-  }
-
-  
-
-
-
-
-  if (forest_flag) {
-    // set yellow color
-    setDiffuseColor(1.0f, 1.0f, 0.0f);
-    // random display of trees
-    glScaled(3, 3, 3);
-    glTranslated(-4, -5, 0);
-    for (int i = 0; i < 10; i++) {
-      glPushMatrix();
-      glTranslated(rand() % 10 - 5, rand() % 10 - 5, rand() % 10 - 5);
-      drawLSystemTree(120, 0.2, 0.01);
-      glPopMatrix();
-    }
-    // forest_flag = 0;
   }
 }
 
@@ -522,15 +479,15 @@ int main() {
   controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
   controls[FRONTLEG_ROTATE] = ModelerControl("Front Leg Rotate", -60, 30, 1, 0);
   controls[LEFTSIDELEG_ROTATE] =
-      ModelerControl("Left Side Leg Rotate", -180.0, 180.0, 0.1, 0);
+      ModelerControl("Left Side Leg Rotate", -180, 180, 1, 0);
   controls[RIGHTSIDELEG_ROTATE] =
-      ModelerControl("Right Side Leg Rotate", -180.0, 180.0, 0.1, 0);
+      ModelerControl("Right Side Leg Rotate", -180, 180, 1, 0);
   controls[LEFTSIDELEG_LENGTH] =
       ModelerControl("Left Side Leg Length", 1, 3.5, 0.1f, 3.5);
   controls[RIGHTSIDELEG_LENGTH] =
       ModelerControl("Right Side Leg Length", 1, 3.5, 0.1f, 3.5);
   controls[LEFTSIDEFEET_ROTATE] =
-      ModelerControl("Left Side Feet Rotate", -180, 180, 0.1, 0);
+      ModelerControl("Left Side Feet Rotate", -180, 180, 1, 0);
   controls[RIGHTSIDEFEET_ROTATE] =
       ModelerControl("Right Side Feet Rotate", -180, 180, 1, 0);
   controls[RIGHTSIDELEG_YAWROTATE] =
@@ -592,7 +549,6 @@ int main() {
   controls[GOAL_X] = ModelerControl("Goal X", -8, 8, 0.1f, 4);
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
-  controls[ANIMATION] = ModelerControl("Animation", 0, 1, 1, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
