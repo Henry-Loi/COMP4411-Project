@@ -20,11 +20,11 @@
 - [ ] expand ray-casting into ray-tracing
 
 #### Task 2 - Phong specular-reflection model
-- [ ] Implement Model
+- [X] Implement Model
 - [ ] Support for transparent objects
 
 #### Task 3 - Ray tracer
-- [ ] Recursively trace rays to account
+- [X] Recursively trace rays to account
 - [ ] Recursively proceed to a maximum depth as set by the user
 
 #### Task 4 - Program extension
@@ -38,11 +38,11 @@
 
 
 ## Bells and Whistles
-> **Total marks: 0.0/42 +1.5*n** \
+> **Total marks: 0.5/42 +1.5*n** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
-- [ ] [0.5] Implement an adaptive termination criterion for tracing rays, based on ray contribution.  Control the adaptation  threshold with a slider.
+- [X] [0.5] Implement an adaptive termination criterion for tracing rays, based on ray contribution.  Control the adaptation  threshold with a slider.
 - [ ] [0.5/1] Implement antialiasing by supersampling and averaging down.  **(This whistle upgrades to a bell if you implement the first stage of distribution ray tracing by jittering the sub-pixel samples.)**
 
 - [ ] [1] Implement spot lights. 

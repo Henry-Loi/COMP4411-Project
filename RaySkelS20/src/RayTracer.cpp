@@ -9,6 +9,8 @@
 #include "scene/material.h"
 #include "scene/ray.h"
 
+#include "ui/TraceUI.h"
+extern TraceUI *traceUI;
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
@@ -63,9 +65,9 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     vec3f I = m.shade(scene, r, i);
 
     // adaptive termination
-    // if (phong_model.length() < RAY_EPSILON) {
-    //   return phong_model;
-    // }
+    if (I.length() < traceUI->m_nAdaptiveThresh) {
+      return I;
+    }
 
     // reflection
     vec3f R = reflectionDirection(r, i);
