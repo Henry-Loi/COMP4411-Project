@@ -3,10 +3,10 @@
 #include "main.h"
 #include "modelerdraw.h"
 #include "texturedraw.h"
-#include <cmath>
-#include <array>
-#include<iostream>
 #include <GL/gl.h>
+#include <array>
+#include <cmath>
+#include <iostream>
 #include "modelerui.h"
 
 // We need to make a creator function, mostly because of
@@ -51,8 +51,10 @@ void RobotModel::set_model_lighting(int mood) {
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light2_diffuse);
     ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 1.0);
     break;
-  default:
+  case NORMAL:
     ModelerApplication::Instance()->SetControlValue(LIGHT2_INTENSITY, 0);
+    break;
+  default:
     break;
   }
 
@@ -62,56 +64,46 @@ void RobotModel::set_model_lighting(int mood) {
   glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
   glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambient);
 }
-float anim_index = 0.0;
-int anim_flag = 0;
-//void RobotModel::set_mood(int state) {
-//
-//  switch (state) {
-//  case ANGRY:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  case SAD:
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
-//    break;
-//  case HAPPY:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
-//                                                    125);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
-//    break;
-//  case NONE:
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
-//
-//    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
-//    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
-//    break;
-//  default:
-//    break;
-//  }
-//}
+
+void RobotModel::set_mood(int state) {
+
+  switch (state) {
+  case ANGRY:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 37);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  case SAD:
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 13);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 1);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, -60);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 1);
+    break;
+  case HAPPY:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 125);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE,
+                                                    125);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, -45);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_LENGTH, 3.5);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_LENGTH, 3.5);
+    break;
+  case NORMAL:
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(FRONTLEG_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
 
 void RobotModel::initTextureMap() {
   for (int i = 0; i < NUM_OF_TEXTURES; i++) {
@@ -128,11 +120,11 @@ void RobotModel::draw() {
   // projection matrix, don't bother with this ...
   ModelerView::draw();
 
-  std::array<float, 3> COLOR1 = { 0.0,0.0,0.0 };
+  std::array<float, 3> COLOR1 = {0.0, 0.0, 0.0};
   if (VAL(CHARACTER) == 1)
-      COLOR1= { 0.0,0.0,1.0 };
+    COLOR1 = {0.0, 0.0, 1.0};
   else
-      COLOR1 = { 223.0 / 255.0,89.0 / 255.0,0.0 };
+    COLOR1 = {223.0 / 255.0, 89.0 / 255.0, 0.0};
   set_model_lighting(VAL(MOOD));
 
   //set_mood(VAL(MOOD));
@@ -177,102 +169,97 @@ void RobotModel::draw() {
     SETVAL(RIGHTSIDELEG_ROTATE, VAL(BODY_PITCH) * -3 / 2);
   }
   if (VAL(DISPLAY_GOAL)) {
-      glPushMatrix();
-      setDiffuseColor(COLOR_RED);
-      glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
-      drawSphere(0.2);
-      glPopMatrix();
+    glPushMatrix();
+    setDiffuseColor(COLOR_RED);
+    glTranslated(VAL(GOAL_X), VAL(GOAL_Y), VAL(GOAL_Z));
+    drawSphere(0.2);
+    glPopMatrix();
 
-      //offset from the leg joint
-      float off_x = VAL(XPOS);
-      float off_y = VAL(YPOS);
-      float off_z = VAL(ZPOS);
-      // calculate the direction vector
-      float direction[3] = { (VAL(GOAL_Z) - VAL(ZPOS)) * -1, (VAL(GOAL_Y) - VAL(YPOS) - 1),
-                            VAL(GOAL_X) - VAL(XPOS) - 2 };
+    // offset from the leg joint
+    float off_x = VAL(XPOS);
+    float off_y = VAL(YPOS);
+    float off_z = VAL(ZPOS);
+    // calculate the direction vector
+    float direction[3] = {(VAL(GOAL_Z) - VAL(ZPOS)) * -1,
+                          (VAL(GOAL_Y) - VAL(YPOS) - 1),
+                          VAL(GOAL_X) - VAL(XPOS) - 2};
 
-      std::cout << direction[1] << direction[2] << std::endl;
+    std::cout << direction[1] << direction[2] << std::endl;
 
-      float angle3 = 0;
-      float angle4 = M_PI / 2;
-      float right_leg_length = 3.5;
-      float angle5 = 0;
+    float angle3 = 0;
+    float angle4 = M_PI / 2;
+    float right_leg_length = 3.5;
+    float angle5 = 0;
 
-      // inverse kinematics
-      float angle1 = acos((-direction[1] /
-          (sqrt(direction[1] * direction[1] +
-              direction[2] * direction[2]))));
-      float angle2 = acos((direction[0] /
-          (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-              direction[0] * direction[0]))));;
-      float left_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-          direction[0] * direction[0]) - 1.5;
-      // float angle3 = atan2(direction[2], direction[1]);
+    // inverse kinematics
+    float angle1 = acos((-direction[1] / (sqrt(direction[1] * direction[1] +
+                                               direction[2] * direction[2]))));
+    float angle2 = acos((direction[0] / (sqrt(direction[2] * direction[2] +
+                                              direction[1] * direction[1] +
+                                              direction[0] * direction[0]))));
+    ;
+    float left_leg_length =
+        sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+             direction[0] * direction[0]) -
+        1.5;
+    // float angle3 = atan2(direction[2], direction[1]);
 
-      if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-          direction[0] * direction[0]) - 1.5 > 3.5) {
-          left_leg_length = 3.5;
+    if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+             direction[0] * direction[0]) -
+            1.5 >
+        3.5) {
+      left_leg_length = 3.5;
 
-      }
-      else if (left_leg_length < 0.5) {
-          left_leg_length = 0.5;
-      }
+    } else if (left_leg_length < 0.5) {
+      left_leg_length = 0.5;
+    }
+    if (direction[2] < 0) {
+      angle1 = 0;
+      angle2 = M_PI / 2;
+      left_leg_length = 3.5;
+      direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)) * -1;
+      direction[1] = (VAL(GOAL_Y) - VAL(YPOS) - 1);
+      direction[2] = VAL(GOAL_X) - VAL(XPOS) + 2;
       if (direction[2] < 0) {
-          angle1 = 0;
-          angle2 = M_PI / 2;
-          left_leg_length = 3.5;
-          direction[0] = (VAL(GOAL_Z) - VAL(ZPOS)) * -1;
-          direction[1] = (VAL(GOAL_Y) - VAL(YPOS) - 1);
-          direction[2] = VAL(GOAL_X) - VAL(XPOS) + 2;
-          if (direction[2] < 0) {
-              angle3 = acos((-direction[1] /
-                  (sqrt(direction[1] * direction[1] +
-                      direction[2] * direction[2]))));
-              angle4 = acos((direction[0] /
-                  (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-                      direction[0] * direction[0]))));;
-              right_leg_length = sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
-                  direction[0] * direction[0]) - 1.5;
-              if (right_leg_length > 3.5)
-                  right_leg_length = 3.5;
-              if (right_leg_length < 0.5)
-                  right_leg_length = 0.5;
-          }
-          else {
-              direction[0] = (VAL(GOAL_Z) - VAL(ZPOS) - 1) * -1;
-              direction[1] = (VAL(GOAL_Y) - VAL(YPOS) + 2.75);
-              angle5 = acos((-direction[0] /
-                  (sqrt(direction[0] * direction[0] +
-                      direction[1] * direction[1])))) - M_PI / 2;
-              if (angle5 > M_PI / 3)
-                  angle5 = M_PI / 3;
-              else if (angle5 < -M_PI / 6)
-                  angle5 = -M_PI / 6;
-          }
-
+        angle3 = acos((-direction[1] / (sqrt(direction[1] * direction[1] +
+                                             direction[2] * direction[2]))));
+        angle4 = acos((direction[0] / (sqrt(direction[2] * direction[2] +
+                                            direction[1] * direction[1] +
+                                            direction[0] * direction[0]))));
+        ;
+        right_leg_length =
+            sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
+                 direction[0] * direction[0]) -
+            1.5;
+        if (right_leg_length > 3.5)
+          right_leg_length = 3.5;
+        if (right_leg_length < 0.5)
+          right_leg_length = 0.5;
+      } else {
+        direction[0] = (VAL(GOAL_Z) - VAL(ZPOS) - 1) * -1;
+        direction[1] = (VAL(GOAL_Y) - VAL(YPOS) + 2.75);
+        angle5 = acos((-direction[0] / (sqrt(direction[0] * direction[0] +
+                                             direction[1] * direction[1])))) -
+                 M_PI / 2;
+        if (angle5 > M_PI / 3)
+          angle5 = M_PI / 3;
+        else if (angle5 < -M_PI / 6)
+          angle5 = -M_PI / 6;
       }
+    }
 
+    std::cout << ((angle1)*180.0) / M_PI << "ANGLE1" << std::endl;
 
-      std::cout << ((angle1) * 180.0) / M_PI << "ANGLE1" << std::endl;
+    SETVAL(LEFTSIDELEG_YAWROTATE, (((angle1)*180.0)) / M_PI);
 
-      SETVAL(LEFTSIDELEG_YAWROTATE, (((angle1) * 180.0)) / M_PI);
+    SETVAL(LEFTSIDELEG_ROTATE, 90 - 1 * (angle2 * 180) / M_PI);
+    SETVAL(LEFTSIDELEG_LENGTH, left_leg_length);
+    SETVAL(RIGHTSIDELEG_YAWROTATE, (((angle3)*180.0)) / M_PI);
 
-      SETVAL(LEFTSIDELEG_ROTATE,
-          90 - 1 * (angle2 * 180) / M_PI);
-      SETVAL(LEFTSIDELEG_LENGTH, left_leg_length
-      );
-      SETVAL(RIGHTSIDELEG_YAWROTATE,
-          (((angle3) * 180.0)) / M_PI);
-
-      SETVAL(RIGHTSIDELEG_ROTATE,
-          90 - 1 * (angle4 * 180) / M_PI);
-      SETVAL(RIGHTSIDELEG_LENGTH, right_leg_length
-      );
-      SETVAL(FRONTLEG_ROTATE, (((angle5) * 180.0)) / M_PI
-      );
-
+    SETVAL(RIGHTSIDELEG_ROTATE, 90 - 1 * (angle4 * 180) / M_PI);
+    SETVAL(RIGHTSIDELEG_LENGTH, right_leg_length);
+    SETVAL(FRONTLEG_ROTATE, (((angle5)*180.0)) / M_PI);
   }
-
 
   float sideLeftLegangle = VAL(LEFTSIDELEG_ROTATE);
   float sideRightLegangle = -VAL(RIGHTSIDELEG_ROTATE);
@@ -280,7 +267,8 @@ void RobotModel::draw() {
   float sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
   float frontLegangle = VAL(FRONTLEG_ROTATE);
   float torsoAngle = VAL(BODY_PITCH);
-  std::cout << "initialvalue" << sideLeftLegangle << " " << sideRightLegangle << " " << std::endl;
+  std::cout << "initialvalue" << sideLeftLegangle << " " << sideRightLegangle
+            << " " << std::endl;
   // draw torso and waist (root)
   //------------------------------------------------//
   setAmbientColor(0.8f, 0.8f, 0.8f);
@@ -312,17 +300,16 @@ void RobotModel::draw() {
   glPushMatrix();
 
   glTranslated(0, 2, 0);
-  setDiffuseColor(COLOR1[0],COLOR1[1],COLOR1[2]);
+  setDiffuseColor(COLOR1[0], COLOR1[1], COLOR1[2]);
   glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
   if (VAL(LEVELOF_DETAILS) > 1)
-      if(VAL(CHARACTER)==1)
-        drawSphere(2);
-      else
-      {     
-          glRotated(-90.0, 1.0, 0.0, 0.0);
-          drawCylinder(2, 2, 1.5);
-          glRotated(90.0, 1.0, 0.0, 0.0);
-      }
+    if (VAL(CHARACTER) == 1)
+      drawSphere(2);
+    else {
+      glRotated(-90.0, 1.0, 0.0, 0.0);
+      drawCylinder(2, 2, 1.5);
+      glRotated(90.0, 1.0, 0.0, 0.0);
+    }
   // draw eyes
   glTranslated(0, 0.3, 0);
   glRotated(5, 0.0, 1.0, 0.0);
@@ -368,18 +355,18 @@ void RobotModel::draw() {
   glRotated(-VAL(LEFTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 1)
-      if (VAL(CHARACTER) == 1)
-          drawCylinder(1, 1.0, 1.0);
-      else {
-          glTranslated(0.0, 0.0, 0.5);
-          drawSphere(1);
-          glTranslated(0.0, 0.0, -0.5);
-      }
+    if (VAL(CHARACTER) == 1)
+      drawCylinder(1, 1.0, 1.0);
+    else {
+      glTranslated(0.0, 0.0, 0.5);
+      drawSphere(1);
+      glTranslated(0.0, 0.0, -0.5);
+    }
   glRotated(180 + sideLeftLegangle, 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   if (VAL(LEVELOF_DETAILS) > 2)
-      if (VAL(CHARACTER) == 1)
-        drawBox(2, 1.5, 0.75);
+    if (VAL(CHARACTER) == 1)
+      drawBox(2, 1.5, 0.75);
   setDiffuseColor(COLOR1[0], COLOR1[1], COLOR1[2]);
   glTranslated(0.25, 0.5, 0.15);
   if (VAL(LEVELOF_DETAILS) > 3)
@@ -391,13 +378,13 @@ void RobotModel::draw() {
   glTranslated(-0.75, 0.0, -0.5);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 4)
-      if (VAL(CHARACTER) == 1)
-        drawBox(1.5, 0.9, 1.5);
-      else {
-          setDiffuseColor(0.2f, 0.2f, 0.2f);
-          glTranslated(0.75, 0.25, 0.25);
-          drawCylinder(0.9, 0.75, 0.75);
-      }
+    if (VAL(CHARACTER) == 1)
+      drawBox(1.5, 0.9, 1.5);
+    else {
+      setDiffuseColor(0.2f, 0.2f, 0.2f);
+      glTranslated(0.75, 0.25, 0.25);
+      drawCylinder(0.9, 0.75, 0.75);
+    }
   glPopMatrix();
   //------------------------------------------------//
 
@@ -410,19 +397,19 @@ void RobotModel::draw() {
   glRotated(-VAL(RIGHTSIDELEG_YAWROTATE), 1.0, 0.0, 0.0);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 1)
-      if (VAL(CHARACTER) == 1)
-          drawCylinder(1, 1.0, 1.0);
-      else {
-          glTranslated(0.0, 0.0, 0.5);
-          drawSphere(1);
-          glTranslated(0.0, 0.0, -0.5);
-      }
+    if (VAL(CHARACTER) == 1)
+      drawCylinder(1, 1.0, 1.0);
+    else {
+      glTranslated(0.0, 0.0, 0.5);
+      drawSphere(1);
+      glTranslated(0.0, 0.0, -0.5);
+    }
   glRotated(180 + sideRightLegangle, 0.0, 0.0, 1.0);
   glTranslated(-1.0, 0.0, 0.25);
   if (VAL(LEVELOF_DETAILS) > 2)
-      if (VAL(CHARACTER) == 1)
-        drawBox(2, 1.5, 0.75);
-  setDiffuseColor(COLOR1[0],COLOR1[1],COLOR1[2]);
+    if (VAL(CHARACTER) == 1)
+      drawBox(2, 1.5, 0.75);
+  setDiffuseColor(COLOR1[0], COLOR1[1], COLOR1[2]);
   glTranslated(0.25, 0.5, 0.15);
   if (VAL(LEVELOF_DETAILS) > 3)
     drawBox(1.5, VAL(RIGHTSIDELEG_LENGTH), 0.5);
@@ -433,16 +420,16 @@ void RobotModel::draw() {
   glTranslated(-0.75, 0.0, -0.5);
   setDiffuseColor(1.0f, 1.0f, 1.0f);
   if (VAL(LEVELOF_DETAILS) > 4)
-      if (VAL(CHARACTER) == 1)
-          drawBox(1.5, 0.9, 1.5);
-      else {
-          setDiffuseColor(0.2f, 0.2f, 0.2f);
-          glTranslated(0.75, 0.25, 0.25);
-          drawCylinder(0.9, 0.75, 0.75);
-      }
+    if (VAL(CHARACTER) == 1)
+      drawBox(1.5, 0.9, 1.5);
+    else {
+      setDiffuseColor(0.2f, 0.2f, 0.2f);
+      glTranslated(0.75, 0.25, 0.25);
+      drawCylinder(0.9, 0.75, 0.75);
+    }
   glPopMatrix();
   //------------------------------------------------//
-  if (VAL(LEVELOF_DETAILS) > 5) {
+  if (VAL(LEVELOF_DETAILS) > 5 && VAL(L_SYSTEM_DISPLAY) == 1) {
     glPushMatrix();
     setDiffuseColor(COLOR_GREEN);
     glTranslated(0, -0.5, 2.0);
@@ -457,13 +444,13 @@ void RobotModel::draw() {
   glPopMatrix();
 
   if (VAL(SHOCKWAVE) == 1) {
-      glPushMatrix();
-      setDiffuseColorwithAlpha(0.3f, 0.8f, 1.0f, 0.5);
-      glRotated(180, 0.0, 1.0, 0.0);
-      glTranslated(0.0, 2.25, -4.0);
-      drawComplexShape();
-      glDisable(GL_BLEND); // Disable blending after rendering
-      glPopMatrix();
+    glPushMatrix();
+    setDiffuseColorwithAlpha(0.3f, 0.8f, 1.0f, 0.5);
+    glRotated(180, 0.0, 1.0, 0.0);
+    glTranslated(0.0, 2.25, -4.0);
+    drawComplexShape();
+    glDisable(GL_BLEND); // Disable blending after rendering
+    glPopMatrix();
   }
   // goal display
   if (VAL(ANIMATION)==1) {
@@ -480,31 +467,18 @@ void RobotModel::draw() {
               anim_index += increment;
               anim_flag = 0;
 
-          }
-      }
-      else
-          anim_index = 0;
-      for(int i = 0; i<100;i++){}
-  }
-
-  
-
-
-
-
   if (forest_flag) {
     // set yellow color
     setDiffuseColor(1.0f, 1.0f, 0.0f);
     // random display of trees
-    glScaled(3, 3, 3);
-    glTranslated(-4, -5, 0);
+    glScaled(2, 2, 2);
+    glTranslated(0, -5, 0);
     for (int i = 0; i < 10; i++) {
       glPushMatrix();
       glTranslated(rand() % 10 - 5, rand() % 10 - 5, rand() % 10 - 5);
       drawLSystemTree(120, 0.2, 0.01);
       glPopMatrix();
     }
-    // forest_flag = 0;
   }
 }
 
@@ -562,7 +536,7 @@ int main() {
 
   // mood
   controls[MOOD] =
-      ModelerControl("Mood (Normal, HAPPY, SAD, ANGRY)", 0, 3, 1, 0);
+      ModelerControl("Mood (Normal, HAPPY, SAD, ANGRY)", 0, 4, 1, 0);
 
   // light controls
   controls[LIGHT0_X] = ModelerControl("Light0 X", -5, 5, 0.1f, 4);
@@ -582,10 +556,8 @@ int main() {
   controls[LIGHT2_Z] = ModelerControl("Light2 Z", -5, 5, 0.1f, 0);
   controls[LIGHT2_INTENSITY] =
       ModelerControl("Light 2 Intensity", 0, 1, 0.1f, 0);
-  controls[SHOCKWAVE] =
-      ModelerControl("SHOCKWAVE", 0, 1, 1, 0);
-  controls[CHARACTER] =
-      ModelerControl("Character", 1, 2, 1, 1);
+  controls[SHOCKWAVE] = ModelerControl("SHOCKWAVE", 0, 1, 1, 0);
+  controls[CHARACTER] = ModelerControl("Character", 1, 2, 1, 1);
 
   // goal-oriented control
   controls[DISPLAY_GOAL] = ModelerControl("Display Goal", 0, 1, 1, 0);
