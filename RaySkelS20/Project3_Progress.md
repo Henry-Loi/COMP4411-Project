@@ -28,7 +28,7 @@
 - [ ] Recursively proceed to a maximum depth as set by the user
 
 #### Task 4 - Program extension
-- [ ] Box Intersection
+- [X] Box Intersection
 - [ ] Phong specular-reflection model
 - [ ] Directional Lights
 - [ ] Point Lights 
