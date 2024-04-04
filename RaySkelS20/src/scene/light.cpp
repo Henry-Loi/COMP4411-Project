@@ -49,7 +49,7 @@ double PointLight::distanceAttenuation(const vec3f &P) const {
         linear_atten_coeff = traceUI->m_nLinear_att;
          quad_atten_coeff = traceUI->m_nQuad_att;
     }
-  double distance = (position - P).length()*pow(10,traceUI->m_nDistanceScale);
+  double distance = (position - P).length()*log10(traceUI->m_nDistanceScale);
   double coeff = (constant_atten_coeff + linear_atten_coeff * distance +
                   quad_atten_coeff * distance * distance);
 
