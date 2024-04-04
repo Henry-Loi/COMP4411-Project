@@ -64,7 +64,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     const Material &m = i.getMaterial();
     vec3f I = m.shade(scene, r, i);
 
-    // adaptive termination
+     //adaptive termination
     if (I.length() < traceUI->m_nAdaptiveThresh) {
       return I;
     }

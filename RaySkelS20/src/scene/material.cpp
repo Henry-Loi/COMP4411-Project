@@ -3,6 +3,7 @@
 #include "ray.h"
 
 #include "../ui/TraceUI.h"
+#include <iostream>
 extern TraceUI *traceUI;
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
@@ -23,18 +24,20 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
       ke + prod(ka, vec3f(traceUI->m_nAmbientLight, traceUI->m_nAmbientLight,
                           traceUI->m_nAmbientLight));
   vec3f P = r.at(i.t);
-  vec3f N = i.N;
-  vec3f V = -r.getDirection();
+  vec3f N = i.N.normalize();
+  vec3f V = (r.getDirection()).normalize();
+
   for (list<Light *>::const_iterator light = scene->beginLights();
        light != scene->endLights(); light++) {
     auto l = *light;
-    vec3f L = l->getDirection(P);
-    vec3f diffuse = kd * max(0.0, L.dot(N));
-    vec3f R = 2 * (L.dot(N)) * N - L;
-    vec3f specular = ks * pow(max(0.0, R.dot(V)), shininess * 128.0);
-    I += prod(prod(l->getColor(P), (diffuse + specular)) *
-                  l->distanceAttenuation(P),
-              l->shadowAttenuation(P));
+    vec3f L = ( (l->getDirection(P))).normalize();
+    vec3f diffuse = kd * max(0.0, N.dot(L));
+    vec3f R =-(2 * (N.dot(L)) * N-L) ;
+    double verify = R.dot(V);
+    vec3f specular = ks * pow( max(0.0,R.dot(V)), shininess*128.0);
+
+        I += prod(prod(l->getColor(P),l->distanceAttenuation(P)*l->shadowAttenuation(P)), (diffuse + specular));
+        //std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R << std::endl;
   }
 
   return I.clamp();

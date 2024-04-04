@@ -20,15 +20,15 @@ vec3f DirectionalLight::shadowAttenuation(const vec3f &P) const {
     R = ray(R.at(i.t), d);
     atten = prod(atten, i.getMaterial().kt);
   }
-
+  
   return atten;
+    //return vec3f(1, 1, 1);
 }
 
 vec3f DirectionalLight::getColor(const vec3f &P) const {
   // Color doesn't depend on P
   return color;
 }
-
 vec3f DirectionalLight::getDirection(const vec3f &P) const {
   return -orientation;
 }
