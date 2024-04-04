@@ -40,6 +40,7 @@ public:
 
   // adaptive termination threshold
   Fl_Slider *m_adaptivethreshSlider;
+  Fl_Check_Button* m_distAttenOverrideButton;
 
   Fl_Button *m_renderButton;
   Fl_Button *m_stopButton;
@@ -64,6 +65,7 @@ public:
 
   // adaptive termination threshold
   double m_nAdaptiveThresh;
+  bool m_nOverrideDistAtten;
 
 private:
   RayTracer *raytracer;
@@ -99,6 +101,8 @@ private:
 
   // adaptive termination threshold
   static void cb_adaptivethreshSlides(Fl_Widget *o, void *v);
+  //overide distanceatten
+  static void cb_overideDistanceAttenConst(Fl_Widget* o, void* v);
 };
 
 #endif

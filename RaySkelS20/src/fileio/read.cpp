@@ -216,7 +216,7 @@ static void verifyTuple( const mytuple& tup, size_t size )
 		ostrstream oss;
 		oss << "Bad tuple size " << tup.size() << ", expected " << size;
 
-		throw ParseError( string( oss.str() ) );
+		throw ParseError(string(oss.str()));
 	}
 }
 
@@ -501,7 +501,7 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 	// Assume the object is named.
 	string name;
 	Obj *child; 
-
+	vec3f distAttenConst(0.0, 0.0, 0.0);
 	if( obj->getTypeName() == "id" ) {
 		name = obj->getID();
 		child = NULL;
@@ -520,18 +520,25 @@ static void processObject( Obj *obj, Scene *scene, mmap& materials )
 		if( child == NULL ) {
 			throw ParseError( "No info for directional_light" );
 		}
-
+		
+		maybeExtractField(child, "constant_attenuation_coeff", distAttenConst[0]);
+		maybeExtractField(child, "linear_attenuation_coeff", distAttenConst[1]);
+		maybeExtractField(child, "quadratic_attenuation_coeff", distAttenConst[2]);
+		
 		scene->add( new DirectionalLight( scene, 
 			tupleToVec( getField( child, "direction" ) ).normalize(),
-			tupleToVec( getColorField( child ) ) ) );
+			tupleToVec( getColorField( child ) ),distAttenConst ) );
 	} else if( name == "point_light" ) {
 		if( child == NULL ) {
 			throw ParseError( "No info for point_light" );
 		}
+		maybeExtractField(child, "constant_attenuation_coeff", distAttenConst[0]);
+		maybeExtractField(child, "linear_attenuation_coeff", distAttenConst[1]);
+		maybeExtractField(child, "quadratic_attenuation_coeff", distAttenConst[2]);
 
 		scene->add( new PointLight( scene, 
 			tupleToVec( getField( child, "position" ) ),
-			tupleToVec( getColorField( child ) ) ) );
+			tupleToVec( getColorField( child ) ) ,distAttenConst) );
 	} else if( 	name == "sphere" ||
 				name == "box" ||
 				name == "cylinder" ||

@@ -38,6 +38,7 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
 
         I += prod(prod(l->getColor(P),l->distanceAttenuation(P)*l->shadowAttenuation(P)), (diffuse + specular));
         //std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R << std::endl;
+        std::cout << "DIstance atten: " << l->distanceAttenuation(P) << std::endl;
   }
 
   return I.clamp();

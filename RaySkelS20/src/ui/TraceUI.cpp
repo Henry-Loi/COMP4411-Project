@@ -116,6 +116,12 @@ void TraceUI::cb_adaptivethreshSlides(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nAdaptiveThresh = ((Fl_Slider *)o)->value();
 }
 
+//Newly added to control distance atten
+void TraceUI::cb_overideDistanceAttenConst(Fl_Widget* o, void* v) {
+    ((TraceUI*)(o->user_data()))->m_nOverrideDistAtten = ((Fl_Check_Button*)o)->value();
+}
+
+
 void TraceUI::cb_render(Fl_Widget *o, void *v) {
   char buffer[256];
 
@@ -364,8 +370,13 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
   m_adaptivethreshSlider->callback(cb_adaptivethreshSlides);
 
+  m_distAttenOverrideButton = new Fl_Check_Button(10, 255, 20, 20, "Overide Distance Attenuation Constant");
+  m_distAttenOverrideButton->user_data((void*)(this));
+  m_distAttenOverrideButton->callback(cb_overideDistanceAttenConst);
+
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);
+  
   m_mainWindow->end();
 
   // image view
@@ -373,4 +384,7 @@ TraceUI::TraceUI() {
       new TraceGLWindow(100, 150, m_nSize, m_nSize, "Rendered Image");
   m_traceGlWindow->end();
   m_traceGlWindow->resizable(m_traceGlWindow);
+
+
+
 }

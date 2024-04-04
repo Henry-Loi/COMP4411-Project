@@ -3,6 +3,7 @@
 #include "../ui/TraceUI.h"
 #include "light.h"
 
+
 double DirectionalLight::distanceAttenuation(const vec3f &P) const {
   // distance to light is infinite, so f(di) goes to 0.  Return 1.
   return 1.0;
@@ -39,12 +40,16 @@ double PointLight::distanceAttenuation(const vec3f &P) const {
   // You'll need to modify this method to attenuate the intensity
   // of the light based on the distance between the source and the
   // point P.  For now, I assume no attenuation and just return 1.0
+    double constant_atten_coeff = distAttenConst[0];
+    double linear_atten_coeff = distAttenConst[1];
+    double quad_atten_coeff = distAttenConst[2];
 
-  double constant_atten_coeff = traceUI->m_nConstant_att;
-  double linear_atten_coeff = traceUI->m_nLinear_att;
-  double quad_atten_coeff = traceUI->m_nQuad_att;
-
-  double distance = (position - P).length();
+    if (traceUI->m_nOverrideDistAtten==1) {
+         constant_atten_coeff = traceUI->m_nConstant_att;
+        linear_atten_coeff = traceUI->m_nLinear_att;
+         quad_atten_coeff = traceUI->m_nQuad_att;
+    }
+  double distance = (position - P).length()*pow(10,traceUI->m_nDistanceScale);
   double coeff = (constant_atten_coeff + linear_atten_coeff * distance +
                   quad_atten_coeff * distance * distance);
 
