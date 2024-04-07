@@ -17,21 +17,21 @@
 ### Progress
 #### Task 1
 - [X] box intersections
-- [ ] expand ray-casting into ray-tracing
+- [X] expand ray-casting into ray-tracing
 
 #### Task 2 - Phong specular-reflection model
 - [X] Implement Model
-- [ ] Support for transparent objects
+- [X] Support for transparent objects
 
 #### Task 3 - Ray tracer
 - [X] Recursively trace rays to account
-- [ ] Recursively proceed to a maximum depth as set by the user
+- [X] Recursively proceed to a maximum depth as set by the user
 
 #### Task 4 - Program extension
 - [X] Box Intersection
-- [ ] Phong specular-reflection model
-- [ ] Directional Lights
-- [ ] Point Lights 
+- [X] Phong specular-reflection model
+- [X] Directional Lights
+- [X] Point Lights 
 - [ ] Shadow Attenuation
 - [ ] Reflection
 - [ ] Refraction

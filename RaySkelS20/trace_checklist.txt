@@ -1,11 +1,11 @@
 Trace Bells and Whistles Checklist for Grading
 (submit ONLY if you have implemented any B&Ws in the following)
 
-HKUST login(s):
+HKUST login(s): hchloi, ykkok
 
 Delete yes/no when appropriate
 
-W adaptive termination				yes/no
+W adaptive termination				yes
 W antialiasing by supersampling			yes/no
 +W jittering					yes/no
 B spot lights					yes/no
