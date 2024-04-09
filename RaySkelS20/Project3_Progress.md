@@ -32,8 +32,8 @@
 - [X] Phong specular-reflection model
 - [X] Directional Lights
 - [X] Point Lights 
-- [ ] Shadow Attenuation
-- [ ] Reflection
+- [X] Shadow Attenuation
+- [X] Reflection
 - [ ] Refraction
 
 

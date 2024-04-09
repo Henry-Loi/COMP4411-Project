@@ -101,7 +101,8 @@ void TraceUI::cb_attenQuadSlides(Fl_Widget *o, void *v) {
 }
 
 void TraceUI::cb_ambientLightSlides(Fl_Widget *o, void *v) {
-  ((TraceUI *)(o->user_data()))->m_nAmbientLight = ((Fl_Slider *)o)->value();
+  ((TraceUI *)(o->user_data()))->m_nAmbientLightIntensity =
+      ((Fl_Slider *)o)->value();
 }
 
 void TraceUI::cb_intensityScaleSlides(Fl_Widget *o, void *v) {
@@ -231,7 +232,7 @@ TraceUI::TraceUI() {
   m_nDepth = 0;
   m_nSize = 150;
 
-  m_nAmbientLight = 0.2;
+  m_nAmbientLightIntensity = 0.2;
   m_nIntensityScale = 1;
   m_nDistanceScale = 1.87;
 

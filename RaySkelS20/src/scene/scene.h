@@ -238,7 +238,7 @@ public:
 
   Camera *getCamera() { return &camera; }
 
-  vec3f ambientLight;
+  vec3f ambientLightColor;
 
 private:
   list<Geometry *> objects;
