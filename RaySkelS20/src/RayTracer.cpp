@@ -20,30 +20,36 @@ extern TraceUI *traceUI;
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
 
   // antialiasing by supersampling and averaging the color
-  int subPixelSize = traceUI->m_nSubsamplePixelSize;
-  if (subPixelSize > 1) {
-    double subPixelWidth = 1.0 / buffer_width / subPixelSize;
-    double subPixelHeight = 1.0 / buffer_height / subPixelSize;
-    double start_x = x - subPixelWidth * (float(subPixelSize - 1) / 2);
-    double start_y = y + subPixelHeight * (float(subPixelSize - 1) / 2);
+  if (traceUI->m_nSubsamplePixelSize > 1) {
+    int n_subpixels = traceUI->m_nSubsamplePixelSize;
+    double subpixel_height = 1.0 / (buffer_height * n_subpixels);
+    double subpixel_width = 1.0 / (buffer_width * n_subpixels);
+    double start_x = x - subpixel_width * (float(n_subpixels - 1) / 2);
+    double start_y = y + subpixel_height * (float(n_subpixels - 1) / 2);
+    vec3f result(0, 0, 0);
+    double jitter_x = 0;
+    double jitter_y = 0;
 
-    // implement jittering on the subpixel samples
-    vec3f color(0.0, 0.0, 0.0);
-    for (int i = 0; i < subPixelSize; i++) {
-      double x_jitter = rand() % 100 / 100.0 * subPixelWidth;
-      x_jitter -= subPixelWidth / 2;
-      double y_jitter = rand() % 100 / 100.0 * subPixelHeight;
-      y_jitter -= subPixelHeight / 2;
+    for (int y = 0; y < n_subpixels; y++) {
+      // jitter the subpixel
+      if (traceUI->m_nSubsampleJitter) {
+        jitter_x = static_cast<float>(rand()) / RAND_MAX - subpixel_width / 2;
+        jitter_x = min(jitter_x, subpixel_width / 2);
+        jitter_y = static_cast<float>(rand()) / RAND_MAX - subpixel_height / 2;
+        jitter_y = min(jitter_y, subpixel_height / 2);
+      }
 
-      for (int j = 0; j < subPixelSize; j++) {
-        x_jitter += start_x + i * subPixelWidth;
-        y_jitter += start_y - j * subPixelHeight;
+      for (int x = 0; x < n_subpixels; x++) {
+        double new_y = start_y - y * subpixel_height + jitter_y;
+        double new_x = start_x + x * subpixel_width + jitter_x;
+
         ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-        scene->getCamera()->rayThrough(x_jitter, y_jitter, r);
-        color += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+        scene->getCamera()->rayThrough(new_x, new_y, r);
+        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
       }
     }
-    return color / (subPixelSize * subPixelSize);
+    result /= (n_subpixels * n_subpixels);
+    return result;
   }
 
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));

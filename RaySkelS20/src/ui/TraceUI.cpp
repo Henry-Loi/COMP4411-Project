@@ -128,6 +128,11 @@ void TraceUI::cb_overideDistanceAttenConst(Fl_Widget *o, void *v) {
       ((Fl_Check_Button *)o)->value();
 }
 
+void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nSubsampleJitter =
+      ((Fl_Check_Button *)o)->value();
+}
+
 void TraceUI::cb_render(Fl_Widget *o, void *v) {
   char buffer[256];
 
@@ -246,6 +251,7 @@ TraceUI::TraceUI() {
   m_nQuad_att = 0.5;
 
   m_nSubsamplePixelSize = 0;
+  m_nSubsampleJitter = false;
 
   m_mainWindow = new Fl_Window(100, 40, 400, 400, "Ray <Not Loaded>");
   m_mainWindow->user_data(
@@ -387,6 +393,11 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
   m_adaptivethreshSlider->callback(cb_adaptivethreshSlides);
 
+  m_distAttenOverrideButton = new Fl_Check_Button(
+      10, 255, 20, 20, "Overide Distance Attenuation Constant");
+  m_distAttenOverrideButton->user_data((void *)(this));
+  m_distAttenOverrideButton->callback(cb_overideDistanceAttenConst);
+
   m_SubSameplePixelSlider =
       new Fl_Value_Slider(10, 280, 180, 20, "Subsample Pixel Size");
   m_SubSameplePixelSlider->user_data(
@@ -401,10 +412,10 @@ TraceUI::TraceUI() {
   m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
   m_SubSameplePixelSlider->callback(cb_subsamplepixelSlides);
 
-  m_distAttenOverrideButton = new Fl_Check_Button(
-      10, 255, 20, 20, "Overide Distance Attenuation Constant");
-  m_distAttenOverrideButton->user_data((void *)(this));
-  m_distAttenOverrideButton->callback(cb_overideDistanceAttenConst);
+  m_SubSampleJitterButton =
+      new Fl_Check_Button(10, 305, 20, 20, "Enable Subsample Jitter");
+  m_SubSampleJitterButton->user_data((void *)(this));
+  m_SubSampleJitterButton->callback(cb_subsamplejitterbutton);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);

@@ -43,6 +43,7 @@ public:
 
   // subsample pixel size
   Fl_Slider *m_SubSameplePixelSlider;
+  Fl_Check_Button *m_SubSampleJitterButton;
 
   Fl_Check_Button *m_distAttenOverrideButton;
 
@@ -72,6 +73,7 @@ public:
   bool m_nOverrideDistAtten;
 
   int m_nSubsamplePixelSize;
+  bool m_nSubsampleJitter;
 
 private:
   RayTracer *raytracer;
@@ -110,6 +112,7 @@ private:
 
   // subsample pixel size
   static void cb_subsamplepixelSlides(Fl_Widget *o, void *v);
+  static void cb_subsamplejitterbutton(Fl_Widget *o, void *v);
 
   // overide distanceatten
   static void cb_overideDistanceAttenConst(Fl_Widget *o, void *v);
