@@ -145,6 +145,26 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // it according to the background color, which in this (simple) case
     // is just black.
 
+    if (background && traceUI->m_nEnableBackground) {
+      vec3f dir = r.getDirection();
+      // double theta = atan2(dir[1], dir[0]);
+      // double phi = acos(dir[2]);
+      // // Convert to pixel coordinates
+      // int x = (theta + 3.14) / (2 * 3.14) * bg_width;
+      // int y = phi / 3.14 * bg_height;
+
+      double u = 0.5 + atan2(dir[1], dir[0]) / (2 * 3.14156);
+      double v = 0.5 - asin(dir[2]) / 3.14156;
+      // Convert to pixel coordinates
+      int x = u * bg_width;
+      int y = v * bg_height;
+
+      // Return color of pixel in background image
+      return vec3f(background[3 * (x + y * bg_width) + 0] / 255.0,
+                   background[3 * (x + y * bg_width) + 1] / 255.0,
+                   background[3 * (x + y * bg_width) + 2] / 255.0);
+    }
+
     return vec3f(0.0, 0.0, 0.0);
   }
 }
@@ -243,4 +263,22 @@ void RayTracer::tracePixel(int i, int j) {
   pixel[0] = (int)(255.0 * col[0]);
   pixel[1] = (int)(255.0 * col[1]);
   pixel[2] = (int)(255.0 * col[2]);
+}
+
+#include "fileio/bitmap.h"
+int RayTracer::loadBackground(char *iname) {
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
+
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    fl_alert("Can't load bitmap file");
+    return 0;
+  }
+
+  // reflect the fact of loading the new image
+  bg_width = width;
+  bg_height = height;
+
+  background = data;
 }
