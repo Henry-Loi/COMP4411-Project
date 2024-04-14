@@ -29,13 +29,14 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
   for (list<Light *>::const_iterator light = scene->beginLights();
        light != scene->endLights(); light++) {
     auto l = *light;
-    if (dynamic_cast<AmbientLight*>(l)) {
+    auto u = l;
+    if (dynamic_cast<AmbientLight*>(u)) {
         I += prod(ka, l->getColor(P) *
             traceUI->m_nAmbientLightIntensity);
         default_amb = FALSE;
         continue;
     }
-    vec3f L = ((l->getDirection(P))).normalize();
+    vec3f L = (l->getDirection(P)).normalize();
     vec3f diffuse = kd * max(0.0, N.dot(L));
     vec3f R = -(2 * (N.dot(L)) * N - L);
     double verify = R.dot(V);

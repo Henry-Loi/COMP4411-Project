@@ -45,7 +45,7 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
 
         ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
         scene->getCamera()->rayThrough(new_x, new_y, r);
-        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
       }
     }
     result /= (n_subpixels * n_subpixels);
@@ -54,7 +54,7 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
 
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
-  return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+  return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
 }
 
 vec3f RayTracer::reflectionDirection(const ray &r, const isect &i) {
@@ -66,7 +66,7 @@ vec3f RayTracer::reflectionDirection(const ray &r, const isect &i) {
 vec3f RayTracer::refractionDirection(const ray &r, const isect &i, double n,
                                      bool &internal_refraction) {
   // equation: T = nD - (n(D dot N) + sqrt(1 - n^2(1 - (D dot N)^2)))N
-  double cos_I = -r.getDirection().dot(i.N);
+  double cos_I = r.getDirection().dot(i.N);
   double sin_theta = n * n * (1.0 - cos_I * cos_I);
   if (sin_theta > 1.0) {
     internal_refraction = true;
@@ -109,33 +109,39 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     }
 
     // reflection
-    vec3f R = reflectionDirection(r, i);
-    ray reflect_ray = ray(r.at(i.t), R);
-    vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth + 1), m.kr);
-    I = I + I_r;
+    if (depth > 0) {
+
+        vec3f R = reflectionDirection(r, i);
+        ray reflect_ray = ray(r.at(i.t), R);
+        vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth - 1), m.kr);
+        I = I + I_r;
+   
 
     // if there are no refraction return the phong model + reflect color
-    if (!m.kt.iszero()) {
-      // refraction
-      bool internal_refraction = false;
+        if (!m.kt.iszero()) {
+            // refraction
 
-      double n = 0.0;
-      double refract_index = 1.0;
+            bool internal_refraction = false;
 
-      if (i.N * r.getDirection() < -RAY_EPSILON) {
-        n = refract_index / m.index;
-      } else {
-        n = m.index / refract_index;
-        i.N = -i.N; // reverse the normal
-      }
+            double n = 0.0;
+            double refract_index = 1.0;
 
-      vec3f T = refractionDirection(r, i, m.index, internal_refraction);
+            if (i.N * r.getDirection() < -RAY_EPSILON) {
+                n = refract_index / m.index;
+            }
+            else {
+                n = m.index / refract_index;
+                i.N = -i.N; // reverse the normal
+            }
 
-      if (!internal_refraction) {
-        ray r_refract = ray(r.at(i.t), T);
-        vec3f I_t = prod(traceRay(scene, r_refract, thresh, depth + 1), m.kt);
-        I = I - prod(I, m.kt) + I_t;
-      }
+            vec3f T = refractionDirection(r, i, m.index, internal_refraction);
+
+            if (!internal_refraction) {
+                ray r_refract = ray(r.at(i.t), T);
+                vec3f I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
+                I = I - prod(I, m.kt) + I_t;
+            }
+        }
     }
 
     return I;
