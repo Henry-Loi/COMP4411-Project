@@ -117,6 +117,11 @@ void TraceUI::cb_adaptivethreshSlides(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nAdaptiveThresh = ((Fl_Slider *)o)->value();
 }
 
+void TraceUI::cb_subsamplepixelSlides(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nSubsamplePixelSize =
+      ((Fl_Slider *)o)->value();
+}
+
 // Newly added to control distance atten
 void TraceUI::cb_overideDistanceAttenConst(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nOverrideDistAtten =
@@ -240,11 +245,13 @@ TraceUI::TraceUI() {
   m_nLinear_att = 0.25;
   m_nQuad_att = 0.5;
 
-  m_mainWindow = new Fl_Window(100, 40, 350, 300, "Ray <Not Loaded>");
+  m_nSubsamplePixelSize = 0;
+
+  m_mainWindow = new Fl_Window(100, 40, 400, 400, "Ray <Not Loaded>");
   m_mainWindow->user_data(
       (void *)(this)); // record self to be used by static callback functions
   // install menu bar
-  m_menubar = new Fl_Menu_Bar(0, 0, 350, 25);
+  m_menubar = new Fl_Menu_Bar(0, 0, 400, 25);
   m_menubar->menu(menuitems);
 
   // install slider depth
@@ -275,11 +282,11 @@ TraceUI::TraceUI() {
   m_sizeSlider->align(FL_ALIGN_RIGHT);
   m_sizeSlider->callback(cb_sizeSlides);
 
-  m_renderButton = new Fl_Button(260, 27, 70, 25, "&Render");
+  m_renderButton = new Fl_Button(290, 27, 90, 25, "&Render");
   m_renderButton->user_data((void *)(this));
   m_renderButton->callback(cb_render);
 
-  m_stopButton = new Fl_Button(260, 55, 70, 25, "&Stop");
+  m_stopButton = new Fl_Button(290, 55, 90, 25, "&Stop");
   m_stopButton->user_data((void *)(this));
   m_stopButton->callback(cb_stop);
 
@@ -379,6 +386,20 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->value(0.01);
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
   m_adaptivethreshSlider->callback(cb_adaptivethreshSlides);
+
+  m_SubSameplePixelSlider =
+      new Fl_Value_Slider(10, 280, 180, 20, "Subsample Pixel Size");
+  m_SubSameplePixelSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_SubSameplePixelSlider->type(FL_HOR_NICE_SLIDER);
+  m_SubSameplePixelSlider->labelfont(FL_COURIER);
+  m_SubSameplePixelSlider->labelsize(12);
+  m_SubSameplePixelSlider->minimum(0);
+  m_SubSameplePixelSlider->maximum(5);
+  m_SubSameplePixelSlider->step(1);
+  m_SubSameplePixelSlider->value(0);
+  m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
+  m_SubSameplePixelSlider->callback(cb_subsamplepixelSlides);
 
   m_distAttenOverrideButton = new Fl_Check_Button(
       10, 255, 20, 20, "Overide Distance Attenuation Constant");

@@ -1,6 +1,7 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <stdlib.h>
 
 #include "RayTracer.h"
 #include "fileio/parse.h"
@@ -17,6 +18,34 @@ extern TraceUI *traceUI;
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
+
+  // antialiasing by supersampling and averaging the color
+  int subPixelSize = traceUI->m_nSubsamplePixelSize;
+  if (subPixelSize > 1) {
+    double subPixelWidth = 1.0 / buffer_width / subPixelSize;
+    double subPixelHeight = 1.0 / buffer_height / subPixelSize;
+    double start_x = x - subPixelWidth * (float(subPixelSize - 1) / 2);
+    double start_y = y + subPixelHeight * (float(subPixelSize - 1) / 2);
+
+    // implement jittering on the subpixel samples
+    vec3f color(0.0, 0.0, 0.0);
+    for (int i = 0; i < subPixelSize; i++) {
+      double x_jitter = rand() % 100 / 100.0 * subPixelWidth;
+      x_jitter -= subPixelWidth / 2;
+      double y_jitter = rand() % 100 / 100.0 * subPixelHeight;
+      y_jitter -= subPixelHeight / 2;
+
+      for (int j = 0; j < subPixelSize; j++) {
+        x_jitter += start_x + i * subPixelWidth;
+        y_jitter += start_y - j * subPixelHeight;
+        ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+        scene->getCamera()->rayThrough(x_jitter, y_jitter, r);
+        color += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+      }
+    }
+    return color / (subPixelSize * subPixelSize);
+  }
+
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
   return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
@@ -49,6 +78,10 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
                           int depth) {
   isect i;
 
+  // if (depth > traceUI->getDepth()) {
+  //   return vec3f(0.0, 0.0, 0.0);
+  // }
+
   if (scene->intersect(r, i)) {
     // YOUR CODE HERE
 
@@ -64,7 +97,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     const Material &m = i.getMaterial();
     vec3f I = m.shade(scene, r, i);
 
-     //adaptive termination
+    // adaptive termination
     if (I.length() < traceUI->m_nAdaptiveThresh) {
       return I;
     }
