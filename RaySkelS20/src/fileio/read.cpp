@@ -509,6 +509,7 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
       scene->add(new AmbientLight(scene,
           tupleToVec(getColorField(child)),
           distAttenConst));
+      std::cout << "added ambient light" << std::endl;
   } else if (name == "sphere" || name == "box" || name == "cylinder" ||
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||

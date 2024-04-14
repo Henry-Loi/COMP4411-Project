@@ -29,10 +29,12 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
   for (list<Light *>::const_iterator light = scene->beginLights();
        light != scene->endLights(); light++) {
     auto l = *light;
-    if (typeid(l) == typeid(AmbientLight)) {
+    std::cout << typeid(l).name() << std::endl;
+    if (dynamic_cast<AmbientLight*>(l)) {
         I += prod(ka, l->getColor(P) *
             traceUI->m_nAmbientLightIntensity);
         default_amb = FALSE;
+        std::cout << "runned ambientlight" << std::endl;
         continue;
     }
     vec3f L = ((l->getDirection(P))).normalize();
