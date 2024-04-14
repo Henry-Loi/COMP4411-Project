@@ -501,6 +501,14 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     scene->add(new PointLight(scene, tupleToVec(getField(child, "position")),
                               tupleToVec(getColorField(child)),
                               distAttenConst));
+  }
+  else if (name == "ambient_light") {
+      if (child == NULL) {
+          throw ParseError("No info for ambient_light");
+      }
+      scene->add(new AmbientLight(scene,
+          tupleToVec(getColorField(child)),
+          distAttenConst));
   } else if (name == "sphere" || name == "box" || name == "cylinder" ||
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||
@@ -510,11 +518,14 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     // scene->add( geo );
   } else if (name == "material") {
     processMaterial(child, &materials);
-  } else if (name == "camera") {
-    processCamera(child, scene);
-  } else if (name == "ambient_light") {
-    scene->ambientLightColor = tupleToVec(getColorField(child));
-  } else {
+  }
+  else if (name == "camera") {
+      processCamera(child, scene);
+  }
+  //} /*else if (name == "ambient_light") {
+  //  scene->ambientLightColor = tupleToVec(getColorField(child));*/
+  //} 
+  else {
     throw ParseError(string("Unrecognized object: ") + name);
   }
 }

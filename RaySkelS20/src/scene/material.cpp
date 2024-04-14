@@ -25,10 +25,16 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
   vec3f P = r.at(i.t);
   vec3f N = i.N.normalize();
   vec3f V = (r.getDirection()).normalize();
-
+  bool default_amb = TRUE; //if no ambient light, use the one from the Trace UI
   for (list<Light *>::const_iterator light = scene->beginLights();
        light != scene->endLights(); light++) {
     auto l = *light;
+    if (typeid(l) == typeid(AmbientLight)) {
+        I += prod(ka, l->getColor(P) *
+            traceUI->m_nAmbientLightIntensity);
+        default_amb = FALSE;
+        continue;
+    }
     vec3f L = ((l->getDirection(P))).normalize();
     vec3f diffuse = kd * max(0.0, N.dot(L));
     vec3f R = -(2 * (N.dot(L)) * N - L);
@@ -38,9 +44,12 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
     I += prod(prod(l->getColor(P),
                    l->distanceAttenuation(P) * l->shadowAttenuation(P)),
               (diffuse + specular));
-    // std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R <<
-    // std::endl;
-    std::cout << "DIstance atten: " << l->distanceAttenuation(P) << std::endl;
+    if(default_amb)
+        I+= prod(ka, vec3f(1.0,1.0,1.0) *
+            traceUI->m_nAmbientLightIntensity);
+    //// std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R <<
+    //// std::endl;
+    //std::cout << "DIstance atten: " << l->distanceAttenuation(P) << std::endl;
   }
 
   return I.clamp();

@@ -51,4 +51,20 @@ protected:
 	vec3f position;
 };
 
+
+class AmbientLight
+	: public Light
+{
+public:
+	AmbientLight(Scene* scene, const vec3f& color, const vec3f& distAttenConst)
+		: Light(scene, color, distAttenConst){}
+	virtual vec3f shadowAttenuation(const vec3f& P) const;
+	virtual double distanceAttenuation(const vec3f& P) const;
+	virtual vec3f getColor(const vec3f& P) const;
+	virtual vec3f getDirection(const vec3f& P) const;
+
+protected:
+	vec3f position;
+};
+
 #endif // __LIGHT_H__
