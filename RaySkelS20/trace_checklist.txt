@@ -6,7 +6,7 @@ HKUST login(s): hchloi, ykkok
 Delete yes/no when appropriate
 
 W adaptive termination				yes
-W antialiasing by supersampling			yes/no
+W antialiasing by supersampling			yes
 +W jittering					yes/no
 B spot lights					yes/no
 B background image				yes/no

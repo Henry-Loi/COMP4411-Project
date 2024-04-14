@@ -1,6 +1,7 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <stdlib.h>
 
 #include "RayTracer.h"
 #include "fileio/parse.h"
@@ -17,6 +18,40 @@ extern TraceUI *traceUI;
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
+
+  // antialiasing by supersampling and averaging the color
+  if (traceUI->m_nSubsamplePixelSize > 1) {
+    int n_subpixels = traceUI->m_nSubsamplePixelSize;
+    double subpixel_height = 1.0 / (buffer_height * n_subpixels);
+    double subpixel_width = 1.0 / (buffer_width * n_subpixels);
+    double start_x = x - subpixel_width * (float(n_subpixels - 1) / 2);
+    double start_y = y + subpixel_height * (float(n_subpixels - 1) / 2);
+    vec3f result(0, 0, 0);
+    double jitter_x = 0;
+    double jitter_y = 0;
+
+    for (int y = 0; y < n_subpixels; y++) {
+      // jitter the subpixel
+      if (traceUI->m_nSubsampleJitter) {
+        jitter_x = static_cast<float>(rand()) / RAND_MAX - subpixel_width / 2;
+        jitter_x = min(jitter_x, subpixel_width / 2);
+        jitter_y = static_cast<float>(rand()) / RAND_MAX - subpixel_height / 2;
+        jitter_y = min(jitter_y, subpixel_height / 2);
+      }
+
+      for (int x = 0; x < n_subpixels; x++) {
+        double new_y = start_y - y * subpixel_height + jitter_y;
+        double new_x = start_x + x * subpixel_width + jitter_x;
+
+        ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+        scene->getCamera()->rayThrough(new_x, new_y, r);
+        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
+      }
+    }
+    result /= (n_subpixels * n_subpixels);
+    return result;
+  }
+
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
   return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), 0).clamp();
@@ -49,6 +84,10 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
                           int depth) {
   isect i;
 
+  // if (depth > traceUI->getDepth()) {
+  //   return vec3f(0.0, 0.0, 0.0);
+  // }
+
   if (scene->intersect(r, i)) {
     // YOUR CODE HERE
 
@@ -64,7 +103,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     const Material &m = i.getMaterial();
     vec3f I = m.shade(scene, r, i);
 
-     //adaptive termination
+    // adaptive termination
     if (I.length() < traceUI->m_nAdaptiveThresh) {
       return I;
     }
