@@ -147,22 +147,24 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
 
     if (background && traceUI->m_nEnableBackground) {
       vec3f dir = r.getDirection();
-      // double theta = atan2(dir[1], dir[0]);
-      // double phi = acos(dir[2]);
-      // // Convert to pixel coordinates
-      // int x = (theta + 3.14) / (2 * 3.14) * bg_width;
-      // int y = phi / 3.14 * bg_height;
 
-      double u = 0.5 + atan2(dir[1], dir[0]) / (2 * 3.14156);
-      double v = 0.5 - asin(dir[2]) / 3.14156;
-      // Convert to pixel coordinates
-      int x = u * bg_width;
-      int y = v * bg_height;
+      double x = dir * scene->getCamera()->u;
+      double y = dir * scene->getCamera()->v;
+      double z = dir * scene->getCamera()->look;
 
-      // Return color of pixel in background image
-      return vec3f(background[3 * (x + y * bg_width) + 0] / 255.0,
-                   background[3 * (x + y * bg_width) + 1] / 255.0,
-                   background[3 * (x + y * bg_width) + 2] / 255.0);
+      x = x / z + 0.5;
+      y = y / z + 0.5;
+
+      int xGrid = int(x * bg_width);
+      int yGrid = int(y * bg_height);
+
+      if (xGrid < 0 || xGrid >= bg_width || yGrid < 0 || yGrid >= bg_height) {
+        return vec3f(0, 0, 0);
+      }
+
+      return vec3f(background[(yGrid * bg_width + xGrid) * 3] / 255.0,
+                   background[(yGrid * bg_width + xGrid) * 3 + 1] / 255.0,
+                   background[(yGrid * bg_width + xGrid) * 3 + 2] / 255.0);
     }
 
     return vec3f(0.0, 0.0, 0.0);
