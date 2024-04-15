@@ -24,11 +24,16 @@ public:
 
   bool sceneLoaded();
 
+  int loadBackground(char *iname);
+
 private:
   unsigned char *buffer;
   int buffer_width, buffer_height;
   int bufferSize;
   Scene *scene;
+
+  unsigned char *background;
+  int bg_width, bg_height;
 
   bool m_bSceneLoaded;
 

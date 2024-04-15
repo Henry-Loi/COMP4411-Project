@@ -9,7 +9,7 @@ W adaptive termination				yes
 W antialiasing by supersampling			yes
 +W jittering					yes/no
 B spot lights					yes/no
-B background image				yes/no
+B background image				yes
 B accelerate shadow atteuation			yes/no
 B overlapping tranparent objects		yes/no
 BW texture mapping (diffuse and transparent)	yes/no
