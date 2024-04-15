@@ -67,4 +67,22 @@ protected:
 	vec3f position;
 };
 
+class SpotLight
+	: public Light
+{
+	//Source: https://math.hws.edu/graphicsbook/c7/s2.html#:~:text=A%20spotlight%20is%20a%20kind,is%20specified%20as%20a%20vector.
+public:
+	SpotLight(Scene* scene, const vec3f& pos, const vec3f& color, const vec3f& orien, const vec3f& cutoff, const vec3f& distAttenConst)
+		: Light(scene, color, distAttenConst), position(pos),cutoffAngle(cutoff) {}
+	virtual vec3f shadowAttenuation(const vec3f& P) const;
+	virtual double distanceAttenuation(const vec3f& P) const;
+	virtual vec3f getColor(const vec3f& P) const;
+	virtual vec3f getDirection(const vec3f& P) const;
+	virtual vec3f getCutoffAngle(const vec3f& P)const;
+
+protected:
+	vec3f position;
+	vec3f cutoffAngle;
+};
+
 #endif // __LIGHT_H__
