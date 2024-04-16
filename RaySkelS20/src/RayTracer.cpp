@@ -45,7 +45,8 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
 
         ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
         scene->getCamera()->rayThrough(new_x, new_y, r);
-        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth())
+                      .clamp();
       }
     }
     result /= (n_subpixels * n_subpixels);
@@ -111,37 +112,41 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // reflection
     if (depth > 0) {
 
-        vec3f R = reflectionDirection(r, i);
-        ray reflect_ray = ray(r.at(i.t), R);
-        vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth - 1), m.kr);
-        I = I + I_r;
-   
+      vec3f R = reflectionDirection(r, i);
+      ray reflect_ray = ray(r.at(i.t), R);
+      vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth - 1), m.kr);
 
-    // if there are no refraction return the phong model + reflect color
-        if (!m.kt.iszero()) {
-            // refraction
+      // if there are not intersect object with the reflection ray
+      if (!scene->intersect(reflect_ray, i)) {
+        I_r = getBackground(scene, reflect_ray);
+      }
 
-            bool internal_refraction = false;
+      I = I + I_r;
 
-            double n = 0.0;
-            double refract_index = 1.0;
+      // if there are no refraction return the phong model + reflect color
+      if (!m.kt.iszero()) {
 
-            if (i.N * r.getDirection() < -RAY_EPSILON) {
-                n = refract_index / m.index;
-            }
-            else {
-                n = m.index / refract_index;
-                i.N = -i.N; // reverse the normal
-            }
+        // refraction
+        bool internal_refraction = false;
 
-            vec3f T = refractionDirection(r, i, m.index, internal_refraction);
+        double n = 0.0;
+        double refract_index = 1.0;
 
-            if (!internal_refraction) {
-                ray r_refract = ray(r.at(i.t), T);
-                vec3f I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
-                I = I - prod(I, m.kt) + I_t;
-            }
+        if (i.N * r.getDirection() < -RAY_EPSILON) {
+          n = refract_index / m.index;
+        } else {
+          n = m.index / refract_index;
+          i.N = -i.N; // reverse the normal
         }
+
+        vec3f T = refractionDirection(r, i, m.index, internal_refraction);
+
+        if (!internal_refraction) {
+          ray r_refract = ray(r.at(i.t), T);
+          vec3f I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
+          I = I - prod(I, m.kt) + I_t;
+        }
+      }
     }
 
     return I;
@@ -152,25 +157,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // is just black.
 
     if (background && traceUI->m_nEnableBackground) {
-      vec3f dir = r.getDirection();
-
-      double x = dir * scene->getCamera()->u;
-      double y = dir * scene->getCamera()->v;
-      double z = dir * scene->getCamera()->look;
-
-      x = x / z + 0.5;
-      y = y / z + 0.5;
-
-      int xGrid = int(x * bg_width);
-      int yGrid = int(y * bg_height);
-
-      if (xGrid < 0 || xGrid >= bg_width || yGrid < 0 || yGrid >= bg_height) {
-        return vec3f(0, 0, 0);
-      }
-
-      return vec3f(background[(yGrid * bg_width + xGrid) * 3] / 255.0,
-                   background[(yGrid * bg_width + xGrid) * 3 + 1] / 255.0,
-                   background[(yGrid * bg_width + xGrid) * 3 + 2] / 255.0);
+      return getBackground(scene, r);
     }
 
     return vec3f(0.0, 0.0, 0.0);
@@ -289,4 +276,26 @@ int RayTracer::loadBackground(char *iname) {
   bg_height = height;
 
   background = data;
+}
+
+vec3f RayTracer::getBackground(Scene *scene, const ray &r) {
+  vec3f dir = r.getDirection();
+
+  double x = dir * scene->getCamera()->u;
+  double y = dir * scene->getCamera()->v;
+  double z = dir * scene->getCamera()->look;
+
+  x = x / z + 0.5;
+  y = y / z + 0.5;
+
+  int xGrid = int(x * bg_width);
+  int yGrid = int(y * bg_height);
+
+  if (xGrid < 0 || xGrid >= bg_width || yGrid < 0 || yGrid >= bg_height) {
+    return vec3f(0, 0, 0);
+  }
+
+  return vec3f(background[(yGrid * bg_width + xGrid) * 3] / 255.0,
+               background[(yGrid * bg_width + xGrid) * 3 + 1] / 255.0,
+               background[(yGrid * bg_width + xGrid) * 3 + 2] / 255.0);
 }
