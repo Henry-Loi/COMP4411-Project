@@ -3,8 +3,11 @@
 
 // The main ray tracer.
 
+#include "scene/material.h"
 #include "scene/ray.h"
 #include "scene/scene.h"
+
+#include <stack>
 
 class RayTracer {
 public:
@@ -12,7 +15,8 @@ public:
   ~RayTracer();
 
   vec3f trace(Scene *scene, double x, double y);
-  vec3f traceRay(Scene *scene, const ray &r, const vec3f &thresh, int depth);
+  vec3f traceRay(Scene *scene, const ray &r, const vec3f &thresh, int depth,
+                 stack<Material> materials);
 
   void getBuffer(unsigned char *&buf, int &w, int &h);
   double aspectRatio();
@@ -38,7 +42,10 @@ private:
   bool m_bSceneLoaded;
 
   vec3f reflectionDirection(const ray &r, const isect &i);
-  vec3f refractionDirection(const ray &r, const isect &i, double n, bool &);
+  vec3f refractionDirection(const ray &r, const isect &i, double n, vec3f norm);
+
+  bool inStack(stack<Material> stk, Material m);
+  void removeFromStack(stack<Material> &stk, Material m);
 
   vec3f getBackground(Scene *scene, const ray &r);
 };
