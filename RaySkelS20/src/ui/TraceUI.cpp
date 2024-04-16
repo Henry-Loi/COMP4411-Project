@@ -412,8 +412,8 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->type(FL_HOR_NICE_SLIDER);
   m_adaptivethreshSlider->labelfont(FL_COURIER);
   m_adaptivethreshSlider->labelsize(12);
-  m_adaptivethreshSlider->minimum(0);
-  m_adaptivethreshSlider->maximum(5);
+  m_adaptivethreshSlider->maximum(1);
+  m_adaptivethreshSlider->step(0.00001);
   m_adaptivethreshSlider->step(0.01);
   m_adaptivethreshSlider->value(0.0);
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
