@@ -101,6 +101,47 @@ Scene *readScene(istream &is) {
   return ret;
 }
 
+#include "../fileio/bitmap.h"
+Scene *loadHeightField(char *iname) {
+
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
+
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    return NULL;
+  }
+
+  // create a new scene
+  Scene *scene = new Scene();
+  Material *mat = new Material();
+
+  Trimesh *tmesh = new Trimesh(scene, mat, &scene->transformRoot);
+
+  for (int y = 0; y < height; ++y) {
+    for (int x = 0; x < width; ++x) {
+      int pos = y * width + x;
+      unsigned char pixel[3];
+      memcpy(pixel, data + pos * 3, 3);
+      double height = double(pixel[0] + pixel[1] + pixel[2]) / 3 / 128;
+      vec3f point(x, y, height);
+      tmesh->addVertex(point);
+      if (x > 0 && y > 0) { // link the points
+        tmesh->addFace(pos, pos - 1, pos - 1 - width);
+        tmesh->addFace(pos, pos - 1 - width, pos - width);
+      }
+    }
+  }
+
+  char *error;
+  if (error = tmesh->doubleCheck())
+    throw ParseError(error);
+
+  scene->add(tmesh);
+
+  return scene;
+}
+
 // Find a color field inside some object.  Now, I recognize that not
 // everyone speaks the Queen's English, so I allow both spellings of
 // color.  If you're composing scenes, you don't need to worry about
@@ -501,22 +542,21 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     scene->add(new PointLight(scene, tupleToVec(getField(child, "position")),
                               tupleToVec(getColorField(child)),
                               distAttenConst));
-  }
-  else if (name == "ambient_light") {
-      if (child == NULL) {
-          throw ParseError("No info for ambient_light");
-      }
-      scene->add(new AmbientLight(scene,
-          tupleToVec(getColorField(child)),
-          distAttenConst));
-  }
-  else if (name == "spot_light") {
-      if (child == NULL) {
-          throw ParseError("No info for ambient_light");
-      }
-      scene->add(new SpotLight(scene, tupleToVec(getField(child, "position")),
-          tupleToVec(getColorField(child)), tupleToVec(getField(child, "direction")), tupleToVec(getField(child, "edgeplace")),
-          distAttenConst));
+  } else if (name == "ambient_light") {
+    if (child == NULL) {
+      throw ParseError("No info for ambient_light");
+    }
+    scene->add(new AmbientLight(scene, tupleToVec(getColorField(child)),
+                                distAttenConst));
+  } else if (name == "spot_light") {
+    if (child == NULL) {
+      throw ParseError("No info for ambient_light");
+    }
+    scene->add(new SpotLight(scene, tupleToVec(getField(child, "position")),
+                             tupleToVec(getColorField(child)),
+                             tupleToVec(getField(child, "direction")),
+                             tupleToVec(getField(child, "edgeplace")),
+                             distAttenConst));
   } else if (name == "sphere" || name == "box" || name == "cylinder" ||
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||
@@ -526,13 +566,12 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     // scene->add( geo );
   } else if (name == "material") {
     processMaterial(child, &materials);
-  }
-  else if (name == "camera") {
-      processCamera(child, scene);
+  } else if (name == "camera") {
+    processCamera(child, scene);
   }
   //} /*else if (name == "ambient_light") {
   //  scene->ambientLightColor = tupleToVec(getColorField(child));*/
-  //} 
+  //}
   else {
     throw ParseError(string("Unrecognized object: ") + name);
   }
