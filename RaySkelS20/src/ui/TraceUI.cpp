@@ -42,6 +42,16 @@ void TraceUI::cb_load_scene(Fl_Menu_ *o, void *v) {
   }
 }
 
+void TraceUI::cb_load_background(Fl_Menu_ *o, void *v) {
+  TraceUI *pUI = whoami(o);
+
+  char *newfile = fl_file_chooser("Open Background Image?", "*.bmp", NULL);
+
+  if (newfile != NULL) {
+    pUI->raytracer->loadBackground(newfile);
+  }
+}
+
 void TraceUI::cb_save_image(Fl_Menu_ *o, void *v) {
   TraceUI *pUI = whoami(o);
 
@@ -130,6 +140,11 @@ void TraceUI::cb_overideDistanceAttenConst(Fl_Widget *o, void *v) {
 
 void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nSubsampleJitter =
+      ((Fl_Check_Button *)o)->value();
+}
+
+void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nEnableBackground =
       ((Fl_Check_Button *)o)->value();
 }
 
@@ -228,6 +243,8 @@ Fl_Menu_Item TraceUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Scene...", FL_ALT + 'l', (Fl_Callback *)TraceUI::cb_load_scene},
     {"&Save Image...", FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image},
+    {"&Load Background Image...", FL_ALT + 'l',
+     (Fl_Callback *)TraceUI::cb_load_background},
     {"&Exit", FL_ALT + 'e', (Fl_Callback *)TraceUI::cb_exit},
     {0},
 
@@ -252,6 +269,9 @@ TraceUI::TraceUI() {
 
   m_nSubsamplePixelSize = 0;
   m_nSubsampleJitter = false;
+  m_nAdaptiveThresh = 0.0;
+
+  m_nEnableBackground = false;
 
   m_mainWindow = new Fl_Window(100, 40, 400, 400, "Ray <Not Loaded>");
   m_mainWindow->user_data(
@@ -389,7 +409,7 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->minimum(0);
   m_adaptivethreshSlider->maximum(5);
   m_adaptivethreshSlider->step(0.01);
-  m_adaptivethreshSlider->value(0.01);
+  m_adaptivethreshSlider->value(0.0);
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
   m_adaptivethreshSlider->callback(cb_adaptivethreshSlides);
 
@@ -416,6 +436,11 @@ TraceUI::TraceUI() {
       new Fl_Check_Button(10, 305, 20, 20, "Enable Subsample Jitter");
   m_SubSampleJitterButton->user_data((void *)(this));
   m_SubSampleJitterButton->callback(cb_subsamplejitterbutton);
+
+  m_enableBackgroundButton =
+      new Fl_Check_Button(10, 330, 20, 20, "Enable External Background");
+  m_enableBackgroundButton->user_data((void *)(this));
+  m_enableBackgroundButton->callback(cb_enablebackgroundbutton);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);

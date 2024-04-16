@@ -45,6 +45,9 @@ public:
   Fl_Slider *m_SubSameplePixelSlider;
   Fl_Check_Button *m_SubSampleJitterButton;
 
+  // background image
+  Fl_Check_Button *m_enableBackgroundButton;
+
   Fl_Check_Button *m_distAttenOverrideButton;
 
   Fl_Button *m_renderButton;
@@ -75,6 +78,8 @@ public:
   int m_nSubsamplePixelSize;
   bool m_nSubsampleJitter;
 
+  bool m_nEnableBackground;
+
 private:
   RayTracer *raytracer;
 
@@ -93,15 +98,17 @@ private:
 
   static void cb_exit2(Fl_Widget *o, void *v);
 
+  static void cb_load_background(Fl_Menu_ *o, void *v);
+
   static void cb_sizeSlides(Fl_Widget *o, void *v);
   static void cb_depthSlides(Fl_Widget *o, void *v);
 
   static void cb_render(Fl_Widget *o, void *v);
   static void cb_stop(Fl_Widget *o, void *v);
 
-  static void TraceUI::cb_attenConstantSlides(Fl_Widget *o, void *v);
-  static void TraceUI::cb_attenLinearSlides(Fl_Widget *o, void *v);
-  static void TraceUI::cb_attenQuadSlides(Fl_Widget *o, void *v);
+  static void cb_attenConstantSlides(Fl_Widget *o, void *v);
+  static void cb_attenLinearSlides(Fl_Widget *o, void *v);
+  static void cb_attenQuadSlides(Fl_Widget *o, void *v);
 
   static void cb_ambientLightSlides(Fl_Widget *o, void *v);
   static void cb_intensityScaleSlides(Fl_Widget *o, void *v);
@@ -113,6 +120,9 @@ private:
   // subsample pixel size
   static void cb_subsamplepixelSlides(Fl_Widget *o, void *v);
   static void cb_subsamplejitterbutton(Fl_Widget *o, void *v);
+
+  // background image
+  static void cb_enablebackgroundbutton(Fl_Widget *o, void *v);
 
   // overide distanceatten
   static void cb_overideDistanceAttenConst(Fl_Widget *o, void *v);
