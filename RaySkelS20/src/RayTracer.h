@@ -39,6 +39,8 @@ private:
 
   vec3f reflectionDirection(const ray &r, const isect &i);
   vec3f refractionDirection(const ray &r, const isect &i, double n, bool &);
+
+  vec3f getBackground(Scene *scene, const ray &r);
 };
 
 #endif // __RAYTRACER_H__
