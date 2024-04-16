@@ -31,7 +31,6 @@ public:
         : ke( e ), ka( a ), ks( s ), kd( d ), kr( r ), kt( t ), shininess( sh ), index( in ) {}
 
 	virtual vec3f shade( Scene *scene, const ray& r, const isect& i ) const;
-
     vec3f ke;                    // emissive
     vec3f ka;                    // ambient
     vec3f ks;                    // specular

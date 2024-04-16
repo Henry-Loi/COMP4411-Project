@@ -103,10 +103,7 @@ vec3f AmbientLight::getDirection(const vec3f& P) const {
 }
 
 double SpotLight::distanceAttenuation(const vec3f& P) const {
-    cout << acos(getDirection(P).normalize().dot(getSpotDirection().normalize()) )<< endl;
-    if ((acos(getDirection(P).normalize().dot(getSpotDirection().normalize())) / 3.142) * 180.0 >= getCutoffAngle()[0] ) {
-        return 0.0;
-    }//larger than cutoff angle(Warn Model)
+
 
     double constant_atten_coeff = distAttenConst[0];
     double linear_atten_coeff = distAttenConst[1];
@@ -156,3 +153,5 @@ vec3f SpotLight::getCutoffAngle() const {
     return cutoffAngle;
 
 }
+
+

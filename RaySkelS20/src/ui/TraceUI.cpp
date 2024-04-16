@@ -143,6 +143,12 @@ void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
       ((Fl_Check_Button *)o)->value();
 }
 
+
+void TraceUI::cb_WarnExponent(Fl_Widget* o, void* v) {
+    ((TraceUI*)(o->user_data()))->m_nWarnExponent = ((Fl_Slider*)o)->value();
+}
+
+
 void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nEnableBackground =
       ((Fl_Check_Button *)o)->value();
@@ -441,6 +447,20 @@ TraceUI::TraceUI() {
       new Fl_Check_Button(10, 330, 20, 20, "Enable External Background");
   m_enableBackgroundButton->user_data((void *)(this));
   m_enableBackgroundButton->callback(cb_enablebackgroundbutton);
+
+  m_WarnExponentSlider=
+      new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
+  m_WarnExponentSlider->user_data(
+      (void*)(this)); // record self to be used by static callback functions
+  m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
+  m_WarnExponentSlider->labelfont(FL_COURIER);
+  m_WarnExponentSlider->labelsize(12);
+  m_WarnExponentSlider->minimum(0);
+  m_WarnExponentSlider->maximum(32);
+  m_WarnExponentSlider->step(1);
+  m_WarnExponentSlider->value(0);
+  m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
+  m_WarnExponentSlider->callback(cb_WarnExponent);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);
