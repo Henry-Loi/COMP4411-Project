@@ -143,7 +143,14 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
 
         if (!internal_refraction) {
           ray r_refract = ray(r.at(i.t), T);
-          vec3f I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
+          vec3f I_t;
+
+          if (!scene->intersect(r_refract, i)) {
+            I_t = getBackground(scene, r_refract);
+          } else {
+            I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
+          }
+
           I = I - prod(I, m.kt) + I_t;
         }
       }
