@@ -47,7 +47,7 @@
 
 - [ ] [1] Implement spot lights. 
 - [X] [1] Add a menu option that lets you specify a background image. to replace the environment's ambient color during the rendering. 
-- [ ] [1] Find a good way to accelerate shadow attenuation.
+- [ ] [1] Find a good way to accelerate shadow attenuation(hierarchical bounding volumes).
 - [ ] [1] Deal with overlapping objects intelligently.
 
 - [ ] [1.5] Add texture mapping support to the program.
