@@ -47,24 +47,24 @@
 
 - [ ] [1] Implement spot lights. 
 - [X] [1] Add a menu option that lets you specify a background image. to replace the environment's ambient color during the rendering. 
-- [ ] [1] Find a good way to accelerate shadow attenuation(hierarchical bounding volumes).
-- [ ] [1] Deal with overlapping objects intelligently.
+- [ ] [1] Find a good way to accelerate shadow attenuation. (use hierical bonding volume to avoid intersection checking)
+- [ ] [1] Deal with overlapping objects intelligently. (object inside object overlapping with depth test: refraction.ray)
 
-- [ ] [1.5] Add texture mapping support to the program.
-- [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results.
+- [ ] [1.5] Add texture mapping support to the program. (2D to 2D, u-v map)
+- [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results. (highlight the high frequency region, supersample the change of intensity of the model)
 - [ ] [1.5] Implement more versatile lighting controls, such as the Warn model described in Foley 16.1.5.
   
-- [ ] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). 
-- [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. 
+- [ ] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). (world and world_normal)
+- [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. (design a math equation to generate 3D texture map + add randomness)
 - [ ] [2] Add some new types of geometry to the ray tracer.
-- [ ] [2] Add support for height-fields.
-- [ ] [2+1.5*n] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4).
+- [ ] [2] Add support for height-fields. (displacement mapping: construct a polygonal "mesh based model)
+- [ ] [2+1.5*n] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4). (see L11 lecture notes & depth of field: forcal length)
 
 - [ ] [3] Add some higher-level geometry to the ray tracer, such as surfaces of revolution, extrusions, metaballs or blend surfaces.
 - [ ] [3] Implement ray-intersection optimization by either implement the BSP Tree implemented or by implementing a different optimization method, such as hierarchical bounding volumes (See Glassner 6.4 and 6.5, Foley, et al., 15.10.2).
 
 - [ ] [4] Implement a more realistic shading model. Credit will vary depending on the sophistication of the model.
-- [ ] [4] Implement CSG, constructive solid geometry.
+- [ ] [4] Implement CSG, constructive solid geometry. (if ray intersect B, return other (TA said is simple))
 - [ ] [4] Add a particle systems simulation and renderer (Foley 20.5, Watt 17.7). 
 - [ ] [4] Implement caustics.
 
