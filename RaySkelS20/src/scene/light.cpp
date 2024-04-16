@@ -106,7 +106,7 @@ double SpotLight::distanceAttenuation(const vec3f& P) const {
     cout << acos(getDirection(P).normalize().dot(getSpotDirection().normalize()) )<< endl;
     if ((acos(getDirection(P).normalize().dot(getSpotDirection().normalize())) / 3.142) * 180.0 >= getCutoffAngle()[0] ) {
         return 0.0;
-    }//larger than cutoff angle
+    }//larger than cutoff angle(Warn Model)
 
     double constant_atten_coeff = distAttenConst[0];
     double linear_atten_coeff = distAttenConst[1];
@@ -120,7 +120,7 @@ double SpotLight::distanceAttenuation(const vec3f& P) const {
     double distance = (position - P).length() * pow(10, traceUI->m_nDistanceScale);
     double coeff = (constant_atten_coeff + linear_atten_coeff * distance +
         quad_atten_coeff * distance * distance);
-    cout << "const" << constant_atten_coeff << "  " << linear_atten_coeff << "  " << quad_atten_coeff << endl;
+
     return min(1.0, 1.0 / coeff);
 }
 
