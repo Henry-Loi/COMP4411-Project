@@ -45,14 +45,14 @@
 - [X] [0.5] Implement an adaptive termination criterion for tracing rays, based on ray contribution.  Control the adaptation  threshold with a slider.
 - [X] [0.5/**1**] Implement antialiasing by supersampling and averaging down.  **(This whistle upgrades to a bell if you implement the first stage of distribution ray tracing by jittering the sub-pixel samples.)**
 
-- [ ] [1] Implement spot lights. 
+- [X] [1] Implement spot lights. 
 - [X] [1] Add a menu option that lets you specify a background image. to replace the environment's ambient color during the rendering. 
 - [ ] [1] Find a good way to accelerate shadow attenuation. (use hierical bonding volume to avoid intersection checking)
 - [ ] [1] Deal with overlapping objects intelligently. (object inside object overlapping with depth test: refraction.ray)
 
 - [ ] [1.5] Add texture mapping support to the program. (2D to 2D, u-v map)
 - [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results. (highlight the high frequency region, supersample the change of intensity of the model)
-- [ ] [1.5] Implement more versatile lighting controls, such as the Warn model described in Foley 16.1.5.
+- [X] [1.5] Implement more versatile lighting controls, such as the Warn model described in Foley 16.1.5.
   
 - [ ] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). (world and world_normal)
 - [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. (design a math equation to generate 3D texture map + add randomness)
