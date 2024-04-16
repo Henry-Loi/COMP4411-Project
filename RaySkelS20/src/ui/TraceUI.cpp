@@ -269,6 +269,7 @@ TraceUI::TraceUI() {
 
   m_nSubsamplePixelSize = 0;
   m_nSubsampleJitter = false;
+  m_nAdaptiveThresh = 0.0;
 
   m_nEnableBackground = false;
 
@@ -408,7 +409,7 @@ TraceUI::TraceUI() {
   m_adaptivethreshSlider->minimum(0);
   m_adaptivethreshSlider->maximum(5);
   m_adaptivethreshSlider->step(0.01);
-  m_adaptivethreshSlider->value(0.01);
+  m_adaptivethreshSlider->value(0.0);
   m_adaptivethreshSlider->align(FL_ALIGN_RIGHT);
   m_adaptivethreshSlider->callback(cb_adaptivethreshSlides);
 
