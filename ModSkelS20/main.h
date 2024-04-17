@@ -7,6 +7,9 @@
 #include "texturedraw.h"
 
 #include "modelerglobals.h"
+#include "vec.h"
+
+#include <vector>
 
 // To make a RobotModel, we inherit off of ModelerView
 class RobotModel : public ModelerView {
@@ -27,3 +30,6 @@ public:
 
   virtual void draw();
 };
+
+float frand(void);
+std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
