@@ -2,6 +2,7 @@
 
 #include <Fl/fl_ask.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "RayTracer.h"
 #include "fileio/parse.h"
@@ -11,13 +12,21 @@
 #include "scene/ray.h"
 
 #include "ui/TraceUI.h"
+
 extern TraceUI *traceUI;
+std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
+
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
+
+  ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+  scene->getCamera()->rayThrough(x, y, r);
+  vec3f result =
+      traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
 
   // antialiasing by supersampling and averaging the color
   if (traceUI->m_nSubsamplePixelSize > 1) {
@@ -26,7 +35,6 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
     double subpixel_width = 1.0 / (buffer_width * n_subpixels);
     double start_x = x - subpixel_width * (float(n_subpixels - 1) / 2);
     double start_y = y + subpixel_height * (float(n_subpixels - 1) / 2);
-    vec3f result(0, 0, 0);
     double jitter_x = 0;
     double jitter_y = 0;
 
@@ -43,19 +51,37 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
         double new_y = start_y - y * subpixel_height + jitter_y;
         double new_x = start_x + x * subpixel_width + jitter_x;
 
-        ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
         scene->getCamera()->rayThrough(new_x, new_y, r);
         result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth())
                       .clamp();
       }
     }
     result /= (n_subpixels * n_subpixels);
-    return result;
+
+    // return result;
   }
 
-  ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-  scene->getCamera()->rayThrough(x, y, r);
-  return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+  if (traceUI->m_nEnable_dof) {
+    ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+    double focal_length = traceUI->m_nFocalLength;
+    double aperture = traceUI->m_nAperture;
+
+    vec3f focal_point = r.getDirection() * focal_length + r.getPosition();
+    std::vector<vec3f> samples =
+        sampleDistributed(r.getDirection(), aperture * 0.05, 19);
+    for (int i = 0; i < samples.size(); i++) {
+      vec3f new_origin = focal_point - focal_length /
+                                           samples[i].dot(r.getDirection()) *
+                                           samples[i];
+      ray new_ray(new_origin, samples[i]);
+      result +=
+          traceRay(scene, new_ray, vec3f(0.0, 0.0, 0.0), traceUI->getDepth())
+              .clamp();
+    }
+    result /= 20;
+  }
+
+  return result;
 }
 
 vec3f RayTracer::reflectionDirection(const ray &r, const isect &i) {

@@ -304,6 +304,7 @@ TraceUI::TraceUI() {
   m_nEnableBackground = false;
   m_nWarnExponent = false;
   m_nEnable_soft_shadow = false;
+  m_nEnable_dof = false;
 
   m_mainWindow = new Fl_Window(100, 40, 390, 500, "Ray <Not Loaded>");
   m_mainWindow->user_data(
