@@ -139,6 +139,22 @@ Scene *loadHeightField(char *iname) {
 
   scene->add(tmesh);
 
+  // add a pointlight
+  PointLight *point_light =
+      new PointLight(scene, vec3f(width, height, 10), vec3f(1.0, 1.0, 1.0),
+                     vec3f(0.0, 0.0, 0.0));
+  scene->add(point_light);
+
+  // set the camerea
+  // TODO: calculate the correct viewing distance;
+  vec3f map_center((double)width / 2 - 0.5, (double)height / 2 - 0.5, 0.5);
+  double camera_distance = (double)width + 3.0;
+  vec3f camera_pos(0, -camera_distance, 2 * camera_distance);
+  camera_pos += map_center;
+  scene->getCamera()->setEye(camera_pos);
+  scene->getCamera()->setLook((map_center - camera_pos).normalize(),
+                              vec3f(0, 0, 1).normalize());
+
   return scene;
 }
 
