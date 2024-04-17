@@ -175,6 +175,7 @@ RayTracer::RayTracer() {
   buffer = NULL;
   buffer_width = buffer_height = 256;
   scene = NULL;
+  background = NULL;
 
   m_bSceneLoaded = false;
 }

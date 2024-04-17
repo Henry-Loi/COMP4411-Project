@@ -15,6 +15,7 @@
 #include <FL/Fl_Window.H>
 
 #include <FL/fl_file_chooser.H> // FLTK file chooser
+#include <sys/stat.h>
 
 #include "TraceGLWindow.h"
 
@@ -43,7 +44,7 @@ public:
 
   // subsample pixel size
   Fl_Slider *m_SubSameplePixelSlider;
-  Fl_Slider* m_WarnExponentSlider;
+  Fl_Slider *m_WarnExponentSlider;
   Fl_Check_Button *m_SubSampleJitterButton;
 
   // background image
@@ -53,6 +54,8 @@ public:
 
   Fl_Button *m_renderButton;
   Fl_Button *m_stopButton;
+
+  Fl_Light_Button *m_SoftShadowLightButton;
 
   TraceGLWindow *m_traceGlWindow;
 
@@ -81,6 +84,8 @@ public:
 
   bool m_nEnableBackground;
   int m_nWarnExponent;
+
+  bool m_nEnable_soft_shadow;
 
 private:
   RayTracer *raytracer;
@@ -129,8 +134,11 @@ private:
   // overide distanceatten
   static void cb_overideDistanceAttenConst(Fl_Widget *o, void *v);
 
-  //warnmodel
-  static void cb_WarnExponent(Fl_Widget* o, void* v);
+  // warnmodel
+  static void cb_WarnExponent(Fl_Widget *o, void *v);
+
+  // soft shadow
+  static void cb_sizeRandLightButton(Fl_Widget* o, void* v);
 };
 
 #endif

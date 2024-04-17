@@ -143,15 +143,22 @@ void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
       ((Fl_Check_Button *)o)->value();
 }
 
-
-void TraceUI::cb_WarnExponent(Fl_Widget* o, void* v) {
-    ((TraceUI*)(o->user_data()))->m_nWarnExponent = ((Fl_Slider*)o)->value();
+void TraceUI::cb_WarnExponent(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nWarnExponent = ((Fl_Slider *)o)->value();
 }
-
 
 void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nEnableBackground =
       ((Fl_Check_Button *)o)->value();
+}
+
+void TraceUI::cb_sizeRandLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_soft_shadow == true)
+    pUI->m_nEnable_soft_shadow = false;
+  else
+    pUI->m_nEnable_soft_shadow = true;
 }
 
 void TraceUI::cb_render(Fl_Widget *o, void *v) {
@@ -278,8 +285,10 @@ TraceUI::TraceUI() {
   m_nAdaptiveThresh = 0.0;
 
   m_nEnableBackground = false;
+  m_nWarnExponent = false;
+  m_nEnable_soft_shadow = false;
 
-  m_mainWindow = new Fl_Window(100, 40, 400, 400, "Ray <Not Loaded>");
+  m_mainWindow = new Fl_Window(100, 40, 400, 500, "Ray <Not Loaded>");
   m_mainWindow->user_data(
       (void *)(this)); // record self to be used by static callback functions
   // install menu bar
@@ -448,10 +457,10 @@ TraceUI::TraceUI() {
   m_enableBackgroundButton->user_data((void *)(this));
   m_enableBackgroundButton->callback(cb_enablebackgroundbutton);
 
-  m_WarnExponentSlider=
+  m_WarnExponentSlider =
       new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
   m_WarnExponentSlider->user_data(
-      (void*)(this)); // record self to be used by static callback functions
+      (void *)(this)); // record self to be used by static callback functions
   m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
   m_WarnExponentSlider->labelfont(FL_COURIER);
   m_WarnExponentSlider->labelsize(12);
@@ -461,6 +470,12 @@ TraceUI::TraceUI() {
   m_WarnExponentSlider->value(0);
   m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
   m_WarnExponentSlider->callback(cb_WarnExponent);
+
+  m_SoftShadowLightButton =
+      new Fl_Light_Button(10, 380, 110, 20, "&Soft Shadow");
+  m_SoftShadowLightButton->user_data((void *)(this));
+  m_SoftShadowLightButton->callback(cb_sizeRandLightButton);
+  m_SoftShadowLightButton->value(false);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);
