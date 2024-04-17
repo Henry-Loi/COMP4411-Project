@@ -11,6 +11,7 @@ double DirectionalLight::distanceAttenuation(const vec3f &P) const {
   return 1.0;
 }
 
+std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 vec3f DirectionalLight::shadowAttenuation(const vec3f &P) const {
   // YOUR CODE HERE:
   // You should implement shadow-handling code here.
@@ -26,14 +27,12 @@ vec3f DirectionalLight::shadowAttenuation(const vec3f &P) const {
 
   // soft shadow
   if (traceUI->m_nEnable_soft_shadow) {
-    for (int i = 0; i < 49; i++) {
-      vec3f random = vec3f((rand() % 100) / 100.0, (rand() % 100) / 100.0,
-                           (rand() % 100) / 100.0);
-      vec3f randomDir = (d + random).normalize();
-      ray randomRay(P, randomDir);
+    std::vector<vec3f> vecs = sampleDistributed(d, 0.05, 49);
+    for (int i = 0; i < vecs.size(); i++) {
+      ray randomRay(P, vecs[i]);
       isect randomIsect;
       if (scene->intersect(randomRay, randomIsect)) {
-        atten += prod(atten, randomIsect.getMaterial().kt);
+        atten += prod(color, randomIsect.getMaterial().kt);
       } else {
         atten += color;
       }
@@ -84,7 +83,6 @@ vec3f PointLight::getDirection(const vec3f &P) const {
   return (position - P).normalize();
 }
 
-std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 vec3f PointLight::shadowAttenuation(const vec3f &P) const {
   // YOUR CODE HERE:
   // You should implement shadow-handling code here.
