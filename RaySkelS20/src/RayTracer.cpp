@@ -117,7 +117,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
       vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth - 1), m.kr);
 
       // if there are not intersect object with the reflection ray
-      if (!scene->intersect(reflect_ray, i)) {
+      if (background && !scene->intersect(reflect_ray, i)) {
         I_r = getBackground(scene, reflect_ray);
       }
 
@@ -145,7 +145,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
           ray r_refract = ray(r.at(i.t), T);
           vec3f I_t;
 
-          if (!scene->intersect(r_refract, i)) {
+          if (background && !scene->intersect(r_refract, i)) {
             I_t = getBackground(scene, r_refract);
           } else {
             I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
