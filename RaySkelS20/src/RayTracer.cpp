@@ -22,7 +22,6 @@ std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
-
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
   vec3f result =
@@ -57,8 +56,6 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
       }
     }
     result /= (n_subpixels * n_subpixels);
-
-    // return result;
   }
 
   if (traceUI->m_nEnable_dof) {
@@ -79,6 +76,25 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
               .clamp();
     }
     result /= 20;
+  }
+
+  if (traceUI->m_nEnable_motion_blur) {
+    vec3f c = r.getDirection();
+    vec3f up = vec3f(0, 1, 0);
+    if ((c.normalize() - up).length() < RAY_EPSILON) {
+      up = vec3f(0, 0, 1);
+    }
+    vec3f u = (c.cross(up)).normalize();
+    vec3f v = (u.cross(c)).normalize();
+    u = (c.cross(v)).normalize();
+    vec3f dir = c - 0.025 * v;
+    for (int i = 0; i < 10; i++) {
+      dir += 0.005 * v;
+      ray ray(r.getPosition(), dir.normalize());
+      result += traceRay(scene, ray, vec3f(1.0, 1.0, 1.0), traceUI->getDepth())
+                    .clamp();
+    }
+    result /= 10.f;
   }
 
   return result;
