@@ -503,6 +503,18 @@ TraceUI::TraceUI() {
   m_SoftShadowLightButton->callback(cb_softShadowLightButton);
   m_SoftShadowLightButton->value(false);
 
+  m_MotionBlurLightButton =
+      new Fl_Light_Button(130, 330, 100, 20, "&Motion Blur");
+  m_MotionBlurLightButton->user_data((void *)(this));
+  m_MotionBlurLightButton->callback(cb_MotionBlurLightButton);
+  m_MotionBlurLightButton->value(false);
+
+  m_GlossyReflectionLightButton =
+      new Fl_Light_Button(240, 330, 80, 20, "&Glossy");
+  m_GlossyReflectionLightButton->user_data((void *)(this));
+  m_GlossyReflectionLightButton->callback(cb_glossyReflectionLightButton);
+  m_GlossyReflectionLightButton->value(false);
+
   m_WarnExponentSlider =
       new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
   m_WarnExponentSlider->user_data(
@@ -521,18 +533,6 @@ TraceUI::TraceUI() {
   m_DofLightButton->user_data((void *)(this));
   m_DofLightButton->callback(cb_dofLightButton);
   m_DofLightButton->value(false);
-
-  m_MotionBlurLightButton =
-      new Fl_Light_Button(90, 380, 100, 20, "&Motion Blur");
-  m_MotionBlurLightButton->user_data((void *)(this));
-  m_MotionBlurLightButton->callback(cb_MotionBlurLightButton);
-  m_MotionBlurLightButton->value(false);
-
-  m_GlossyReflectionLightButton =
-      new Fl_Light_Button(200, 380, 80, 20, "&Glossy");
-  m_GlossyReflectionLightButton->user_data((void *)(this));
-  m_GlossyReflectionLightButton->callback(cb_glossyReflectionLightButton);
-  m_GlossyReflectionLightButton->value(false);
 
   m_SubSameplePixelSlider = new Fl_Value_Slider(10, 405, 120, 20, "F Length");
   m_SubSameplePixelSlider->user_data(
