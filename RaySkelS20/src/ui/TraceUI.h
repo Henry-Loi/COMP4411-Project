@@ -56,6 +56,7 @@ public:
   Fl_Button *m_stopButton;
 
   Fl_Light_Button *m_SoftShadowLightButton;
+  Fl_Light_Button *m_DofLightButton;
 
   TraceGLWindow *m_traceGlWindow;
 
@@ -85,7 +86,13 @@ public:
   bool m_nEnableBackground;
   int m_nWarnExponent;
 
+  // soft shadow
   bool m_nEnable_soft_shadow;
+
+  // depth of field
+  bool m_nEnable_dof;
+  double m_nFocalLength;
+  double m_nAperture;
 
 private:
   RayTracer *raytracer;
@@ -138,7 +145,12 @@ private:
   static void cb_WarnExponent(Fl_Widget *o, void *v);
 
   // soft shadow
-  static void cb_sizeRandLightButton(Fl_Widget* o, void* v);
+  static void cb_softShadowLightButton(Fl_Widget *o, void *v);
+
+  // depth of field
+  static void cb_dofLightButton(Fl_Widget *o, void *v);
+  static void cb_focalLengthSlides(Fl_Widget *o, void *v);
+  static void cb_apertureSlides(Fl_Widget *o, void *v);
 };
 
 #endif

@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 7.0/42 +1.5*n** \
+> **Total marks: 8.5/46.5*1** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -59,7 +59,7 @@
 - [ ] [2] Add some new types of geometry to the ray tracer.
 - [ ] [2] Add support for height-fields. (displacement mapping: construct a polygonal "mesh based model)
 - [ ] [2+1.5*n] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4). (see L11 lecture notes & depth of field: forcal length)
-  - [ ] depth of field
+  - [X] depth of field
   - [X] soft shadows
   - [ ] motion blur
   - [ ] glossy reflection

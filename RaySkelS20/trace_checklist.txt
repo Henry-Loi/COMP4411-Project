@@ -20,7 +20,7 @@ BW Warn model					yes
 2B new geometry (quadrics)			yes/no
 2B height fields				yes/no
 2B first 					yes
-1.5B next for each Dof, soft shadows, 		yes/no [corrected 04/16/21]
+1.5B next for each Dof, soft shadows, 		yes [corrected 04/16/21]
      motion blur, glossy reflection		yes/no
 3B high lever geometry (e.g. metaballs)		yes/no
 3B ray-intersection optimization		yes/no
