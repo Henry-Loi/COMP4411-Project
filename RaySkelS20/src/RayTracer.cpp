@@ -1,6 +1,7 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <list>
 #include <stdlib.h>
 #include <vector>
 
@@ -79,22 +80,39 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
   }
 
   if (traceUI->m_nEnable_motion_blur) {
-    vec3f c = r.getDirection();
-    vec3f up = vec3f(0, 1, 0);
-    if ((c.normalize() - up).length() < RAY_EPSILON) {
-      up = vec3f(0, 0, 1);
+    mat4f slightTranslation(
+        vec4f(1.0, 0.0, 0.0, 0.005), vec4f(0.0, 1.0, 0.0, 0.005),
+        vec4f(0.0, 0.0, 1.0, 0.005), vec4f(0.0, 0.0, 0.0, 1.0));
+
+    // backup the xforms
+    std::vector<mat4f> backupMatrices;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      backupMatrices.push_back((*itr)->getTransformNode()->getXform());
     }
-    vec3f u = (c.cross(up)).normalize();
-    vec3f v = (u.cross(c)).normalize();
-    u = (c.cross(v)).normalize();
-    vec3f dir = c - 0.025 * v;
-    for (int i = 0; i < 10; i++) {
-      dir += 0.005 * v;
-      ray ray(r.getPosition(), dir.normalize());
-      result += traceRay(scene, ray, vec3f(1.0, 1.0, 1.0), traceUI->getDepth())
-                    .clamp();
+
+    for (int i = 0; i < 120; i++) {
+      // update the position of all objects
+      for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+           itr != scene->endObjects(); itr++) {
+        mat4f backup = (*itr)->getTransformNode()->getXform();
+        (*itr)->getTransformNode()->setXform(slightTranslation * backup);
+      }
+
+      // trace a ray normally
+      ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+      scene->getCamera()->rayThrough(x, y, r);
+      result +=
+          traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
     }
-    result /= 10.f;
+    // restore the xforms after finishing up this pixel
+    int counter = 0;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      (*itr)->getTransformNode()->setXform(backupMatrices[counter]);
+      counter++;
+    }
+    result /= 120.0;
   }
 
   return result;
