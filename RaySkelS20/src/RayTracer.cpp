@@ -62,7 +62,7 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
   }
 
   if (traceUI->m_nEnable_dof) {
-    ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+    // ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
     double focal_length = traceUI->m_nFocalLength;
     double aperture = traceUI->m_nAperture;
 
