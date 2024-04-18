@@ -60,6 +60,8 @@ public:
 
   Fl_Light_Button *m_MotionBlurLightButton;
 
+  Fl_Light_Button *m_GlossyReflectionLightButton;
+
   TraceGLWindow *m_traceGlWindow;
 
   // member functions
@@ -98,6 +100,9 @@ public:
 
   // motion blur
   bool m_nEnable_motion_blur;
+
+  // glossy reflection
+  bool m_nEnable_glossy_reflection;
 
 private:
   RayTracer *raytracer;
@@ -159,6 +164,9 @@ private:
 
   // motion blur
   static void cb_MotionBlurLightButton(Fl_Widget *o, void *v);
+
+  // glossy reflection
+  static void cb_glossyReflectionLightButton(Fl_Widget *o, void *v);
 };
 
 #endif

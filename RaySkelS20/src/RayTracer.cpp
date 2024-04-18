@@ -181,11 +181,20 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
         I_r = getBackground(scene, reflect_ray);
       }
 
+      if (traceUI->m_nEnable_glossy_reflection) {
+        std::vector<vec3f> vecs = sampleDistributed(R, 0.05, 49);
+        for (vec3f v : vecs) {
+          ray reflectRayL(r.at(i.t), v);
+          I_r += prod(traceRay(scene, reflectRayL, thresh, traceUI->getDepth()),
+                      m.kr);
+        }
+        I_r /= 50.f;
+      }
+
       I = I + I_r;
 
       // if there are no refraction return the phong model + reflect color
       if (!m.kt.iszero()) {
-
         // refraction
         bool internal_refraction = false;
 
