@@ -179,6 +179,15 @@ void TraceUI::cb_MotionBlurLightButton(Fl_Widget *o, void *v) {
     pUI->m_nEnable_motion_blur = true;
 }
 
+void TraceUI::cb_glossyReflectionLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_glossy_reflection == true)
+    pUI->m_nEnable_glossy_reflection = false;
+  else
+    pUI->m_nEnable_glossy_reflection = true;
+}
+
 void TraceUI::cb_focalLengthSlides(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nFocalLength = ((Fl_Slider *)o)->value();
 }
@@ -317,6 +326,7 @@ TraceUI::TraceUI() {
   m_nFocalLength = 2;
   m_nAperture = 2;
   m_nEnable_motion_blur = false;
+  m_nEnable_glossy_reflection = false;
 
   m_mainWindow = new Fl_Window(100, 40, 390, 500, "Ray <Not Loaded>");
   m_mainWindow->user_data(
@@ -493,6 +503,18 @@ TraceUI::TraceUI() {
   m_SoftShadowLightButton->callback(cb_softShadowLightButton);
   m_SoftShadowLightButton->value(false);
 
+  m_MotionBlurLightButton =
+      new Fl_Light_Button(130, 330, 100, 20, "&Motion Blur");
+  m_MotionBlurLightButton->user_data((void *)(this));
+  m_MotionBlurLightButton->callback(cb_MotionBlurLightButton);
+  m_MotionBlurLightButton->value(false);
+
+  m_GlossyReflectionLightButton =
+      new Fl_Light_Button(240, 330, 80, 20, "&Glossy");
+  m_GlossyReflectionLightButton->user_data((void *)(this));
+  m_GlossyReflectionLightButton->callback(cb_glossyReflectionLightButton);
+  m_GlossyReflectionLightButton->value(false);
+
   m_WarnExponentSlider =
       new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
   m_WarnExponentSlider->user_data(
@@ -511,12 +533,6 @@ TraceUI::TraceUI() {
   m_DofLightButton->user_data((void *)(this));
   m_DofLightButton->callback(cb_dofLightButton);
   m_DofLightButton->value(false);
-
-  m_MotionBlurLightButton =
-      new Fl_Light_Button(90, 380, 100, 20, "&Motion Blur");
-  m_MotionBlurLightButton->user_data((void *)(this));
-  m_MotionBlurLightButton->callback(cb_MotionBlurLightButton);
-  m_MotionBlurLightButton->value(false);
 
   m_SubSameplePixelSlider = new Fl_Value_Slider(10, 405, 120, 20, "F Length");
   m_SubSameplePixelSlider->user_data(

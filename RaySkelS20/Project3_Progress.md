@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 10.0/46.5** \
+> **Total marks: 11.5/46.5** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -58,11 +58,11 @@
 - [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. (design a math equation to generate 3D texture map + add randomness)
 - [ ] [2] Add some new types of geometry to the ray tracer.
 - [ ] [2] Add support for height-fields. (displacement mapping: construct a polygonal "mesh based model)
-- [ ] [2+1.5*n] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4). (see L11 lecture notes & depth of field: forcal length)
+- [X] [6.5(2+1.5*3)] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4). (see L11 lecture notes & depth of field: forcal length)
   - [X] depth of field
   - [X] soft shadows
   - [X] motion blur
-  - [ ] glossy reflection
+  - [X] glossy reflection
 
 - [ ] [3] Add some higher-level geometry to the ray tracer, such as surfaces of revolution, extrusions, metaballs or blend surfaces.
 - [ ] [3] Implement ray-intersection optimization by either implement the BSP Tree implemented or by implementing a different optimization method, such as hierarchical bounding volumes (See Glassner 6.4 and 6.5, Foley, et al., 15.10.2).
