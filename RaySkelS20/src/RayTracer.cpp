@@ -1,6 +1,7 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <list>
 #include <stdlib.h>
 #include <vector>
 
@@ -22,7 +23,6 @@ std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
-
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
   vec3f result =
@@ -57,8 +57,6 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
       }
     }
     result /= (n_subpixels * n_subpixels);
-
-    // return result;
   }
 
   if (traceUI->m_nEnable_dof) {
@@ -79,6 +77,42 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
               .clamp();
     }
     result /= 20;
+  }
+
+  if (traceUI->m_nEnable_motion_blur) {
+    mat4f slightTranslation(
+        vec4f(1.0, 0.0, 0.0, 0.005), vec4f(0.0, 1.0, 0.0, 0.005),
+        vec4f(0.0, 0.0, 1.0, 0.005), vec4f(0.0, 0.0, 0.0, 1.0));
+
+    // backup the xforms
+    std::vector<mat4f> backupMatrices;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      backupMatrices.push_back((*itr)->getTransformNode()->getXform());
+    }
+
+    for (int i = 0; i < 120; i++) {
+      // update the position of all objects
+      for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+           itr != scene->endObjects(); itr++) {
+        mat4f backup = (*itr)->getTransformNode()->getXform();
+        (*itr)->getTransformNode()->setXform(slightTranslation * backup);
+      }
+
+      // trace a ray normally
+      ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+      scene->getCamera()->rayThrough(x, y, r);
+      result +=
+          traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+    }
+    // restore the xforms after finishing up this pixel
+    int counter = 0;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      (*itr)->getTransformNode()->setXform(backupMatrices[counter]);
+      counter++;
+    }
+    result /= 120.0;
   }
 
   return result;

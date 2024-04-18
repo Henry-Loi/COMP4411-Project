@@ -58,6 +58,8 @@ public:
   Fl_Light_Button *m_SoftShadowLightButton;
   Fl_Light_Button *m_DofLightButton;
 
+  Fl_Light_Button *m_MotionBlurLightButton;
+
   TraceGLWindow *m_traceGlWindow;
 
   // member functions
@@ -93,6 +95,9 @@ public:
   bool m_nEnable_dof;
   double m_nFocalLength;
   double m_nAperture;
+
+  // motion blur
+  bool m_nEnable_motion_blur;
 
 private:
   RayTracer *raytracer;
@@ -151,6 +156,9 @@ private:
   static void cb_dofLightButton(Fl_Widget *o, void *v);
   static void cb_focalLengthSlides(Fl_Widget *o, void *v);
   static void cb_apertureSlides(Fl_Widget *o, void *v);
+
+  // motion blur
+  static void cb_MotionBlurLightButton(Fl_Widget *o, void *v);
 };
 
 #endif
