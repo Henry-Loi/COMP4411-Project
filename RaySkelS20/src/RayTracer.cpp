@@ -1,7 +1,9 @@
 // The main ray tracer.
 
 #include <Fl/fl_ask.h>
+#include <list>
 #include <stdlib.h>
+#include <vector>
 
 #include "RayTracer.h"
 #include "fileio/parse.h"
@@ -14,12 +16,18 @@
 
 using namespace std;
 extern TraceUI *traceUI;
+std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
+
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
 // enter the main ray-tracing method, getting things started by plugging
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
+  ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+  scene->getCamera()->rayThrough(x, y, r);
+  vec3f result =
+      traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
 
   // antialiasing by supersampling and averaging the color
   if (traceUI->m_nSubsamplePixelSize > 1) {
@@ -28,7 +36,6 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
     double subpixel_width = 1.0 / (buffer_width * n_subpixels);
     double start_x = x - subpixel_width * (float(n_subpixels - 1) / 2);
     double start_y = y + subpixel_height * (float(n_subpixels - 1) / 2);
-    vec3f result(0, 0, 0);
     double jitter_x = 0;
     double jitter_y = 0;
 
@@ -45,7 +52,6 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
         double new_y = start_y - y * subpixel_height + jitter_y;
         double new_x = start_x + x * subpixel_width + jitter_x;
 
-        ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
         scene->getCamera()->rayThrough(new_x, new_y, r);
         stack<Material> stack;
         result +=
@@ -54,14 +60,67 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
       }
     }
     result /= (n_subpixels * n_subpixels);
-    return result;
   }
 
-  ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
-  scene->getCamera()->rayThrough(x, y, r);
   stack<Material> stack;
-  return traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth(), stack)
-      .clamp();
+
+  if (traceUI->m_nEnable_dof) {
+    // ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+    double focal_length = traceUI->m_nFocalLength;
+    double aperture = traceUI->m_nAperture;
+
+    vec3f focal_point = r.getDirection() * focal_length + r.getPosition();
+    std::vector<vec3f> samples =
+        sampleDistributed(r.getDirection(), aperture * 0.05, 19);
+    for (int i = 0; i < samples.size(); i++) {
+      vec3f new_origin = focal_point - focal_length /
+                                           samples[i].dot(r.getDirection()) *
+                                           samples[i];
+      ray new_ray(new_origin, samples[i]);
+      result +=
+          traceRay(scene, new_ray, vec3f(0.0, 0.0, 0.0), traceUI->getDepth())
+              .clamp();
+    }
+    result /= 20;
+  }
+
+  if (traceUI->m_nEnable_motion_blur) {
+    mat4f slightTranslation(
+        vec4f(1.0, 0.0, 0.0, 0.005), vec4f(0.0, 1.0, 0.0, 0.005),
+        vec4f(0.0, 0.0, 1.0, 0.005), vec4f(0.0, 0.0, 0.0, 1.0));
+
+    // backup the xforms
+    std::vector<mat4f> backupMatrices;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      backupMatrices.push_back((*itr)->getTransformNode()->getXform());
+    }
+
+    for (int i = 0; i < 120; i++) {
+      // update the position of all objects
+      for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+           itr != scene->endObjects(); itr++) {
+        mat4f backup = (*itr)->getTransformNode()->getXform();
+        (*itr)->getTransformNode()->setXform(slightTranslation * backup);
+      }
+
+      // trace a ray normally
+      ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
+      scene->getCamera()->rayThrough(x, y, r);
+      result +=
+          traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+    }
+    // restore the xforms after finishing up this pixel
+    int counter = 0;
+    for (list<Geometry *>::const_iterator itr = scene->beginObjects();
+         itr != scene->endObjects(); itr++) {
+      (*itr)->getTransformNode()->setXform(backupMatrices[counter]);
+      counter++;
+    }
+    result /= 120.0;
+  }
+
+  return result;
 }
 
 vec3f RayTracer::reflectionDirection(const ray &r, const isect &i) {
@@ -118,8 +177,18 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
                m.kr);
 
       // if there are not intersect object with the reflection ray
-      if (!scene->intersect(reflect_ray, i)) {
+      if (background && !scene->intersect(reflect_ray, i)) {
         I_r = getBackground(scene, reflect_ray);
+      }
+
+      if (traceUI->m_nEnable_glossy_reflection) {
+        std::vector<vec3f> vecs = sampleDistributed(R, 0.05, 49);
+        for (vec3f v : vecs) {
+          ray reflectRayL(r.at(i.t), v);
+          I_r += prod(traceRay(scene, reflectRayL, thresh, traceUI->getDepth()),
+                      m.kr);
+        }
+        I_r /= 50.f;
       }
 
       I = I + I_r;
@@ -165,12 +234,10 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
 
         vec3f I_t;
 
-        if (!scene->intersect(refracted_ray, i)) {
+        if (background && !scene->intersect(refracted_ray, i)) {
           I_t = getBackground(scene, refracted_ray);
         } else {
-          I_t = prod(
-              traceRay(scene, refracted_ray, thresh, depth - 1, material_stack),
-              m.kt);
+          I_t = prod(traceRay(scene, refracted_ray, thresh, depth - 1), m.kt);
         }
 
         I = I + I_t;
@@ -195,6 +262,7 @@ RayTracer::RayTracer() {
   buffer = NULL;
   buffer_width = buffer_height = 256;
   scene = NULL;
+  background = NULL;
 
   m_bSceneLoaded = false;
 }

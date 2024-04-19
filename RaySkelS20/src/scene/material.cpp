@@ -7,6 +7,15 @@
 #include <cmath>
 #include <math.h>
 extern TraceUI *traceUI;
+
+double WarnModel(SpotLight* l, const vec3f& P, const int specular_exp) {
+    cout << acos(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize())) << endl;
+    if ((acos(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize())) / 3.142) * 180.0 >= l->getCutoffAngle()[0]) {
+        return -1.0;
+    }//larger than cutoff angle(Warn Model)
+    else
+        return pow(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize()), specular_exp);
+}
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
 vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
@@ -39,19 +48,27 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
         continue;
     }
     auto v = *light;
-    if (dynamic_cast<SpotLight*>(u)) {
-        cout << "spotlight" << endl;
-    }
+
     vec3f L = l->getDirection(P).normalize();
     vec3f diffuse = kd * max(0.0, N.dot(L));
     vec3f R = -(2 * (N.dot(L)) * N - L);
     double verify = R.dot(V);
 
     vec3f specular = ks * pow(max(0.0, R.dot(V)), shininess * 128.0);
+    
+    //apply warn model
+    double warn = 1.0;
+    if (dynamic_cast<SpotLight*>(u)) {
+        cout << "spotlight" << endl;
+        SpotLight* spotL = dynamic_cast<SpotLight*>(u);
+        warn = WarnModel(spotL, P, traceUI->m_nWarnExponent);
+        if (warn < 0)
+            continue;
+    }
 
     I += prod(prod(l->getColor(P),
                    l->distanceAttenuation(P) * l->shadowAttenuation(P)),
-              (diffuse + specular));
+              (diffuse + specular))*warn;
     if(default_amb)
         I+= prod(ka, vec3f(1.0,1.0,1.0) *
             traceUI->m_nAmbientLightIntensity);
@@ -62,3 +79,5 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
 
   return I.clamp();
 }
+
+
