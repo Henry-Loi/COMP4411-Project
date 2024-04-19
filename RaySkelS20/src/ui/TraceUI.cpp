@@ -153,9 +153,57 @@ void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
       ((Fl_Check_Button *)o)->value();
 }
 
+void TraceUI::cb_WarnExponent(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nWarnExponent = ((Fl_Slider *)o)->value();
+}
+
 void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nEnableBackground =
       ((Fl_Check_Button *)o)->value();
+}
+
+void TraceUI::cb_softShadowLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_soft_shadow == true)
+    pUI->m_nEnable_soft_shadow = false;
+  else
+    pUI->m_nEnable_soft_shadow = true;
+}
+
+void TraceUI::cb_dofLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_dof == true)
+    pUI->m_nEnable_dof = false;
+  else
+    pUI->m_nEnable_dof = true;
+}
+
+void TraceUI::cb_MotionBlurLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_motion_blur == true)
+    pUI->m_nEnable_motion_blur = false;
+  else
+    pUI->m_nEnable_motion_blur = true;
+}
+
+void TraceUI::cb_glossyReflectionLightButton(Fl_Widget *o, void *v) {
+  TraceUI *pUI = ((TraceUI *)(o->user_data()));
+
+  if (pUI->m_nEnable_glossy_reflection == true)
+    pUI->m_nEnable_glossy_reflection = false;
+  else
+    pUI->m_nEnable_glossy_reflection = true;
+}
+
+void TraceUI::cb_focalLengthSlides(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nFocalLength = ((Fl_Slider *)o)->value();
+}
+
+void TraceUI::cb_apertureSlides(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nAperture = ((Fl_Slider *)o)->value();
 }
 
 void TraceUI::cb_render(Fl_Widget *o, void *v) {
@@ -284,12 +332,19 @@ TraceUI::TraceUI() {
   m_nAdaptiveThresh = 0.0;
 
   m_nEnableBackground = false;
+  m_nWarnExponent = false;
+  m_nEnable_soft_shadow = false;
+  m_nEnable_dof = false;
+  m_nFocalLength = 2;
+  m_nAperture = 2;
+  m_nEnable_motion_blur = false;
+  m_nEnable_glossy_reflection = false;
 
-  m_mainWindow = new Fl_Window(100, 40, 400, 400, "Ray <Not Loaded>");
+  m_mainWindow = new Fl_Window(100, 40, 390, 500, "Ray <Not Loaded>");
   m_mainWindow->user_data(
       (void *)(this)); // record self to be used by static callback functions
   // install menu bar
-  m_menubar = new Fl_Menu_Bar(0, 0, 400, 25);
+  m_menubar = new Fl_Menu_Bar(0, 0, 390, 25);
   m_menubar->menu(menuitems);
 
   // install slider depth
@@ -412,7 +467,7 @@ TraceUI::TraceUI() {
   m_distanceScaleSlider->callback(cb_distanceScaleSlides);
 
   m_adaptivethreshSlider =
-      new Fl_Value_Slider(10, 230, 180, 20, "Adaptive Termination Threshold");
+      new Fl_Value_Slider(10, 230, 180, 20, "Adaptive Termination Thresh");
   m_adaptivethreshSlider->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_adaptivethreshSlider->type(FL_HOR_NICE_SLIDER);
@@ -450,9 +505,72 @@ TraceUI::TraceUI() {
   m_SubSampleJitterButton->callback(cb_subsamplejitterbutton);
 
   m_enableBackgroundButton =
-      new Fl_Check_Button(10, 330, 20, 20, "Enable External Background");
+      new Fl_Check_Button(190, 305, 20, 20, "Enable External Background");
   m_enableBackgroundButton->user_data((void *)(this));
   m_enableBackgroundButton->callback(cb_enablebackgroundbutton);
+
+  m_SoftShadowLightButton =
+      new Fl_Light_Button(10, 330, 110, 20, "&Soft Shadow");
+  m_SoftShadowLightButton->user_data((void *)(this));
+  m_SoftShadowLightButton->callback(cb_softShadowLightButton);
+  m_SoftShadowLightButton->value(false);
+
+  m_MotionBlurLightButton =
+      new Fl_Light_Button(130, 330, 100, 20, "&Motion Blur");
+  m_MotionBlurLightButton->user_data((void *)(this));
+  m_MotionBlurLightButton->callback(cb_MotionBlurLightButton);
+  m_MotionBlurLightButton->value(false);
+
+  m_GlossyReflectionLightButton =
+      new Fl_Light_Button(240, 330, 80, 20, "&Glossy");
+  m_GlossyReflectionLightButton->user_data((void *)(this));
+  m_GlossyReflectionLightButton->callback(cb_glossyReflectionLightButton);
+  m_GlossyReflectionLightButton->value(false);
+
+  m_WarnExponentSlider =
+      new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
+  m_WarnExponentSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
+  m_WarnExponentSlider->labelfont(FL_COURIER);
+  m_WarnExponentSlider->labelsize(12);
+  m_WarnExponentSlider->minimum(0);
+  m_WarnExponentSlider->maximum(32);
+  m_WarnExponentSlider->step(1);
+  m_WarnExponentSlider->value(0);
+  m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
+  m_WarnExponentSlider->callback(cb_WarnExponent);
+
+  m_DofLightButton = new Fl_Light_Button(10, 380, 70, 20, "&DOF");
+  m_DofLightButton->user_data((void *)(this));
+  m_DofLightButton->callback(cb_dofLightButton);
+  m_DofLightButton->value(false);
+
+  m_SubSameplePixelSlider = new Fl_Value_Slider(10, 405, 120, 20, "F Length");
+  m_SubSameplePixelSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_SubSameplePixelSlider->type(FL_HOR_NICE_SLIDER);
+  m_SubSameplePixelSlider->labelfont(FL_COURIER);
+  m_SubSameplePixelSlider->labelsize(12);
+  m_SubSameplePixelSlider->minimum(1);
+  m_SubSameplePixelSlider->maximum(5);
+  m_SubSameplePixelSlider->step(0.1);
+  m_SubSameplePixelSlider->value(2);
+  m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
+  m_SubSameplePixelSlider->callback(cb_focalLengthSlides);
+
+  m_SubSameplePixelSlider = new Fl_Value_Slider(200, 405, 120, 20, "Aperture ");
+  m_SubSameplePixelSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_SubSameplePixelSlider->type(FL_HOR_NICE_SLIDER);
+  m_SubSameplePixelSlider->labelfont(FL_COURIER);
+  m_SubSameplePixelSlider->labelsize(12);
+  m_SubSameplePixelSlider->minimum(1);
+  m_SubSameplePixelSlider->maximum(5);
+  m_SubSameplePixelSlider->step(0.1);
+  m_SubSameplePixelSlider->value(2);
+  m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
+  m_SubSameplePixelSlider->callback(cb_apertureSlides);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);

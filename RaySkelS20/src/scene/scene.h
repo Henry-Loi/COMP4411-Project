@@ -88,6 +88,14 @@ public:
     return (normi * v).normalize();
   }
 
+  mat4f getXform() const { return xform; }
+
+  void setXform(const mat4f &xform) {
+    this->xform = xform;
+    inverse = xform.inverse();
+    normi = xform.upper33().inverse().transpose();
+  }
+
 protected:
   // protected so that users can't directly construct one of these...
   // force them to use the createChild() method.  Note that they CAN
@@ -168,6 +176,7 @@ public:
   virtual BoundingBox ComputeLocalBoundingBox() { return BoundingBox(); }
 
   void setTransform(TransformNode *transform) { this->transform = transform; };
+  TransformNode *getTransformNode() { return transform; }
 
   Geometry(Scene *scene) : SceneElement(scene) {}
 
@@ -239,6 +248,11 @@ public:
   Camera *getCamera() { return &camera; }
 
   vec3f ambientLightColor;
+
+  list<Geometry *>::const_iterator beginObjects() const {
+    return objects.begin();
+  }
+  list<Geometry *>::const_iterator endObjects() const { return objects.end(); }
 
 private:
   list<Geometry *> objects;

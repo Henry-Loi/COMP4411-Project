@@ -15,6 +15,7 @@
 #include <FL/Fl_Window.H>
 
 #include <FL/fl_file_chooser.H> // FLTK file chooser
+#include <sys/stat.h>
 
 #include "TraceGLWindow.h"
 
@@ -43,6 +44,7 @@ public:
 
   // subsample pixel size
   Fl_Slider *m_SubSameplePixelSlider;
+  Fl_Slider *m_WarnExponentSlider;
   Fl_Check_Button *m_SubSampleJitterButton;
 
   // background image
@@ -52,6 +54,13 @@ public:
 
   Fl_Button *m_renderButton;
   Fl_Button *m_stopButton;
+
+  Fl_Light_Button *m_SoftShadowLightButton;
+  Fl_Light_Button *m_DofLightButton;
+
+  Fl_Light_Button *m_MotionBlurLightButton;
+
+  Fl_Light_Button *m_GlossyReflectionLightButton;
 
   TraceGLWindow *m_traceGlWindow;
 
@@ -79,6 +88,21 @@ public:
   bool m_nSubsampleJitter;
 
   bool m_nEnableBackground;
+  int m_nWarnExponent;
+
+  // soft shadow
+  bool m_nEnable_soft_shadow;
+
+  // depth of field
+  bool m_nEnable_dof;
+  double m_nFocalLength;
+  double m_nAperture;
+
+  // motion blur
+  bool m_nEnable_motion_blur;
+
+  // glossy reflection
+  bool m_nEnable_glossy_reflection;
 
 private:
   RayTracer *raytracer;
@@ -128,6 +152,23 @@ private:
 
   // overide distanceatten
   static void cb_overideDistanceAttenConst(Fl_Widget *o, void *v);
+
+  // warnmodel
+  static void cb_WarnExponent(Fl_Widget *o, void *v);
+
+  // soft shadow
+  static void cb_softShadowLightButton(Fl_Widget *o, void *v);
+
+  // depth of field
+  static void cb_dofLightButton(Fl_Widget *o, void *v);
+  static void cb_focalLengthSlides(Fl_Widget *o, void *v);
+  static void cb_apertureSlides(Fl_Widget *o, void *v);
+
+  // motion blur
+  static void cb_MotionBlurLightButton(Fl_Widget *o, void *v);
+
+  // glossy reflection
+  static void cb_glossyReflectionLightButton(Fl_Widget *o, void *v);
 };
 
 #endif
