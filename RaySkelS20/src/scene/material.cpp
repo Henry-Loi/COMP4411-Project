@@ -3,18 +3,27 @@
 #include "ray.h"
 
 #include "../ui/TraceUI.h"
-#include <iostream>
 #include <cmath>
+#include <iostream>
 #include <math.h>
+
 extern TraceUI *traceUI;
 
-double WarnModel(SpotLight* l, const vec3f& P, const int specular_exp) {
-    cout << acos(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize())) << endl;
-    if ((acos(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize())) / 3.142) * 180.0 >= l->getCutoffAngle()[0]) {
-        return -1.0;
-    }//larger than cutoff angle(Warn Model)
-    else
-        return pow(l->getDirection(P).normalize().dot(l->getSpotDirection().normalize()), specular_exp);
+double WarnModel(SpotLight *l, const vec3f &P, const int specular_exp) {
+  cout << acos(l->getDirection(P).normalize().dot(
+              l->getSpotDirection().normalize()))
+       << endl;
+  if ((acos(l->getDirection(P).normalize().dot(
+           l->getSpotDirection().normalize())) /
+       3.142) *
+          180.0 >=
+      l->getCutoffAngle()[0]) {
+    return -1.0;
+  } // larger than cutoff angle(Warn Model)
+  else
+    return pow(
+        l->getDirection(P).normalize().dot(l->getSpotDirection().normalize()),
+        specular_exp);
 }
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
@@ -31,21 +40,19 @@ vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTr
   // You will need to call both distanceAttenuation() and shadowAttenuation()
   // somewhere in your code in order to compute shadows and light falloff.
 
-  vec3f I = ke + prod(ka, scene->ambientLightColor *
-                              traceUI->m_nAmbientLightIntensity);
+  vec3f I = ke;
   vec3f P = r.at(i.t);
   vec3f N = i.N.normalize();
   vec3f V = (r.getDirection()).normalize();
-  bool default_amb = TRUE; //if no ambient light, use the one from the Trace UI
+  bool default_amb = true; // if no ambient light, use the one from the Trace UI
   for (list<Light *>::const_iterator light = scene->beginLights();
        light != scene->endLights(); light++) {
     auto l = *light;
     auto u = *light;
-    if (dynamic_cast<AmbientLight*>(u)) {
-        I += prod(ka, l->getColor(P) *
-            traceUI->m_nAmbientLightIntensity);
-        default_amb = FALSE;
-        continue;
+    if (dynamic_cast<AmbientLight *>(u)) {
+      I += prod(ka, l->getColor(P) * traceUI->m_nAmbientLightIntensity);
+      default_amb = false;
+      continue;
     }
     auto v = *light;
     vec3f m_diffuse = vec3f(0.0, 0.0, 0.0);
@@ -60,29 +67,29 @@ vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTr
     double verify = R.dot(V);
 
     vec3f specular = ks * pow(max(0.0, R.dot(V)), shininess * 128.0);
-    
-    //apply warn model
+
+    // apply warn model
     double warn = 1.0;
-    if (dynamic_cast<SpotLight*>(u)) {
-        cout << "spotlight" << endl;
-        SpotLight* spotL = dynamic_cast<SpotLight*>(u);
-        warn = WarnModel(spotL, P, traceUI->m_nWarnExponent);
-        if (warn < 0)
-            continue;
+    if (dynamic_cast<SpotLight *>(u)) {
+      cout << "spotlight" << endl;
+      SpotLight *spotL = dynamic_cast<SpotLight *>(u);
+      warn = WarnModel(spotL, P, traceUI->m_nWarnExponent);
+      if (warn < 0)
+        continue;
     }
 
     I += prod(prod(l->getColor(P),
                    l->distanceAttenuation(P) * l->shadowAttenuation(P)),
-              (diffuse + specular))*warn;
-    if(default_amb)
-        I+= prod(ka, vec3f(1.0,1.0,1.0) *
-            traceUI->m_nAmbientLightIntensity);
-    //// std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R <<
-    //// std::endl;
-    //std::cout << "DIstance atten: " << l->distanceAttenuation(P) << std::endl;
+              (diffuse + specular)) *
+         warn;
+    if (default_amb)
+      I += prod(ka,
+                scene->ambientLightColor * traceUI->m_nAmbientLightIntensity);
+    //// std::cout << "  L = " << L << "   V =" << V << " N = "<<N <<" R = "<<R
+    ///<< / std::endl;
+    // std::cout << "DIstance atten: " << l->distanceAttenuation(P) <<
+    // std::endl;
   }
 
   return I.clamp();
 }
-
-

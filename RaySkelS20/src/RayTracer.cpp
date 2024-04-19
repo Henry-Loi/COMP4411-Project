@@ -2,6 +2,7 @@
 
 #include <Fl/fl_ask.h>
 #include <list>
+#include <stack>
 #include <stdlib.h>
 #include <vector>
 
@@ -14,6 +15,7 @@
 
 #include "ui/TraceUI.h"
 
+using namespace std;
 extern TraceUI *traceUI;
 std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 
@@ -23,10 +25,14 @@ std::vector<vec3f> sampleDistributed(vec3f c, double r, int count);
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of
 // 0.
 vec3f RayTracer::trace(Scene *scene, double x, double y) {
+  stack<Material> stack;
+  stack.push(Material::getAir());
+
   ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
   scene->getCamera()->rayThrough(x, y, r);
   vec3f result =
-      traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+      traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth(), stack)
+          .clamp();
 
   // antialiasing by supersampling and averaging the color
   if (traceUI->m_nSubsamplePixelSize > 1) {
@@ -52,8 +58,9 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
         double new_x = start_x + x * subpixel_width + jitter_x;
 
         scene->getCamera()->rayThrough(new_x, new_y, r);
-        result += traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth())
-                      .clamp();
+        result +=
+            traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth(), stack)
+                .clamp();
       }
     }
     result /= (n_subpixels * n_subpixels);
@@ -72,9 +79,9 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
                                            samples[i].dot(r.getDirection()) *
                                            samples[i];
       ray new_ray(new_origin, samples[i]);
-      result +=
-          traceRay(scene, new_ray, vec3f(0.0, 0.0, 0.0), traceUI->getDepth())
-              .clamp();
+      result += traceRay(scene, new_ray, vec3f(0.0, 0.0, 0.0),
+                         traceUI->getDepth(), stack)
+                    .clamp();
     }
     result /= 20;
   }
@@ -103,7 +110,8 @@ vec3f RayTracer::trace(Scene *scene, double x, double y) {
       ray r(vec3f(0, 0, 0), vec3f(0, 0, 0));
       scene->getCamera()->rayThrough(x, y, r);
       result +=
-          traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth()).clamp();
+          traceRay(scene, r, vec3f(1.0, 1.0, 1.0), traceUI->getDepth(), stack)
+              .clamp();
     }
     // restore the xforms after finishing up this pixel
     int counter = 0;
@@ -124,30 +132,45 @@ vec3f RayTracer::reflectionDirection(const ray &r, const isect &i) {
   return R.normalize();
 }
 
-vec3f RayTracer::refractionDirection(const ray &r, const isect &i, double n,
-                                     bool &internal_refraction) {
+vec3f RayTracer::refractionDirection(const ray &r, const isect &i, double n1,
+                                     double n2, vec3f norm) {
   // equation: T = nD - (n(D dot N) + sqrt(1 - n^2(1 - (D dot N)^2)))N
-  double cos_I = r.getDirection().dot(i.N);
-  double sin_theta = n * n * (1.0 - cos_I * cos_I);
-  if (sin_theta > 1.0) {
-    internal_refraction = true;
-  }
-  double cos_theta2 = sqrt(1.0 - sin_theta);
-  double cos_theta = sqrt(1.0 - sin_theta);
-  vec3f refraction = n * r.getDirection() + (n * cos_I - cos_theta) * i.N;
+  vec3f D = r.getDirection();
 
-  return refraction.normalize();
+  if (abs(abs(norm * D) - 1) < RAY_EPSILON)
+    return D;
+
+  double sinTheta1 = sqrt(1 - pow(norm * D, 2));
+  double sinTheta2 = (n1 * sinTheta1) / n2;
+  double theta1 = asin(sinTheta1);
+  double theta2 = asin(sinTheta2);
+  double sinTheta3 = sin(abs(theta1 - theta2));
+
+  if (n1 == n2) {
+    return D;
+  } else if (n1 > n2) {
+    double critical = n2 / n1;
+
+    if (critical - sinTheta1 > RAY_EPSILON) {
+      double sinAlpha = sin(3.1416 - theta2);
+      double fac = sinAlpha / sinTheta3;
+
+      return -(-D * fac + (-norm)).normalize();
+    } else {
+      // TIR
+      return vec3f(0.0, 0.0, 0.0);
+    }
+  } else {
+    double fac = sinTheta2 / sinTheta3;
+    return (D * fac + (-norm)).normalize();
+  }
 }
 
 // Do recursive ray tracing!  You'll want to insert a lot of code here
 // (or places called from here) to handle reflection, refraction, etc etc.
 vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
-                          int depth) {
+                          int depth, stack<Material> material_stack) {
   isect i;
-
-  // if (depth > traceUI->getDepth()) {
-  //   return vec3f(0.0, 0.0, 0.0);
-  // }
 
   if (scene->intersect(r, i)) {
     // YOUR CODE HERE
@@ -180,7 +203,9 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
 
       vec3f R = reflectionDirection(r, i);
       ray reflect_ray = ray(r.at(i.t), R);
-      vec3f I_r = prod(traceRay(scene, reflect_ray, thresh, depth - 1), m.kr);
+      vec3f I_r =
+          prod(traceRay(scene, reflect_ray, thresh, depth - 1, material_stack),
+               m.kr);
 
       // if there are not intersect object with the reflection ray
       if (background && !scene->intersect(reflect_ray, i)) {
@@ -191,7 +216,8 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
         std::vector<vec3f> vecs = sampleDistributed(R, 0.05, 49);
         for (vec3f v : vecs) {
           ray reflectRayL(r.at(i.t), v);
-          I_r += prod(traceRay(scene, reflectRayL, thresh, traceUI->getDepth()),
+          I_r += prod(traceRay(scene, reflectRayL, thresh, traceUI->getDepth(),
+                               material_stack),
                       m.kr);
         }
         I_r /= 50.f;
@@ -202,35 +228,43 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
       // if there are no refraction return the phong model + reflect color
       if (!m.kt.iszero()) {
         // refraction
-        bool internal_refraction = false;
+        bool internal_reflection = false;
 
-        double n = 0.0;
-        double refract_index = 1.0;
+        double n_1 = material_stack.top().index;
+        double n_2 = m.index;
+        vec3f norm = i.N;
 
-        if (i.N * r.getDirection() < -RAY_EPSILON) {
-          n = refract_index / m.index;
+        // update the stack and the refractive index
+        if (material_stack.empty()) {
+          material_stack.push(m);
         } else {
-          n = m.index / refract_index;
-          i.N = -i.N; // reverse the normal
-        }
-
-        vec3f T = refractionDirection(r, i, m.index, internal_refraction);
-
-        if (!internal_refraction) {
-          ray r_refract = ray(r.at(i.t), T);
-          vec3f I_t;
-
-          if (background && !scene->intersect(r_refract, i)) {
-            I_t = getBackground(scene, r_refract);
+          Material top_material = material_stack.top();
+          if (top_material.index == m.index) {
+            material_stack.pop();
+            n_2 = material_stack.empty() ? 1.0 : top_material.index;
+            norm = -norm;
           } else {
-            I_t = prod(traceRay(scene, r_refract, thresh, depth - 1), m.kt);
+            n_2 = m.index;
+            material_stack.push(m);
           }
-
-          I = I - prod(I, m.kt) + I_t;
         }
+
+        vec3f T = refractionDirection(r, i, n_1, n_2, norm);
+        ray refracted_ray(r.at(i.t), T);
+
+        vec3f I_t;
+
+        if (background && !scene->intersect(refracted_ray, i)) {
+          I_t = getBackground(scene, refracted_ray);
+        } else {
+          I_t = prod(
+              traceRay(scene, refracted_ray, thresh, depth - 1, material_stack),
+              m.kt);
+        }
+
+        I = I + I_t;
       }
     }
-
     return I;
 
   } else {
@@ -381,4 +415,29 @@ vec3f RayTracer::getBackground(Scene *scene, const ray &r) {
   return vec3f(background[(yGrid * bg_width + xGrid) * 3] / 255.0,
                background[(yGrid * bg_width + xGrid) * 3 + 1] / 255.0,
                background[(yGrid * bg_width + xGrid) * 3 + 2] / 255.0);
+}
+
+bool RayTracer::inStack(stack<Material> stk, Material m) {
+  while (!stk.empty()) {
+    if (stk.top().identity == m.identity)
+      return true;
+    stk.pop();
+  }
+  return false;
+}
+
+void RayTracer::removeFromStack(stack<Material> &stk, Material m) {
+  stack<Material> new_stack;
+  while (!stk.empty()) {
+    if (stk.top().identity == m.identity) {
+      stk.pop();
+      continue;
+    }
+    new_stack.push(stk.top());
+    stk.pop();
+  }
+  while (!new_stack.empty()) {
+    stk.push(new_stack.top());
+    new_stack.pop();
+  }
 }
