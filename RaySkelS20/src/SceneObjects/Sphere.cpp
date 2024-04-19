@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "Sphere.h"
-
+#include <iostream>
 bool Sphere::intersectLocal( const ray& r, isect& i ) const
 {
 	vec3f v = -r.getPosition();
@@ -32,5 +32,10 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 	}
 
 	return true;
+}
+
+vec3f Sphere::MapToTexture(TextureMap* textMap, vec3f pos) const {
+	std::cout << " Sphere Map2Texture" << std::endl;
+	return textMap->getSphereColor(transform->globalToLocalCoords(pos));
 }
 

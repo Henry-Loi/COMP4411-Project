@@ -11,11 +11,15 @@ public:
     bool loadTexture(char*);
     bool LoadMaterialTexture(char* orig_file, unsigned char*& target, int& width, int& height);
     vec3f getSquareColor(const vec3f P);
+    vec3f getSphereColor(const vec3f P);
 
     int texImageWidth = 0;
     int texImageHeight = 0;
 public:
     unsigned char* texImage = nullptr;
     GLuint texImageId = NULL;
+private:
+    const double RAY_EPSILON = 0.00001;
+    const double NORMAL_EPSILON = 0.00001;
 };
 

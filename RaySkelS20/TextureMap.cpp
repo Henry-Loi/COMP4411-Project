@@ -46,3 +46,30 @@ vec3f TextureMap::getSquareColor(const vec3f P) {
     else
         return vec3f(1.0, 1.0, 1.0);
 }
+
+vec3f TextureMap::getSphereColor(const vec3f P) {
+    vec3f Pos(P[2], P[0], P[1]);
+    vec3f S_p(0.0, 0.0, 1.0);
+    vec3f S_e(1.0, 0.0, 0.0);
+    double phi = acos(-Pos.dot(S_p));
+    double v = phi / 3.142;
+    double sita = acos(S_e.dot(Pos) / sin(phi)) / (2 * 3.142);
+    double u = sita;
+    if ((S_p.cross(S_e)).dot(Pos) < 0)
+        u = 1 - sita;
+    if (abs(v - 1.0) < 0.001|| abs(v) < 0.001)
+        u = 0.0;
+    int X_pos = u* (texImageWidth - 1);
+    int Y_pos = v* (texImageHeight - 1);
+    std::cout << "POS" << P << "X:" << X_pos << "Y:" << Y_pos << std::endl;
+    std::cout << "Phi:" << phi << "SIta:" << sita << std::endl;
+    if (texImage != NULL) {
+        int index = Y_pos * (texImageWidth * 3) + (X_pos * 3);
+        if (P[2] < 0.5)
+            return vec3f(double(texImage[index]) / 255.0, double(texImage[index + 1]) / 255.0, double(texImage[index + 2]) / 255.0);
+        else
+            return vec3f(0.0, 0.0, 0.0);
+    }
+    else
+        return vec3f(1.0, 1.0, 1.0);
+}

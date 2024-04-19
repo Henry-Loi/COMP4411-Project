@@ -407,9 +407,8 @@ static Material *processMaterial(Obj *child, mmap *bindings)
       std::cout << child->getTypeName() << std::endl;
       Obj* di = getField(child, "diffuse");
       std::cout << di->getTypeName() << std::endl;
-      std::cout << (di->getName() == "map") << std::endl;
-      std::cout << getField(child, "diffuse")->getName()  << std::endl;
-          if (getField(child, "diffuse")->getName() !="map") {
+
+          if (di->getTypeName() == "tuple") {
               std::cout << "no_map" << std::endl;
             diffuse = tupleToVec(getField(child, "diffuse"));
           }
