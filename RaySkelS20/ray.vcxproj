@@ -300,6 +300,10 @@
   <ItemGroup>
     <None Include="Makefile" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="simpleSamples\worldmap.bmp" />
+    <Image Include="worldmap.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -180,4 +180,12 @@
   <ItemGroup>
     <None Include="Makefile" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="simpleSamples\worldmap.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="worldmap.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

@@ -41,6 +41,5 @@ bool Square::intersectLocal( const ray& r, isect& i ) const
 }
 
 vec3f Square::MapToTexture(TextureMap* textMap, vec3f pos) const {
-	std::cout << "Square Map2Texture" << std::endl;
 	return textMap->getSquareColor(transform->globalToLocalCoords(pos));
 }

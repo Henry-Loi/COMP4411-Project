@@ -8,17 +8,13 @@ camera {
 }
 
 
-point_light
-{
-	position = (0, 0, 2);
-	colour = (1.0, 1.0, 1.0);
-
-}
+point_light{position = (0, 0, 2);
+	colour = (1.0, 1.0, 1.0);}
 
 scale(4.0,2.0,1.0,
 	square {
   		material = {
-   		diffuse = (1.0,1.0,1.0);
+		diffuse = map "worldmap.bmp" ; 
   		}
 	}
 )

@@ -14,7 +14,7 @@ bool TextureMap::loadTexture(char* filename) {
     // Seek to the beginning of the file and read the header (assuming BMP format)
     texImage = readBMP(filename, texImageWidth, texImageHeight);
     std::cout << "WIDTH_HEIGHT" << texImageWidth << " " << texImageHeight << std::endl;
-    if (texImage== nullptr) {
+    if (texImage== NULL) {
         // pop alert
         fl_alert("Error reading texture file");
         return false;
