@@ -16,6 +16,7 @@ using namespace std;
 #include "camera.h"
 #include "material.h"
 #include "ray.h"
+#include "../TextureMap.h"
 
 class Light;
 class Scene;
@@ -193,7 +194,7 @@ class SceneObject : public Geometry {
 public:
   virtual const Material &getMaterial() const = 0;
   virtual void setMaterial(Material *m) = 0;
-
+  virtual vec3f MapToTexture(TextureMap* textMap, vec3f pos) const {  return vec3f(1.0, 1.0, 1.0); }
 protected:
   SceneObject(Scene *scene) : Geometry(scene) {}
 };
@@ -209,7 +210,6 @@ public:
 
   virtual const Material &getMaterial() const { return *material; }
   virtual void setMaterial(Material *m) { material = m; }
-
 protected:
   MaterialSceneObject(Scene *scene, Material *mat)
       : SceneObject(scene), material(mat) {}

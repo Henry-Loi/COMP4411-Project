@@ -2,6 +2,7 @@
 #define __SQUARE_H__
 
 #include "../scene/scene.h"
+#include "../TextureMap.h"
 
 class Square
 	: public MaterialSceneObject
@@ -14,7 +15,7 @@ public:
 
 	virtual bool intersectLocal( const ray& r, isect& i ) const;
 	virtual bool hasBoundingBoxCapability() const { return true; }
-
+	vec3f MapToTexture(TextureMap* textMap, vec3f pos)const ;
     virtual BoundingBox ComputeLocalBoundingBox()
     {
         BoundingBox localbounds;

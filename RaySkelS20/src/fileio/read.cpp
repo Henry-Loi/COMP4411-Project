@@ -11,7 +11,7 @@
 
 #include "parse.h"
 #include "read.h"
-
+#include "bitmap.h"
 #include "../SceneObjects/Box.h"
 #include "../SceneObjects/Cone.h"
 #include "../SceneObjects/Cylinder.h"
@@ -20,6 +20,7 @@
 #include "../SceneObjects/trimesh.h"
 #include "../scene/light.h"
 #include "../scene/scene.h"
+#include "../ui/TraceUI.h"
 
 typedef map<string, Material *> mmap;
 
@@ -36,6 +37,8 @@ static void processCamera(Obj *child, Scene *scene);
 static Material *getMaterial(Obj *child, const mmap &bindings);
 static Material *processMaterial(Obj *child, mmap *bindings = NULL);
 static void verifyTuple(const mytuple &tup, size_t size);
+static vec3f readColor(Obj* child);
+extern TraceUI* traceUI;
 
 Scene *readScene(const string &filename) {
   ifstream ifs(filename.c_str());
@@ -398,7 +401,26 @@ static Material *processMaterial(Obj *child, mmap *bindings)
     mat->ks = tupleToVec(getField(child, "specular"));
   }
   if (hasField(child, "diffuse")) {
-    mat->kd = tupleToVec(getField(child, "diffuse"));
+      //load bitmap
+      vec3f diffuse(0.0, 0.0, 0.0);
+      std::cout << "diffuse" << std::endl;
+      std::cout << child->getTypeName() << std::endl;
+      Obj* di = getField(child, "diffuse");
+      std::cout << di->getTypeName() << std::endl;
+
+          if (di->getTypeName() == "tuple") {
+              std::cout << "no_map" << std::endl;
+            diffuse = tupleToVec(getField(child, "diffuse"));
+          }
+          else {
+              std::cout << "run map" << std::endl;
+              string str = getField(child, "diffuse")->getChild()->getString();
+              std::cout << str << std::endl;
+              char* charPtr = new char[str.size() + 1]; // +1 for null-terminator
+              strcpy(charPtr, str.data());
+              traceUI->texMap->loadTexture(charPtr);
+          }
+          mat->kd = diffuse;
   }
   if (hasField(child, "reflective")) {
     mat->kr = tupleToVec(getField(child, "reflective"));
@@ -477,6 +499,8 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
 
     throw ParseError(string(oss.str()));
   }
+  //color = tupleToVec(getColorField(child));
+
 
   if (name == "directional_light") {
     if (child == NULL) {

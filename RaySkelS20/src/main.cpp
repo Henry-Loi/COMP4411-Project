@@ -66,6 +66,7 @@
 #include "RayTracer.h"
 #include "ui/TraceUI.h"
 
+
 #include "fileio/bitmap.h"
 
 // ***********************************************************
@@ -77,8 +78,9 @@ extern char *optarg;
 extern int optind, opterr, optopt;
 // ***********************************************************
 
-RayTracer *theRayTracer;
-TraceUI *traceUI;
+RayTracer* theRayTracer;
+TraceUI* traceUI;
+TextureMap* texMap;
 
 //
 // options from program parameters
@@ -150,18 +152,19 @@ bool processArgs(int argc, char **argv) {
 int main(int argc, char **argv) {
   progname = argv[0];
 
-  if (argc != 1) {
-    // text mode
-    if (!processArgs(argc, argv)) {
-      usage();
-      exit(1);
-    }
-
-    theRayTracer = new RayTracer();
-    theRayTracer->loadScene(rayName);
-
-    if (theRayTracer->sceneLoaded()) {
-      g_height = (int)(g_width / theRayTracer->aspectRatio() + 0.5);
+	if (argc!=1) {
+		// text mode
+		if (!processArgs(argc, argv)) {
+			usage();
+			exit(1);
+		}
+		
+		theRayTracer=new RayTracer();
+		texMap = new TextureMap();
+		theRayTracer->loadScene(rayName);
+	
+		if (theRayTracer->sceneLoaded()) {
+			g_height = (int)(g_width / theRayTracer->aspectRatio() + 0.5);
 
       theRayTracer->traceSetup(g_width, g_height);
 

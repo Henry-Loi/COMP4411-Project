@@ -18,7 +18,8 @@ point_light
 scale(4.0,2.0,1.0,
 	square {
   		material = {
-   		diffuse = (1.0,1.0,1.0);
+		diffuse = map( "checkerboard.bmp" ); 
+
   		}
 	}
 )

@@ -1,6 +1,8 @@
 #include <cmath>
 
 #include "Square.h"
+#include <iostream>
+
 
 bool Square::intersectLocal( const ray& r, isect& i ) const
 {
@@ -36,4 +38,8 @@ bool Square::intersectLocal( const ray& r, isect& i ) const
 	}
 
 	return true;
+}
+
+vec3f Square::MapToTexture(TextureMap* textMap, vec3f pos) const {
+	return textMap->getSquareColor(transform->globalToLocalCoords(pos));
 }

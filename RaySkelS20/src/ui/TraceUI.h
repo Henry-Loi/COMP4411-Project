@@ -52,6 +52,7 @@ public:
 
   Fl_Check_Button *m_distAttenOverrideButton;
 
+  Fl_Check_Button *m_TextureButton;
   Fl_Button *m_renderButton;
   Fl_Button *m_stopButton;
 
@@ -68,6 +69,8 @@ public:
   void show();
 
   void setRayTracer(RayTracer *tracer);
+  void setTexMap(TextureMap* texMap);
+  TextureMap* texMap = new TextureMap;
 
   int getSize();
   int getDepth();
@@ -83,6 +86,7 @@ public:
   // adaptive termination threshold
   double m_nAdaptiveThresh;
   bool m_nOverrideDistAtten;
+  bool m_nTexture;
 
   int m_nSubsamplePixelSize;
   bool m_nSubsampleJitter;
@@ -106,6 +110,7 @@ public:
 
 private:
   RayTracer *raytracer;
+
 
   int m_nSize;
   int m_nDepth;
@@ -167,6 +172,13 @@ private:
 
   // glossy reflection
   static void cb_glossyReflectionLightButton(Fl_Widget *o, void *v);
+  //warnmodel
+  static void cb_WarnExponent(Fl_Widget* o, void* v);
+
+  //Load Texture
+  static void cb_load_texture(Fl_Menu_* o, void* v);
+  static void cb_Texture(Fl_Widget* o, void* v);
+
 };
 
 #endif

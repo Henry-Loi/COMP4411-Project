@@ -3,6 +3,7 @@
 #include "scene.h"
 #include "light.h"
 #include "../ui/TraceUI.h"
+
 extern TraceUI* traceUI;
 
 void BoundingBox::operator=(const BoundingBox& target)

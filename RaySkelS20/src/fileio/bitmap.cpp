@@ -10,7 +10,7 @@
 //
 
 #include "bitmap.h"
- 
+#include <iostream> 
 BMP_BITMAPFILEHEADER bmfh; 
 BMP_BITMAPINFOHEADER bmih; 
 
@@ -32,7 +32,7 @@ unsigned char *readBMP(char *fname, int& width, int& height)
 	pos = bmfh.bfOffBits; 
  
 	fread( &bmih, sizeof(BMP_BITMAPINFOHEADER), 1, file ); 
- 
+	std::cout << "Stage 1" << std::endl;
 	// error checking
 	if ( bmfh.bfType!= 0x4d42 ) {	// "BM" actually
 		return NULL;
@@ -48,7 +48,7 @@ unsigned char *readBMP(char *fname, int& width, int& height)
  
 	width = bmih.biWidth; 
 	height = bmih.biHeight; 
- 
+	std::cout << "Stage 2" << std::endl;
 	int padWidth = width * 3; 
 	int pad = 0; 
 	if ( padWidth % 4 != 0 ) 
@@ -59,14 +59,13 @@ unsigned char *readBMP(char *fname, int& width, int& height)
 	int bytes = height*padWidth; 
  
 	unsigned char *data = new unsigned char [bytes]; 
-
-	int foo = fread( data, bytes, 1, file ); 
 	
+	int foo = fread( data, bytes, 1, file ); 
 	if (!foo) {
 		delete [] data;
 		return NULL;
 	}
-
+	std::cout << "Stage 3" << std::endl;
 	fclose( file );
 	
 	// shuffle bitmap data such that it is (R,G,B) tuples in row-major order
@@ -94,7 +93,7 @@ unsigned char *readBMP(char *fname, int& width, int& height)
 		in += pad;
 	}
 			  
-	return data; 
+	return data;
 } 
  
 void writeBMP(char *iname, int width, int height, unsigned char *data) 
