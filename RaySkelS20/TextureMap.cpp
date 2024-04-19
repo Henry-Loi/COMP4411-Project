@@ -19,7 +19,6 @@ bool TextureMap::loadTexture(char* filename) {
         fl_alert("Error reading texture file");
         return false;
     }
-    std::cout << texImage << std::endl;
     return true;
 }
 
@@ -61,8 +60,6 @@ vec3f TextureMap::getSphereColor(const vec3f P) {
         u = 0.0;
     int X_pos = u* (texImageWidth - 1);
     int Y_pos = v* (texImageHeight - 1);
-    std::cout << "POS" << P << "X:" << X_pos << "Y:" << Y_pos << std::endl;
-    std::cout << "Phi:" << phi << "SIta:" << sita << std::endl;
     if (texImage != NULL) {
         int index = Y_pos * (texImageWidth * 3) + (X_pos * 3);
         if (P[2] < 0.5)
