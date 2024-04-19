@@ -42,7 +42,8 @@ private:
   bool m_bSceneLoaded;
 
   vec3f reflectionDirection(const ray &r, const isect &i);
-  vec3f refractionDirection(const ray &r, const isect &i, double n, vec3f norm);
+  vec3f refractionDirection(const ray &r, const isect &i, double n1, double n2,
+                            vec3f norm);
 
   bool inStack(stack<Material> stk, Material m);
   void removeFromStack(stack<Material> &stk, Material m);

@@ -30,6 +30,11 @@ public:
 
   virtual vec3f shade(Scene *scene, const ray &r, const isect &i) const;
 
+  static Material getAir() {
+    return Material({0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0},
+                    {1, 1, 1}, 0, 1);
+  }
+
   vec3f ke; // emissive
   vec3f ka; // ambient
   vec3f ks; // specular
