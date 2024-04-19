@@ -50,7 +50,7 @@
 - [ ] [1] Find a good way to accelerate shadow attenuation. (use hierical bonding volume to avoid intersection checking)
 - [ ] [1] Deal with overlapping objects intelligently. (object inside object overlapping with depth test: refraction.ray)
 
-- [ ] [1.5] Add texture mapping support to the program. (2D to 2D, u-v map)
+- [X] [1.5] Add texture mapping support to the program. (2D to 2D, u-v map)
 - [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results. (highlight the high frequency region, supersample the change of intensity of the model)
 - [X] [1.5] Implement more versatile lighting controls, such as the Warn model described in Foley 16.1.5.
   
