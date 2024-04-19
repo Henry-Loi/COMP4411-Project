@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 13.0/46.5** \
+> **Total marks: 14.0/46.5** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -48,7 +48,7 @@
 - [X] [1] Implement spot lights. 
 - [X] [1] Add a menu option that lets you specify a background image. to replace the environment's ambient color during the rendering. 
 - [ ] [1] Find a good way to accelerate shadow attenuation. (use hierical bonding volume to avoid intersection checking)
-- [ ] [1] Deal with overlapping objects intelligently. (object inside object overlapping with depth test: refraction.ray)
+- [X] [1] Deal with overlapping objects intelligently. (object inside object overlapping with depth test: refraction.ray)
 
 - [X] [1.5] Add texture mapping support to the program. (2D to 2D, u-v map)
 - [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results. (highlight the high frequency region, supersample the change of intensity of the model)

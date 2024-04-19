@@ -11,7 +11,7 @@ W antialiasing by supersampling			yes
 B spot lights					yes
 B background image				yes
 B accelerate shadow atteuation			yes/no
-B overlapping tranparent objects		yes/no
+B overlapping tranparent objects		yes
 BW texture mapping (diffuse and transparent)	yes
 BW antialiasing by adaptive supersampling	yes/no
 BW Warn model					yes
