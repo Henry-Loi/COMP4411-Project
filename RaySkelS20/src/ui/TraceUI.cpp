@@ -42,25 +42,24 @@ void TraceUI::cb_load_scene(Fl_Menu_ *o, void *v) {
   }
 }
 
-//load texture
-void TraceUI::cb_load_texture(Fl_Menu_* o, void* v) {
-    TraceUI* pUI = whoami(o);
+// load texture
+void TraceUI::cb_load_texture(Fl_Menu_ *o, void *v) {
+  TraceUI *pUI = whoami(o);
 
-    char* newfile = fl_file_chooser("Open Texture?", "*.bmp", NULL);
+  char *newfile = fl_file_chooser("Open Texture?", "*.bmp", NULL);
 
-    if (newfile != NULL) {
-        char buf[256];
+  if (newfile != NULL) {
+    char buf[256];
 
-        if (pUI->texMap->loadTexture(newfile)) {
-            sprintf(buf, "Texture <%s>", newfile);
-            done = true; // terminate the previous rendering
-        }
-        else {
-            sprintf(buf, "Texture <Not Loaded>");
-        }
-
-        pUI->m_mainWindow->label(buf);
+    if (pUI->texMap->loadTexture(newfile)) {
+      sprintf(buf, "Texture <%s>", newfile);
+      done = true; // terminate the previous rendering
+    } else {
+      sprintf(buf, "Texture <Not Loaded>");
     }
+
+    pUI->m_mainWindow->label(buf);
+  }
 }
 
 void TraceUI::cb_load_background(Fl_Menu_ *o, void *v) {
@@ -164,15 +163,12 @@ void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
       ((Fl_Check_Button *)o)->value();
 }
 
-void TraceUI::cb_Texture(Fl_Widget* o, void* v) {
-    ((TraceUI*)(o->user_data()))->m_nTexture =
-        ((Fl_Check_Button*)o)->value();
+void TraceUI::cb_Texture(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nTexture = ((Fl_Check_Button *)o)->value();
 }
 
-
-
-void TraceUI::cb_WarnExponent(Fl_Widget* o, void* v) {
-    ((TraceUI*)(o->user_data()))->m_nWarnExponent = ((Fl_Slider*)o)->value();
+void TraceUI::cb_WarnExponent(Fl_Widget *o, void *v) {
+  ((TraceUI *)(o->user_data()))->m_nWarnExponent = ((Fl_Slider *)o)->value();
 }
 
 void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
@@ -309,9 +305,7 @@ void TraceUI::setRayTracer(RayTracer *tracer) {
   raytracer = tracer;
   m_traceGlWindow->setRayTracer(tracer);
 }
-void TraceUI::setTexMap(TextureMap* texMap) {
-    texMap= texMap;
-}
+void TraceUI::setTexMap(TextureMap *texMap) { texMap = texMap; }
 
 int TraceUI::getSize() { return m_nSize; }
 
@@ -321,7 +315,7 @@ int TraceUI::getDepth() { return m_nDepth; }
 Fl_Menu_Item TraceUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Scene...", FL_ALT + 'l', (Fl_Callback *)TraceUI::cb_load_scene},
-    {"&Load Texture...", FL_ALT + 't',(Fl_Callback*)TraceUI::cb_load_texture},
+    {"&Load Texture...", FL_ALT + 't', (Fl_Callback *)TraceUI::cb_load_texture},
     {"&Save Image...", FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image},
     {"&Load Background Image...", FL_ALT + 'l',
      (Fl_Callback *)TraceUI::cb_load_background},
@@ -359,6 +353,7 @@ TraceUI::TraceUI() {
   m_nAperture = 2;
   m_nEnable_motion_blur = false;
   m_nEnable_glossy_reflection = false;
+  m_nTexture = false;
 
   m_mainWindow = new Fl_Window(100, 40, 390, 500, "Ray <Not Loaded>");
   m_mainWindow->user_data(
@@ -542,31 +537,17 @@ TraceUI::TraceUI() {
   m_MotionBlurLightButton->value(false);
 
   m_GlossyReflectionLightButton =
-      new Fl_Light_Button(240, 330, 80, 20, "&Glossy");
+      new Fl_Light_Button(240, 330, 70, 20, "&Glossy");
   m_GlossyReflectionLightButton->user_data((void *)(this));
   m_GlossyReflectionLightButton->callback(cb_glossyReflectionLightButton);
   m_GlossyReflectionLightButton->value(false);
 
-  m_WarnExponentSlider =
-      new Fl_Value_Slider(10, 355, 180, 20, "WarnModel Exponent Scale");
-  m_WarnExponentSlider->user_data(
-      (void *)(this)); // record self to be used by static callback functions
-  m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
-  m_WarnExponentSlider->labelfont(FL_COURIER);
-  m_WarnExponentSlider->labelsize(12);
-  m_WarnExponentSlider->minimum(0);
-  m_WarnExponentSlider->maximum(32);
-  m_WarnExponentSlider->step(1);
-  m_WarnExponentSlider->value(0);
-  m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
-  m_WarnExponentSlider->callback(cb_WarnExponent);
-
-  m_DofLightButton = new Fl_Light_Button(10, 380, 70, 20, "&DOF");
+  m_DofLightButton = new Fl_Light_Button(320, 330, 60, 20, "&DOF");
   m_DofLightButton->user_data((void *)(this));
   m_DofLightButton->callback(cb_dofLightButton);
   m_DofLightButton->value(false);
 
-  m_SubSameplePixelSlider = new Fl_Value_Slider(10, 405, 120, 20, "F Length");
+  m_SubSameplePixelSlider = new Fl_Value_Slider(10, 355, 120, 20, "F Length");
   m_SubSameplePixelSlider->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_SubSameplePixelSlider->type(FL_HOR_NICE_SLIDER);
@@ -579,7 +560,7 @@ TraceUI::TraceUI() {
   m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
   m_SubSameplePixelSlider->callback(cb_focalLengthSlides);
 
-  m_SubSameplePixelSlider = new Fl_Value_Slider(200, 405, 120, 20, "Aperture ");
+  m_SubSameplePixelSlider = new Fl_Value_Slider(200, 355, 120, 20, "Aperture ");
   m_SubSameplePixelSlider->user_data(
       (void *)(this)); // record self to be used by static callback functions
   m_SubSameplePixelSlider->type(FL_HOR_NICE_SLIDER);
@@ -592,10 +573,23 @@ TraceUI::TraceUI() {
   m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
   m_SubSameplePixelSlider->callback(cb_apertureSlides);
 
- m_TextureButton= new Fl_Check_Button(
-      10,430, 20, 20, "Texture");
- m_TextureButton->user_data((void*)(this));
- m_TextureButton->callback(cb_Texture);
+  m_WarnExponentSlider =
+      new Fl_Value_Slider(10, 380, 180, 20, "WarnModel Exponent Scale");
+  m_WarnExponentSlider->user_data(
+      (void *)(this)); // record self to be used by static callback functions
+  m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
+  m_WarnExponentSlider->labelfont(FL_COURIER);
+  m_WarnExponentSlider->labelsize(12);
+  m_WarnExponentSlider->minimum(0);
+  m_WarnExponentSlider->maximum(32);
+  m_WarnExponentSlider->step(1);
+  m_WarnExponentSlider->value(0);
+  m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
+  m_WarnExponentSlider->callback(cb_WarnExponent);
+
+  m_TextureButton = new Fl_Check_Button(10, 405, 20, 20, "Texture");
+  m_TextureButton->user_data((void *)(this));
+  m_TextureButton->callback(cb_Texture);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);
