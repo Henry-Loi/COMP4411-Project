@@ -593,7 +593,7 @@ TraceUI::TraceUI() {
   m_SubSameplePixelSlider->callback(cb_apertureSlides);
 
  m_TextureButton= new Fl_Check_Button(
-      10,430, 20, 20, "Texture");
+      10, 380, 20, 20, "Texture");
  m_TextureButton->user_data((void*)(this));
  m_TextureButton->callback(cb_Texture);
 

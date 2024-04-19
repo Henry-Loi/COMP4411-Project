@@ -172,8 +172,7 @@ private:
 
   // glossy reflection
   static void cb_glossyReflectionLightButton(Fl_Widget *o, void *v);
-  //warnmodel
-  static void cb_WarnExponent(Fl_Widget* o, void* v);
+
 
   //Load Texture
   static void cb_load_texture(Fl_Menu_* o, void* v);
