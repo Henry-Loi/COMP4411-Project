@@ -81,6 +81,7 @@ public:
                       // as in the case where the material was interpolated
 
   const Material &getMaterial() const;
+  const SceneObject& getObject() const { return *obj; };
   // Other info here.
 };
 

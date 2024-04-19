@@ -5,6 +5,7 @@
 
 #include "scene/ray.h"
 #include "scene/scene.h"
+#include "../TextureMap.h"
 
 class RayTracer {
 public:

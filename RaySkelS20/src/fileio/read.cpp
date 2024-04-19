@@ -11,7 +11,7 @@
 
 #include "parse.h"
 #include "read.h"
-
+#include "bitmap.h"
 #include "../SceneObjects/Box.h"
 #include "../SceneObjects/Cone.h"
 #include "../SceneObjects/Cylinder.h"
@@ -20,6 +20,7 @@
 #include "../SceneObjects/trimesh.h"
 #include "../scene/light.h"
 #include "../scene/scene.h"
+#include "../ui/TraceUI.h"
 
 typedef map<string, Material *> mmap;
 
@@ -36,6 +37,7 @@ static void processCamera(Obj *child, Scene *scene);
 static Material *getMaterial(Obj *child, const mmap &bindings);
 static Material *processMaterial(Obj *child, mmap *bindings = NULL);
 static void verifyTuple(const mytuple &tup, size_t size);
+extern TraceUI* traceUI;
 
 Scene *readScene(const string &filename) {
   ifstream ifs(filename.c_str());
@@ -464,6 +466,7 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
   string name;
   Obj *child;
   vec3f distAttenConst(0.0, 0.0, 0.0);
+  vec3f color(-1.0, -1.0, -1.0);
   if (obj->getTypeName() == "id") {
     name = obj->getID();
     child = NULL;
@@ -477,6 +480,19 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
 
     throw ParseError(string(oss.str()));
   }
+  //color = tupleToVec(getColorField(child));
+  //load bitmap
+  //if (hasField(child, "color")) {
+  //    if (!hasField(child, "map"))
+  //        color = tupleToVec(getColorField(child));
+  //    else {
+  //        string str = getField(child, "map")->getString();
+  //        char* charPtr = new char[str.size() + 1]; // +1 for null-terminator
+  //        strcpy(charPtr, str.data());
+  //        traceUI->texMap->loadTexture(charPtr);
+  //    }
+  //}
+
 
   if (name == "directional_light") {
     if (child == NULL) {

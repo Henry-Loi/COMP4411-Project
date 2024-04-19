@@ -66,6 +66,7 @@
 #include "ui/TraceUI.h"
 #include "RayTracer.h"
 
+
 #include "fileio/bitmap.h"
 
 // ***********************************************************
@@ -79,6 +80,7 @@ extern int optind, opterr, optopt;
 
 RayTracer* theRayTracer;
 TraceUI* traceUI;
+TextureMap* texMap;
 
 //
 // options from program parameters
@@ -160,6 +162,7 @@ int main(int argc, char **argv) {
 		}
 		
 		theRayTracer=new RayTracer();
+		texMap = new TextureMap();
 		theRayTracer->loadScene(rayName);
 	
 		if (theRayTracer->sceneLoaded()) {
@@ -196,8 +199,8 @@ int main(int argc, char **argv) {
 		// graphics mode
 		traceUI=new TraceUI();
 		theRayTracer=new RayTracer();
-
 		traceUI->setRayTracer(theRayTracer);
+
 
 		Fl::visual(FL_DOUBLE|FL_INDEX);
 

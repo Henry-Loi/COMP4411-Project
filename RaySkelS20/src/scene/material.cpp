@@ -18,7 +18,7 @@ double WarnModel(SpotLight* l, const vec3f& P, const int specular_exp) {
 }
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
-vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
+vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTrigger,vec3f textDiffuse) const {
   // YOUR CODE HERE
 
   // For now, this method just returns the diffuse color of the object.
@@ -48,9 +48,14 @@ vec3f Material::shade(Scene *scene, const ray &r, const isect &i) const {
         continue;
     }
     auto v = *light;
-
+    vec3f m_diffuse = vec3f(0.0, 0.0, 0.0);
+    //Texture Mapping
+    if (!textureTrigger)
+        m_diffuse = kd;
+    else
+        m_diffuse = textDiffuse;
     vec3f L = l->getDirection(P).normalize();
-    vec3f diffuse = kd * max(0.0, N.dot(L));
+    vec3f diffuse = m_diffuse * max(0.0, N.dot(L));
     vec3f R = -(2 * (N.dot(L)) * N - L);
     double verify = R.dot(V);
 

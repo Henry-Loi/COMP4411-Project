@@ -27,7 +27,11 @@ enum SampleModelControls {
   XSCALE,
   YSCALE,
   ZSCALE,
-  TEXTURE_MAPPING,
+  
+  
+  
+  
+  _MAPPING,
   L_SYSTEM_DISPLAY,
   L_SYSTEM_GENERATION,
   METABALLS_THRESHOLD,
