@@ -34,7 +34,7 @@
 - [X] Point Lights 
 - [X] Shadow Attenuation
 - [X] Reflection
-- [ ] Refraction
+- [X] Refraction
 
 
 ## Bells and Whistles
