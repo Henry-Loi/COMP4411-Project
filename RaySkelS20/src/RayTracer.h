@@ -26,6 +26,7 @@ public:
   void tracePixel(int i, int j);
 
   bool loadScene(char *fn);
+  bool loadHeightMap(char *iname);
 
   bool sceneLoaded();
 

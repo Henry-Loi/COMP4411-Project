@@ -132,6 +132,8 @@ private:
 
   static void cb_load_background(Fl_Menu_ *o, void *v);
 
+  static void cb_load_height_map(Fl_Menu_ *o, void *v);
+
   static void cb_sizeSlides(Fl_Widget *o, void *v);
   static void cb_depthSlides(Fl_Widget *o, void *v);
 

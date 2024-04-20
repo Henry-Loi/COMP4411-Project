@@ -1,13 +1,15 @@
 #ifndef __READ_H__
 #define __READ_H__
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include "../scene/scene.h"
 #include "../TextureMap.h"
 
-Scene *readScene( const string& filename );
-Scene *readScene( istream& is );
+Scene *readScene(const string &filename);
+Scene *readScene(istream &is);
+
+Scene *loadHeightField(char *iname);
 
 #endif // __READ_H__

@@ -91,6 +91,16 @@ void TraceUI::cb_load_background(Fl_Menu_ *o, void *v) {
   }
 }
 
+void TraceUI::cb_load_height_map(Fl_Menu_ *o, void *v) {
+  TraceUI *pUI = whoami(o);
+
+  char *newfile = fl_file_chooser("Open Background Image?", "*.bmp", NULL);
+
+  if (newfile != NULL) {
+    pUI->raytracer->loadHeightMap(newfile);
+  }
+}
+
 void TraceUI::cb_save_image(Fl_Menu_ *o, void *v) {
   TraceUI *pUI = whoami(o);
 
@@ -341,8 +351,10 @@ Fl_Menu_Item TraceUI::menuitems[] = {
     {"&Load Texture...", FL_ALT + 't', (Fl_Callback *)TraceUI::cb_load_texture},
     {"&Load Normal...", FL_ALT + 't', (Fl_Callback *)TraceUI::cb_load_normal},
     {"&Save Image...", FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image},
-    {"&Load Background Image...", FL_ALT + 'l',
+    {"&Load Background Image...", FL_ALT + 'b',
      (Fl_Callback *)TraceUI::cb_load_background},
+    {"&Load Height Map...", FL_ALT + 'h',
+     (Fl_Callback *)TraceUI::cb_load_height_map},
     {"&Exit", FL_ALT + 'e', (Fl_Callback *)TraceUI::cb_exit},
     {0},
 

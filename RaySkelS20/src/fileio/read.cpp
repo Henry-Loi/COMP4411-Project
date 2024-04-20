@@ -9,13 +9,13 @@
 
 #include <vector>
 
+#include "../SceneObjects//Hyperbolic.h"
 #include "../SceneObjects/Box.h"
 #include "../SceneObjects/Cone.h"
 #include "../SceneObjects/Cylinder.h"
 #include "../SceneObjects/Sphere.h"
 #include "../SceneObjects/Square.h"
 #include "../SceneObjects/trimesh.h"
-#include "../SceneObjects//Hyperbolic.h"
 #include "../scene/light.h"
 #include "../scene/particle_system.h"
 #include "../scene/scene.h"
@@ -23,6 +23,7 @@
 #include "bitmap.h"
 #include "parse.h"
 #include "read.h"
+
 
 typedef map<string, Material *> mmap;
 
@@ -104,6 +105,63 @@ Scene *readScene(istream &is) {
   }
 
   return ret;
+}
+
+#include "../fileio/bitmap.h"
+Scene *loadHeightField(char *iname) {
+
+  // try to open the image to read
+  unsigned char *data;
+  int width, height;
+
+  if ((data = readBMP(iname, width, height)) == NULL) {
+    return NULL;
+  }
+
+  // create a new scene
+  Scene *scene = new Scene();
+  Material *mat = new Material();
+
+  Trimesh *tmesh = new Trimesh(scene, mat, &scene->transformRoot);
+
+  for (int y = 0; y < height; ++y) {
+    for (int x = 0; x < width; ++x) {
+      int pos = y * width + x;
+      unsigned char pixel[3];
+      memcpy(pixel, data + pos * 3, 3);
+      double height = double(pixel[0] + pixel[1] + pixel[2]) / 3 / 128;
+      vec3f point(x, y, height);
+      tmesh->addVertex(point);
+      if (x > 0 && y > 0) { // link the points
+        tmesh->addFace(pos, pos - 1, pos - 1 - width);
+        tmesh->addFace(pos, pos - 1 - width, pos - width);
+      }
+    }
+  }
+
+  char *error;
+  if (error = tmesh->doubleCheck())
+    throw ParseError(error);
+
+  scene->add(tmesh);
+
+  // add a pointlight
+  PointLight *point_light =
+      new PointLight(scene, vec3f(width, height, 10), vec3f(1.0, 1.0, 1.0),
+                     vec3f(0.0, 0.0, 0.0));
+  scene->add(point_light);
+
+  // set the camerea
+  // TODO: calculate the correct viewing distance;
+  vec3f map_center((double)width / 2 - 0.5, (double)height / 2 - 0.5, 0.5);
+  double camera_distance = (double)width + 3.0;
+  vec3f camera_pos(0, -camera_distance, 2 * camera_distance);
+  camera_pos += map_center;
+  scene->getCamera()->setEye(camera_pos);
+  scene->getCamera()->setLook((map_center - camera_pos).normalize(),
+                              vec3f(0, 0, 1).normalize());
+
+  return scene;
 }
 
 // Find a color field inside some object.  Now, I recognize that not
@@ -332,8 +390,8 @@ static void processGeometry(string name, Obj *child, Scene *scene,
 
       static_cast<ParticleSystem *>(obj)->init();
     } else if (name == "hyperbolic") {
-        std::cout << "readed Hyperbolic" << std::endl;
-        obj = new Hyperbolic(scene, mat);
+      std::cout << "readed Hyperbolic" << std::endl;
+      obj = new Hyperbolic(scene, mat);
     }
 
     obj->setTransform(transform);
@@ -576,8 +634,8 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
   } else if (name == "sphere" || name == "box" || name == "cylinder" ||
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||
-             name == "trimesh" ||
-             name == "polymesh"||name == "hyperbolic") { // polymesh is for backwards compatibility.
+             name == "trimesh" || name == "polymesh" ||
+             name == "hyperbolic") { // polymesh is for backwards compatibility.
     processGeometry(name, child, scene, materials, &scene->transformRoot);
     // scene->add( geo );
   } else if (name == "material") {

@@ -355,6 +355,34 @@ bool RayTracer::loadScene(char *fn) {
   return true;
 }
 
+bool RayTracer::loadHeightMap(char *iname) {
+  try {
+    scene = loadHeightField(iname);
+  } catch (ParseError pe) {
+    fl_alert("ParseError: %s\n", pe);
+    return false;
+  }
+
+  if (!scene)
+    return false;
+
+  buffer_width = 256;
+  buffer_height =
+      (int)(buffer_width / scene->getCamera()->getAspectRatio() + 0.5);
+
+  bufferSize = buffer_width * buffer_height * 3;
+  buffer = new unsigned char[bufferSize];
+
+  // separate objects into bounded and unbounded
+  scene->initScene();
+
+  // Add any specialized scene loading code here
+
+  m_bSceneLoaded = true;
+
+  return true;
+}
+
 void RayTracer::traceSetup(int w, int h) {
   if (buffer_width != w || buffer_height != h) {
     buffer_width = w;
