@@ -184,7 +184,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // more steps: add in the contributions from reflected and refracted
     // rays.
 
-    const Material &m = i.getMaterial();
+    const Material m = i.getMaterial();
     vec3f I (0.0,0.0,0.0);
     int textureTrigger = 0;
     vec3f pos(0.0, 0.0, 0.0);

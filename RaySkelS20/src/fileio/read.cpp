@@ -15,6 +15,7 @@
 #include "../SceneObjects/Sphere.h"
 #include "../SceneObjects/Square.h"
 #include "../SceneObjects/trimesh.h"
+#include "../SceneObjects//Hyperbolic.h"
 #include "../scene/light.h"
 #include "../scene/particle_system.h"
 #include "../scene/scene.h"
@@ -330,6 +331,9 @@ static void processGeometry(string name, Obj *child, Scene *scene,
                         static_cast<ParticleSystem *>(obj)->speedMax);
 
       static_cast<ParticleSystem *>(obj)->init();
+    } else if (name == "hyperbolic") {
+        std::cout << "readed Hyperbolic" << std::endl;
+        obj = new Hyperbolic(scene, mat);
     }
 
     obj->setTransform(transform);
@@ -573,7 +577,7 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||
              name == "trimesh" ||
-             name == "polymesh") { // polymesh is for backwards compatibility.
+             name == "polymesh"||name == "hyperbolic") { // polymesh is for backwards compatibility.
     processGeometry(name, child, scene, materials, &scene->transformRoot);
     // scene->add( geo );
   } else if (name == "material") {
