@@ -29,9 +29,7 @@ public:
     n_materials++;
   }
 
-  virtual vec3f shade(Scene *scene, const ray &r, const isect &i,
-                      const bool textureTrigger = 0,
-                      const vec3f textDiffuse = vec3f(0.0, 0.0, 0.0)) const;
+  virtual vec3f shade(Scene* scene, const ray& r, const isect& i, int textureTrigger, vec3f textDiffuse, vec3f bumpNormal)  const;
 
   static Material getAir() {
     return Material({0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0},

@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 14.0/46.5** \
+> **Total marks: 16.0/46.5** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -54,7 +54,7 @@
 - [ ] [1.5] Implement antialiasing by adaptive supersampling, as described in Foley, et al., 15.10.4.  For full credit, you must show some sort of visualization of the sampling pattern that results. (highlight the high frequency region, supersample the change of intensity of the model)
 - [X] [1.5] Implement more versatile lighting controls, such as the Warn model described in Foley 16.1.5.
   
-- [ ] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). (world and world_normal)
+- [X] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). (world and world_normal)
 - [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. (design a math equation to generate 3D texture map + add randomness)
 - [ ] [2] Add some new types of geometry to the ray tracer.
 - [ ] [2] Add support for height-fields. (displacement mapping: construct a polygonal "mesh based model)
