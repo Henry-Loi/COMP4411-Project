@@ -91,8 +91,8 @@ vec3f PointLight::shadowAttenuation(const vec3f &P) const {
   isect i;
 
   vec3f atten = getColor(P);
-  while (scene->intersect(R, i)) {
-    R = ray(R.at(i.t), d);
+  if (scene->intersect(R, i)) {
+    // R = ray(R.at(i.t), d);
     atten = prod(atten, i.getMaterial().kt);
   }
 
