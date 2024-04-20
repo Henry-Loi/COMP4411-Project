@@ -9,9 +9,6 @@
 
 #include <vector>
 
-#include "parse.h"
-#include "read.h"
-#include "bitmap.h"
 #include "../SceneObjects/Box.h"
 #include "../SceneObjects/Cone.h"
 #include "../SceneObjects/Cylinder.h"
@@ -19,8 +16,12 @@
 #include "../SceneObjects/Square.h"
 #include "../SceneObjects/trimesh.h"
 #include "../scene/light.h"
+#include "../scene/particle_system.h"
 #include "../scene/scene.h"
 #include "../ui/TraceUI.h"
+#include "bitmap.h"
+#include "parse.h"
+#include "read.h"
 
 typedef map<string, Material *> mmap;
 
@@ -37,8 +38,8 @@ static void processCamera(Obj *child, Scene *scene);
 static Material *getMaterial(Obj *child, const mmap &bindings);
 static Material *processMaterial(Obj *child, mmap *bindings = NULL);
 static void verifyTuple(const mytuple &tup, size_t size);
-static vec3f readColor(Obj* child);
-extern TraceUI* traceUI;
+static vec3f readColor(Obj *child);
+extern TraceUI *traceUI;
 
 Scene *readScene(const string &filename) {
   ifstream ifs(filename.c_str());
@@ -299,6 +300,36 @@ static void processGeometry(string name, Obj *child, Scene *scene,
       obj = new Cone(scene, mat, height, bottom_radius, top_radius, capped);
     } else if (name == "square") {
       obj = new Square(scene, mat);
+    } else if (name == "meteorite") {
+      obj = new ParticleSystem(scene, mat);
+
+      static_cast<ParticleSystem *>(obj)->dir =
+          tupleToVec(getField(child, "direction"));
+      static_cast<ParticleSystem *>(obj)->initColorMin =
+          tupleToVec(getField(child, "startColorMin"));
+      static_cast<ParticleSystem *>(obj)->initColorMax =
+          tupleToVec(getField(child, "startColorMax"));
+      static_cast<ParticleSystem *>(obj)->endColorMin =
+          tupleToVec(getField(child, "endColorMin"));
+      static_cast<ParticleSystem *>(obj)->endColorMax =
+          tupleToVec(getField(child, "endColorMax"));
+
+      maybeExtractField(child, "force",
+                        static_cast<ParticleSystem *>(obj)->force);
+      maybeExtractField(child, "minLife",
+                        static_cast<ParticleSystem *>(obj)->lifeMin);
+      maybeExtractField(child, "maxLife",
+                        static_cast<ParticleSystem *>(obj)->lifeMax);
+      maybeExtractField(child, "numEmit",
+                        static_cast<ParticleSystem *>(obj)->numEmit);
+      maybeExtractField(child, "maxNumParticles",
+                        static_cast<ParticleSystem *>(obj)->num_of_particle);
+      maybeExtractField(child, "minSpeed",
+                        static_cast<ParticleSystem *>(obj)->speedMin);
+      maybeExtractField(child, "maxSpeed",
+                        static_cast<ParticleSystem *>(obj)->speedMax);
+
+      static_cast<ParticleSystem *>(obj)->init();
     }
 
     obj->setTransform(transform);
@@ -401,26 +432,25 @@ static Material *processMaterial(Obj *child, mmap *bindings)
     mat->ks = tupleToVec(getField(child, "specular"));
   }
   if (hasField(child, "diffuse")) {
-      //load bitmap
-      vec3f diffuse(0.0, 0.0, 0.0);
-      std::cout << "diffuse" << std::endl;
-      std::cout << child->getTypeName() << std::endl;
-      Obj* di = getField(child, "diffuse");
-      std::cout << di->getTypeName() << std::endl;
+    // load bitmap
+    vec3f diffuse(0.0, 0.0, 0.0);
+    std::cout << "diffuse" << std::endl;
+    std::cout << child->getTypeName() << std::endl;
+    Obj *di = getField(child, "diffuse");
+    std::cout << di->getTypeName() << std::endl;
 
-          if (di->getTypeName() == "tuple") {
-              std::cout << "no_map" << std::endl;
-            diffuse = tupleToVec(getField(child, "diffuse"));
-          }
-          else {
-              std::cout << "run map" << std::endl;
-              string str = getField(child, "diffuse")->getChild()->getString();
-              std::cout << str << std::endl;
-              char* charPtr = new char[str.size() + 1]; // +1 for null-terminator
-              strcpy(charPtr, str.data());
-              traceUI->texMap->loadTexture(charPtr);
-          }
-          mat->kd = diffuse;
+    if (di->getTypeName() == "tuple") {
+      std::cout << "no_map" << std::endl;
+      diffuse = tupleToVec(getField(child, "diffuse"));
+    } else {
+      std::cout << "run map" << std::endl;
+      string str = getField(child, "diffuse")->getChild()->getString();
+      std::cout << str << std::endl;
+      char *charPtr = new char[str.size() + 1]; // +1 for null-terminator
+      strcpy(charPtr, str.data());
+      traceUI->texMap->loadTexture(charPtr);
+    }
+    mat->kd = diffuse;
   }
   if (hasField(child, "reflective")) {
     mat->kr = tupleToVec(getField(child, "reflective"));
@@ -499,8 +529,7 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
 
     throw ParseError(string(oss.str()));
   }
-  //color = tupleToVec(getColorField(child));
-
+  // color = tupleToVec(getColorField(child));
 
   if (name == "directional_light") {
     if (child == NULL) {
@@ -525,22 +554,21 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     scene->add(new PointLight(scene, tupleToVec(getField(child, "position")),
                               tupleToVec(getColorField(child)),
                               distAttenConst));
-  }
-  else if (name == "ambient_light") {
-      if (child == NULL) {
-          throw ParseError("No info for ambient_light");
-      }
-      scene->add(new AmbientLight(scene,
-          tupleToVec(getColorField(child)),
-          distAttenConst));
-  }
-  else if (name == "spot_light") {
-      if (child == NULL) {
-          throw ParseError("No info for ambient_light");
-      }
-      scene->add(new SpotLight(scene, tupleToVec(getField(child, "position")),
-          tupleToVec(getColorField(child)), tupleToVec(getField(child, "direction")), tupleToVec(getField(child, "edgeplace")),
-          distAttenConst));
+  } else if (name == "ambient_light") {
+    if (child == NULL) {
+      throw ParseError("No info for ambient_light");
+    }
+    scene->add(new AmbientLight(scene, tupleToVec(getColorField(child)),
+                                distAttenConst));
+  } else if (name == "spot_light") {
+    if (child == NULL) {
+      throw ParseError("No info for ambient_light");
+    }
+    scene->add(new SpotLight(scene, tupleToVec(getField(child, "position")),
+                             tupleToVec(getColorField(child)),
+                             tupleToVec(getField(child, "direction")),
+                             tupleToVec(getField(child, "edgeplace")),
+                             distAttenConst));
   } else if (name == "sphere" || name == "box" || name == "cylinder" ||
              name == "cone" || name == "square" || name == "translate" ||
              name == "rotate" || name == "scale" || name == "transform" ||
@@ -550,14 +578,11 @@ static void processObject(Obj *obj, Scene *scene, mmap &materials) {
     // scene->add( geo );
   } else if (name == "material") {
     processMaterial(child, &materials);
-  }
-  else if (name == "camera") {
-      processCamera(child, scene);
-  }
-  //} /*else if (name == "ambient_light") {
-  //  scene->ambientLightColor = tupleToVec(getColorField(child));*/
-  //} 
-  else {
+  } else if (name == "camera") {
+    processCamera(child, scene);
+  } else if (name == "meteorite") {
+    processGeometry(name, child, scene, materials, &scene->transformRoot);
+  } else {
     throw ParseError(string("Unrecognized object: ") + name);
   }
 }

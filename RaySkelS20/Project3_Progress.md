@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 16.0/46.5** \
+> **Total marks: 20.0/46.5** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -69,6 +69,6 @@
 
 - [ ] [4] Implement a more realistic shading model. Credit will vary depending on the sophistication of the model.
 - [ ] [4] Implement CSG, constructive solid geometry. (if ray intersect B, return other (TA said is simple))
-- [ ] [4] Add a particle systems simulation and renderer (Foley 20.5, Watt 17.7). 
+- [X] [4] Add a particle systems simulation and renderer (Foley 20.5, Watt 17.7). 
 - [ ] [4] Implement caustics.
 

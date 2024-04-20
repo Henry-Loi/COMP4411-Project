@@ -15,7 +15,7 @@ B overlapping tranparent objects		yes
 BW texture mapping (diffuse and transparent)	yes
 BW antialiasing by adaptive supersampling	yes/no
 BW Warn model					yes
-2B bump mapping					yes/no
+2B bump mapping					yes
 2B solid/procedural texture			yes/no
 2B new geometry (quadrics)			yes/no
 2B height fields				yes/no
