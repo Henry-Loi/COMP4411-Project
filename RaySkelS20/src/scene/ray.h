@@ -45,13 +45,14 @@ class isect {
 public:
   isect() : obj(NULL), t(0.0), N(), material(0) {}
 
-  ~isect() { delete material; }
+  ~isect() { if(material) delete material; }
 
   void setObject(SceneObject *o) { obj = o; }
   void setT(double tt) { t = tt; }
   void setN(const vec3f &n) { N = n; }
   void setMaterial(Material *m) {
-    delete material;
+      if(material)
+        delete material;
     material = m;
   }
 
