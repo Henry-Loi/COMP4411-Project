@@ -6,12 +6,7 @@ camera {
 	aspectratio = 1;
 	updir = (0,1,0);
 }
-point_light
-{
-	position = (0, 2, 0);
-	colour = (0.8, 0.8, 0.8);
 
-}
 
 spot_light {
 	position = (0, 2, 0);
@@ -19,12 +14,7 @@ spot_light {
 	edgeplace = (30, 0, 0);
 	colour = (0.8, 0.8, 0.8);
 }
-spot_light {
-	position = (1, 2, -1);
-	direction = (-1, -2, 1);
-	edgeplace = (15, 0, 0);
-	colour = (0.8, 0.8, 0.8);
-}
+
 
 
 box { 

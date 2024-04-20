@@ -62,6 +62,26 @@ void TraceUI::cb_load_texture(Fl_Menu_ *o, void *v) {
   }
 }
 
+void TraceUI::cb_load_normal(Fl_Menu_* o, void* v) {
+    TraceUI* pUI = whoami(o);
+
+    char* newfile = fl_file_chooser("Open Texture?", "*.bmp", NULL);
+
+    if (newfile != NULL) {
+        char buf[256];
+
+        if (pUI->texMap->loadNormal(newfile)) {
+            sprintf(buf, "Normal <%s>", newfile);
+            done = true; // terminate the previous rendering
+        }
+        else {
+            sprintf(buf, "Normal <Not Loaded>");
+        }
+
+        pUI->m_mainWindow->label(buf);
+    }
+}
+
 void TraceUI::cb_load_background(Fl_Menu_ *o, void *v) {
   TraceUI *pUI = whoami(o);
 
@@ -167,8 +187,15 @@ void TraceUI::cb_Texture(Fl_Widget *o, void *v) {
   ((TraceUI *)(o->user_data()))->m_nTexture = ((Fl_Check_Button *)o)->value();
 }
 
-void TraceUI::cb_WarnExponent(Fl_Widget *o, void *v) {
-  ((TraceUI *)(o->user_data()))->m_nWarnExponent = ((Fl_Slider *)o)->value();
+void TraceUI::cb_Bump(Fl_Widget* o, void* v) {
+    ((TraceUI*)(o->user_data()))->m_nBump =
+        ((Fl_Check_Button*)o)->value();
+}
+
+
+
+void TraceUI::cb_WarnExponent(Fl_Widget* o, void* v) {
+    ((TraceUI*)(o->user_data()))->m_nWarnExponent = ((Fl_Slider*)o)->value();
 }
 
 void TraceUI::cb_enablebackgroundbutton(Fl_Widget *o, void *v) {
@@ -315,7 +342,8 @@ int TraceUI::getDepth() { return m_nDepth; }
 Fl_Menu_Item TraceUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Scene...", FL_ALT + 'l', (Fl_Callback *)TraceUI::cb_load_scene},
-    {"&Load Texture...", FL_ALT + 't', (Fl_Callback *)TraceUI::cb_load_texture},
+    {"&Load Texture...", FL_ALT + 't',(Fl_Callback*)TraceUI::cb_load_texture},
+     {"&Load Normal...", FL_ALT + 't',(Fl_Callback*)TraceUI::cb_load_normal},
     {"&Save Image...", FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image},
     {"&Load Background Image...", FL_ALT + 'l',
      (Fl_Callback *)TraceUI::cb_load_background},
@@ -346,7 +374,7 @@ TraceUI::TraceUI() {
   m_nAdaptiveThresh = 0.0;
 
   m_nEnableBackground = false;
-  m_nWarnExponent = false;
+  m_nWarnExponent = 0;
   m_nEnable_soft_shadow = false;
   m_nEnable_dof = false;
   m_nFocalLength = 2;
@@ -573,23 +601,32 @@ TraceUI::TraceUI() {
   m_SubSameplePixelSlider->align(FL_ALIGN_RIGHT);
   m_SubSameplePixelSlider->callback(cb_apertureSlides);
 
-  m_WarnExponentSlider =
-      new Fl_Value_Slider(10, 380, 180, 20, "WarnModel Exponent Scale");
-  m_WarnExponentSlider->user_data(
-      (void *)(this)); // record self to be used by static callback functions
-  m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
-  m_WarnExponentSlider->labelfont(FL_COURIER);
-  m_WarnExponentSlider->labelsize(12);
-  m_WarnExponentSlider->minimum(0);
-  m_WarnExponentSlider->maximum(32);
-  m_WarnExponentSlider->step(1);
-  m_WarnExponentSlider->value(0);
-  m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
-  m_WarnExponentSlider->callback(cb_WarnExponent);
+ m_TextureButton= new Fl_Check_Button(
+      10,430, 20, 20, "Texture");
+ m_TextureButton->user_data((void*)(this));
+ m_TextureButton->callback(cb_Texture);
+ m_TextureButton->value(false);
 
-  m_TextureButton = new Fl_Check_Button(10, 405, 20, 20, "Texture");
-  m_TextureButton->user_data((void *)(this));
-  m_TextureButton->callback(cb_Texture);
+ m_BumpButton = new Fl_Check_Button(
+     100, 430, 20, 20, "Bump Mapping");
+ m_BumpButton->user_data((void*)(this));
+ m_BumpButton->callback(cb_Bump);
+ m_BumpButton->value(false);
+
+
+ m_WarnExponentSlider =
+     new Fl_Value_Slider(10, 455, 180, 20, "WarnModel Exponent Scale");
+ m_WarnExponentSlider->user_data(
+     (void*)(this)); // record self to be used by static callback functions
+ m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
+ m_WarnExponentSlider->labelfont(FL_COURIER);
+ m_WarnExponentSlider->labelsize(12);
+ m_WarnExponentSlider->minimum(0);
+ m_WarnExponentSlider->maximum(32);
+ m_WarnExponentSlider->step(1);
+ m_WarnExponentSlider->value(0);
+ m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
+ m_WarnExponentSlider->callback(cb_WarnExponent);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);

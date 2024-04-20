@@ -16,6 +16,7 @@ public:
 	virtual bool intersectLocal( const ray& r, isect& i ) const;
 	virtual bool hasBoundingBoxCapability() const { return true; }
 	vec3f MapToTexture(TextureMap* textMap, vec3f pos)const ;
+	vec3f MapToNormal(TextureMap* textMap, vec3f pos, isect& i) const;
     virtual BoundingBox ComputeLocalBoundingBox()
     {
         BoundingBox localbounds;

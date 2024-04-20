@@ -195,6 +195,7 @@ public:
   virtual const Material &getMaterial() const = 0;
   virtual void setMaterial(Material *m) = 0;
   virtual vec3f MapToTexture(TextureMap* textMap, vec3f pos) const {  return vec3f(1.0, 1.0, 1.0); }
+  virtual vec3f MapToNormal(TextureMap* textMap, vec3f pos, isect& i) const { return i.N; }
 protected:
   SceneObject(Scene *scene) : Geometry(scene) {}
 };
