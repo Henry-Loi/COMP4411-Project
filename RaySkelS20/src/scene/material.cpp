@@ -10,9 +10,7 @@
 extern TraceUI *traceUI;
 
 double WarnModel(SpotLight *l, const vec3f &P, const int specular_exp) {
-  cout << acos(l->getDirection(P).normalize().dot(
-              l->getSpotDirection().normalize()))
-       << endl;
+
   if ((acos(l->getDirection(P).normalize().dot(
            l->getSpotDirection().normalize())) /
        3.142) *

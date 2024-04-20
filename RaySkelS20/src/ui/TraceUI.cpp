@@ -374,7 +374,7 @@ TraceUI::TraceUI() {
   m_nAdaptiveThresh = 0.0;
 
   m_nEnableBackground = false;
-  m_nWarnExponent = false;
+  m_nWarnExponent = 0;
   m_nEnable_soft_shadow = false;
   m_nEnable_dof = false;
   m_nFocalLength = 2;
@@ -612,6 +612,21 @@ TraceUI::TraceUI() {
  m_BumpButton->user_data((void*)(this));
  m_BumpButton->callback(cb_Bump);
  m_BumpButton->value(false);
+
+
+ m_WarnExponentSlider =
+     new Fl_Value_Slider(10, 455, 180, 20, "WarnModel Exponent Scale");
+ m_WarnExponentSlider->user_data(
+     (void*)(this)); // record self to be used by static callback functions
+ m_WarnExponentSlider->type(FL_HOR_NICE_SLIDER);
+ m_WarnExponentSlider->labelfont(FL_COURIER);
+ m_WarnExponentSlider->labelsize(12);
+ m_WarnExponentSlider->minimum(0);
+ m_WarnExponentSlider->maximum(32);
+ m_WarnExponentSlider->step(1);
+ m_WarnExponentSlider->value(0);
+ m_WarnExponentSlider->align(FL_ALIGN_RIGHT);
+ m_WarnExponentSlider->callback(cb_WarnExponent);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);
