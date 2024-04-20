@@ -38,7 +38,7 @@
 
 
 ## Bells and Whistles
-> **Total marks: 20.0/46.5** \
+> **Total marks: 22.0/46.5** \
 > 1 Bell = 1 mark, 1 whistle = 0.5 mark\
 > I am summarizing the key points into bullet points. Please always check the [real requirement](https://course.cse.ust.hk/comp4411/Password_Only/projects/trace02/index.html) before start working on it due to my poor english orz.
 
@@ -56,7 +56,7 @@
   
 - [X] [2] Implement bump mapping (Watt 8.4; Foley, et al. 16.3.3). (world and world_normal)
 - [ ] [2] Implement solid textures or some other form of procedural texture mapping, as described in Foley, et al., 20.1.2 and 20.8.3. (design a math equation to generate 3D texture map + add randomness)
-- [ ] [2] Add some new types of geometry to the ray tracer.
+- [X] [2] Add some new types of geometry to the ray tracer.
 - [ ] [2] Add support for height-fields. (displacement mapping: construct a polygonal "mesh based model)
 - [X] [6.5(2+1.5*3)] Implement distribution ray tracing to produce one or more or the following effects: depth of field, soft shadows, motion blur, or glossy reflection (See Watt 10.6, Glassner, chapter 5, or Foley, et al., 16.12.4). (see L11 lecture notes & depth of field: forcal length)
   - [X] depth of field
