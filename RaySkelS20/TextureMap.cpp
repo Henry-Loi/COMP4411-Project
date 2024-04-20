@@ -77,15 +77,18 @@ vec3f TextureMap::getSphereColor(const vec3f P) {
     double v = phi / 3.142;
     double sita = acos(S_e.dot(Pos) / sin(phi)) / (2 * 3.142);
     double u = sita;
+
     if ((S_p.cross(S_e)).dot(Pos) < 0)
         u = 1 - sita;
-    if (abs(v - 1.0) < 0.001|| abs(v) < 0.001)
+    if (abs(v - 1.0) < 0.001|| abs(v) < 0.001|| abs(v + 1.0) < 0.001)
+        u = 0.0;
+    if (std::isnan(u))
         u = 0.0;
     int X_pos = u* (texImageWidth - 1);
     int Y_pos = v* (texImageHeight - 1);
+
     if (texImage != NULL) {
         int index = Y_pos * (texImageWidth * 3) + (X_pos * 3);
-        std::cout << "X_Pos " << X_pos << " Y_pos " << Y_pos <<  std::endl;
         return vec3f(double(texImage[index]) / 255.0, double(texImage[index + 1]) / 255.0, double(texImage[index + 2]) / 255.0);
 
     }
@@ -118,6 +121,7 @@ vec3f TextureMap::getSquareNormal(const vec3f P) {
 
 vec3f TextureMap::getSphereNormal(const vec3f P) {
     vec3f Pos(P[2], P[0], P[1]);
+    //vec3f Pos(P[0], P[1], P[2]);
     vec3f S_p(0.0, 0.0, 1.0);
     vec3f S_e(1.0, 0.0, 0.0);
     double phi = acos(-Pos.dot(S_p));
@@ -128,14 +132,13 @@ vec3f TextureMap::getSphereNormal(const vec3f P) {
         u = 1 - sita;
     if (abs(v - 1.0) < 0.001 || abs(v) < 0.001)
         u = 0.0;
-    int X_pos = u * (NorImageWidth - 1);
-    int Y_pos = v * (NorImageHeight - 1);
+    int X_pos = u * (NorImageWidth - 1); //u
+    int Y_pos = v * (NorImageHeight - 1); //v
     if (norImage != NULL) {
-        int index = Y_pos * (NorImageWidth * 3) + (X_pos * 3);
-        if (P[2] < 0.5)
-            return vec3f(double(norImage[index]) / 255.0, double(norImage[index + 1]) / 255.0, double(norImage[index + 2]) / 255.0);
-        else
-            return vec3f(0.0, 0.0, 0.0);
+        vec3f result(0.0, 0.0, 0.0);
+        result = getNormal(X_pos, Y_pos, norImage, NorImageWidth, NorImageHeight);
+        return vec3f(result[1],result[2],result[0]);
+        //return result;
     }
     else
         return vec3f(1.0, 1.0, 1.0);

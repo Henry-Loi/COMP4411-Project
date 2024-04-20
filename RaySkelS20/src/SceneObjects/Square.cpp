@@ -53,5 +53,5 @@ vec3f Square::MapToNormal(TextureMap* textMap, vec3f pos, isect& i) const {
 
 	TransformNode* curTransform = transform->createChild(mat);
 	result = textMap->getSquareNormal(curTransform->globalToLocalCoords(pos));
-	return result.normalize();
+	return  result.normalize();
 }
