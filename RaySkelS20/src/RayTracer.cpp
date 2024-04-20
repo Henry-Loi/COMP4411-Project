@@ -185,13 +185,12 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // rays.
 
     const Material &m = i.getMaterial();
-    vec3f I (0.0,0.0,0.0);
+    vec3f I(0.0, 0.0, 0.0);
     if (traceUI->m_nTexture) {
-        vec3f pos = i.getObject().MapToTexture(traceUI->texMap, r.at(i.t));
-        I = m.shade(scene, r, i, true, pos);
-    }
-    else
-        I = m.shade(scene, r, i);
+      vec3f pos = i.getObject().MapToTexture(traceUI->texMap, r.at(i.t));
+      I = m.shade(scene, r, i, true, pos);
+    } else
+      I = m.shade(scene, r, i);
 
     // adaptive termination
     if (I.length() < traceUI->m_nAdaptiveThresh) {
@@ -200,7 +199,6 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
 
     // reflection
     if (depth > 0) {
-
       vec3f R = reflectionDirection(r, i);
       ray reflect_ray = ray(r.at(i.t), R);
       vec3f I_r =
@@ -255,7 +253,7 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
         vec3f I_t;
 
         if (background && !scene->intersect(refracted_ray, i)) {
-          I_t = getBackground(scene, refracted_ray);
+          I_t = prod(getBackground(scene, refracted_ray), m.kt);
         } else {
           I_t = prod(
               traceRay(scene, refracted_ray, thresh, depth - 1, material_stack),
