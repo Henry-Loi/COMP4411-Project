@@ -185,12 +185,35 @@ vec3f RayTracer::traceRay(Scene *scene, const ray &r, const vec3f &thresh,
     // rays.
 
     const Material &m = i.getMaterial();
-    vec3f I(0.0, 0.0, 0.0);
-    if (traceUI->m_nTexture) {
-      vec3f pos = i.getObject().MapToTexture(traceUI->texMap, r.at(i.t));
-      I = m.shade(scene, r, i, true, pos);
-    } else
-      I = m.shade(scene, r, i);
+    vec3f I (0.0,0.0,0.0);
+    int textureTrigger = 0;
+    vec3f pos(0.0, 0.0, 0.0);
+    vec3f pos2(0.0, 0.0, 0.0);
+    if (traceUI->m_nTexture && traceUI->m_nBump)
+        textureTrigger = 3;
+    else if (traceUI->m_nBump)
+        textureTrigger = 2;
+    else if (traceUI->m_nTexture)
+        textureTrigger = 1;
+
+    switch (textureTrigger) {
+        case 1:
+            pos = i.getObject().MapToTexture(traceUI->texMap, r.at(i.t));
+            break;
+        case 2:
+            pos2 = i.getObject().MapToNormal(traceUI->texMap, r.at(i.t),i);
+            break;
+        case 3:
+            pos = i.getObject().MapToTexture(traceUI->texMap, r.at(i.t));
+            pos2 = i.getObject().MapToNormal(traceUI->texMap, r.at(i.t),i);
+        break;
+    default:
+        break;
+    }
+
+
+        I = m.shade(scene, r, i, textureTrigger, pos,pos2);
+
 
     // adaptive termination
     if (I.length() < traceUI->m_nAdaptiveThresh) {

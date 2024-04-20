@@ -43,3 +43,15 @@ bool Square::intersectLocal( const ray& r, isect& i ) const
 vec3f Square::MapToTexture(TextureMap* textMap, vec3f pos) const {
 	return textMap->getSquareColor(transform->globalToLocalCoords(pos));
 }
+
+vec3f Square::MapToNormal(TextureMap* textMap, vec3f pos, isect& i) const {
+
+	vec3f result(0.0, 0.0, 0.0);
+	mat4f mat ;
+	mat[0][3] = -0.5;
+	mat[1][3] = -0.5;
+
+	TransformNode* curTransform = transform->createChild(mat);
+	result = textMap->getSquareNormal(curTransform->globalToLocalCoords(pos));
+	return  result.normalize();
+}

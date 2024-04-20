@@ -53,6 +53,7 @@ public:
   Fl_Check_Button *m_distAttenOverrideButton;
 
   Fl_Check_Button *m_TextureButton;
+  Fl_Check_Button* m_BumpButton;
   Fl_Button *m_renderButton;
   Fl_Button *m_stopButton;
 
@@ -87,7 +88,9 @@ public:
   double m_nAdaptiveThresh;
   bool m_nOverrideDistAtten;
 
-  bool m_nTexture;
+  //texture and Bump
+  bool m_nTexture = false;
+  bool m_nBump = false;
 
   int m_nSubsamplePixelSize;
   bool m_nSubsampleJitter;
@@ -173,9 +176,13 @@ private:
   // glossy reflection
   static void cb_glossyReflectionLightButton(Fl_Widget *o, void *v);
 
-  // Load Texture
-  static void cb_load_texture(Fl_Menu_ *o, void *v);
-  static void cb_Texture(Fl_Widget *o, void *v);
+
+  //Load Texture
+  static void cb_load_texture(Fl_Menu_* o, void* v);
+  static void cb_load_normal(Fl_Menu_* o, void* v);
+  static void cb_Texture(Fl_Widget* o, void* v);
+  static void cb_Bump(Fl_Widget* o, void* v);
+
 };
 
 #endif

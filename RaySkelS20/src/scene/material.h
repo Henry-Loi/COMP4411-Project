@@ -8,6 +8,7 @@
 #define __MATERIAL_H__
 
 #include "../vecmath/vecmath.h"
+#include <list>
 
 class Scene;
 class ray;
