@@ -63,6 +63,26 @@ void TraceUI::cb_load_texture(Fl_Menu_* o, void* v) {
     }
 }
 
+void TraceUI::cb_load_normal(Fl_Menu_* o, void* v) {
+    TraceUI* pUI = whoami(o);
+
+    char* newfile = fl_file_chooser("Open Texture?", "*.bmp", NULL);
+
+    if (newfile != NULL) {
+        char buf[256];
+
+        if (pUI->texMap->loadNormal(newfile)) {
+            sprintf(buf, "Normal <%s>", newfile);
+            done = true; // terminate the previous rendering
+        }
+        else {
+            sprintf(buf, "Normal <Not Loaded>");
+        }
+
+        pUI->m_mainWindow->label(buf);
+    }
+}
+
 void TraceUI::cb_load_background(Fl_Menu_ *o, void *v) {
   TraceUI *pUI = whoami(o);
 
@@ -166,6 +186,11 @@ void TraceUI::cb_subsamplejitterbutton(Fl_Widget *o, void *v) {
 
 void TraceUI::cb_Texture(Fl_Widget* o, void* v) {
     ((TraceUI*)(o->user_data()))->m_nTexture =
+        ((Fl_Check_Button*)o)->value();
+}
+
+void TraceUI::cb_Bump(Fl_Widget* o, void* v) {
+    ((TraceUI*)(o->user_data()))->m_nBump =
         ((Fl_Check_Button*)o)->value();
 }
 
@@ -322,6 +347,7 @@ Fl_Menu_Item TraceUI::menuitems[] = {
     {"&File", 0, 0, 0, FL_SUBMENU},
     {"&Load Scene...", FL_ALT + 'l', (Fl_Callback *)TraceUI::cb_load_scene},
     {"&Load Texture...", FL_ALT + 't',(Fl_Callback*)TraceUI::cb_load_texture},
+     {"&Load Normal...", FL_ALT + 't',(Fl_Callback*)TraceUI::cb_load_normal},
     {"&Save Image...", FL_ALT + 's', (Fl_Callback *)TraceUI::cb_save_image},
     {"&Load Background Image...", FL_ALT + 'l',
      (Fl_Callback *)TraceUI::cb_load_background},
@@ -596,6 +622,13 @@ TraceUI::TraceUI() {
       10,430, 20, 20, "Texture");
  m_TextureButton->user_data((void*)(this));
  m_TextureButton->callback(cb_Texture);
+ m_TextureButton->value(false);
+
+ m_BumpButton = new Fl_Check_Button(
+     100, 430, 20, 20, "Bump Mapping");
+ m_BumpButton->user_data((void*)(this));
+ m_BumpButton->callback(cb_Bump);
+ m_BumpButton->value(false);
 
   m_mainWindow->callback(cb_exit2);
   m_mainWindow->when(FL_HIDE);

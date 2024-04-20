@@ -35,7 +35,12 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 }
 
 vec3f Sphere::MapToTexture(TextureMap* textMap, vec3f pos) const {
-	std::cout << " Sphere Map2Texture" << std::endl;
+
 	return textMap->getSphereColor(transform->globalToLocalCoords(pos));
+}
+
+vec3f Sphere::MapToNormal(TextureMap* textMap, vec3f pos, isect& i) const{
+	std::cout << " Sphere Map2Normal" << std::endl;
+	return textMap->getSphereNormal(transform->globalToLocalCoords(pos));
 }
 

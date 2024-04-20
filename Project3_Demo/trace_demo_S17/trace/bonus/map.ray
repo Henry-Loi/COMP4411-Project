@@ -14,7 +14,7 @@ point_light{position = (0, 0, 2);
 scale(4.0,2.0,1.0,
 	square {
   		material = {
-		diffuse = map "worldmap.bmp" ; 
+		diffuse = (1.0,1.0,1.0); 
   		}
 	}
 )

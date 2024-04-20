@@ -18,7 +18,15 @@ double WarnModel(SpotLight* l, const vec3f& P, const int specular_exp) {
 }
 // Apply the phong model to this point on the surface of the object, returning
 // the color of that point.
-vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTrigger,vec3f textDiffuse) const {
+
+////textureTrigger = 1 
+//texture
+////textureTrigger = 2 
+// normal
+////textureTrigger = 3 
+//texture & normal
+
+vec3f Material::shade(Scene* scene, const ray& r, const isect& i, int textureTrigger,vec3f textDiffuse, vec3f bumpNormal) const {
   // YOUR CODE HERE
 
   // For now, this method just returns the diffuse color of the object.
@@ -31,10 +39,13 @@ vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTr
   // You will need to call both distanceAttenuation() and shadowAttenuation()
   // somewhere in your code in order to compute shadows and light falloff.
 
-  vec3f I = ke + prod(ka, scene->ambientLightColor *
-                              traceUI->m_nAmbientLightIntensity);
+    vec3f I = ke;
   vec3f P = r.at(i.t);
   vec3f N = i.N.normalize();
+  //Bump
+  if (textureTrigger > 1) {
+      N = bumpNormal;
+  }
   vec3f V = (r.getDirection()).normalize();
   bool default_amb = TRUE; //if no ambient light, use the one from the Trace UI
   for (list<Light *>::const_iterator light = scene->beginLights();
@@ -50,7 +61,7 @@ vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTr
     auto v = *light;
     vec3f m_diffuse = vec3f(0.0, 0.0, 0.0);
     //Texture Mapping
-    if (!textureTrigger)
+    if (textureTrigger==0 ||textureTrigger ==2)
         m_diffuse = kd;
     else
         m_diffuse = textDiffuse;
@@ -64,7 +75,7 @@ vec3f Material::shade(Scene* scene, const ray& r, const isect& i, bool textureTr
     //apply warn model
     double warn = 1.0;
     if (dynamic_cast<SpotLight*>(u)) {
-        cout << "spotlight" << endl;
+
         SpotLight* spotL = dynamic_cast<SpotLight*>(u);
         warn = WarnModel(spotL, P, traceUI->m_nWarnExponent);
         if (warn < 0)
