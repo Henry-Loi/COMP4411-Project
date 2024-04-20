@@ -29,39 +29,40 @@ void ParticleSystem::init() {
     Particle particle = generateRandomParticle();
     float t = irand(0, numEmit);
     particle.position += particle.velocity * t + dir * force * t * t / 2;
+    float scale = 0.05;
     if (particle.position.length() > vec3f(1.3, 1.3, 0).length()) {
       particle.color =
           vec3f((endColorMax[0] - (endColorMax[0] - endColorMin[0]) *
-                                      particle.position.length()),
+                                      particle.position.length() * scale),
                 (endColorMax[1] - (endColorMax[1] - endColorMin[1]) *
-                                      particle.position.length()),
+                                      particle.position.length() * scale),
                 (endColorMax[2] - (endColorMax[2] - endColorMin[2]) *
-                                      particle.position.length()));
+                                      particle.position.length() * scale));
     } else if (particle.position.length() > vec3f(0.7, 0.7, 0).length()) {
       particle.color =
           vec3f(((endColorMax[0] - (endColorMax[0] - endColorMin[0]) *
-                                       particle.position.length()) +
+                                       particle.position.length() * scale) +
                  (initColorMax[0] - (initColorMax[0] - initColorMin[0]) *
-                                        particle.position.length())) /
+                                        particle.position.length() * scale)) /
                     2,
                 ((endColorMax[1] - (endColorMax[1] - endColorMin[1]) *
-                                       particle.position.length()) +
+                                       particle.position.length() * scale) +
                  (initColorMax[1] - (initColorMax[1] - initColorMin[1]) *
-                                        particle.position.length())) /
+                                        particle.position.length() * scale)) /
                     2,
                 ((endColorMax[2] - (endColorMax[2] - endColorMin[2]) *
-                                       particle.position.length()) +
+                                       particle.position.length() * scale) +
                  (initColorMax[2] - (initColorMax[2] - initColorMin[2]) *
-                                        particle.position.length())) /
+                                        particle.position.length() * scale)) /
                     2);
     } else {
       particle.color =
           vec3f((initColorMax[0] - (initColorMax[0] - initColorMin[0]) *
-                                       particle.position.length()),
+                                       particle.position.length() * scale),
                 (initColorMax[1] - (initColorMax[1] - initColorMin[1]) *
-                                       particle.position.length()),
+                                       particle.position.length() * scale),
                 (initColorMax[2] - (initColorMax[2] - initColorMin[2]) *
-                                       particle.position.length()));
+                                       particle.position.length() * scale));
     }
     particles.push_back(particle);
   }
