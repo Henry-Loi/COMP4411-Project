@@ -7,7 +7,6 @@
 #include <array>
 #include <cmath>
 #include <iostream>
-#include "modelerui.h"
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -105,6 +104,15 @@ void RobotModel::set_mood(int state) {
     ModelerApplication::Instance()->SetControlValue(LEFTSIDEFEET_ROTATE, 0);
     ModelerApplication::Instance()->SetControlValue(RIGHTSIDEFEET_ROTATE, 0);
 
+    ModelerApplication::Instance()->SetControlValue(LEFTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(RIGHTSIDELEG_YAWROTATE, 0);
+    ModelerApplication::Instance()->SetControlValue(L_SYSTEM_GENERATION, 5);
+    break;
+  default:
+    break;
+  }
+}
+
 void RobotModel::initTextureMap() {
   for (int i = 0; i < NUM_OF_TEXTURES; i++) {
     textureMaps[i] = new TextureMap(texture_list[i]);
@@ -127,7 +135,7 @@ void RobotModel::draw() {
     COLOR1 = {223.0 / 255.0, 89.0 / 255.0, 0.0};
   set_model_lighting(VAL(MOOD));
 
-  //set_mood(VAL(MOOD));
+  set_mood(VAL(MOOD));
 
   // draw the floor
   setAmbientColor(.1f, .1f, .1f);
@@ -453,19 +461,6 @@ void RobotModel::draw() {
     glPopMatrix();
   }
   // goal display
-  if (VAL(ANIMATION)==1) {
-      SETVAL(FULL_MOVEMENT, 1);
-      float increment = 0.5;
-      if (anim_index < 45) {
-          if (anim_flag == 0) {
-              SETVAL(BODY_PITCH, anim_index);
-              anim_index += increment;
-              ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
-
-          }
-          else {
-              anim_index += increment;
-              anim_flag = 0;
 
   if (forest_flag) {
     // set yellow color
@@ -564,7 +559,6 @@ int main() {
   controls[GOAL_X] = ModelerControl("Goal X", -8, 8, 0.1f, 4);
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
-  controls[ANIMATION] = ModelerControl("Animation", 0, 1, 1, 0);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);

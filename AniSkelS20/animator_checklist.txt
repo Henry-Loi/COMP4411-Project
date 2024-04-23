@@ -1,7 +1,7 @@
 Animator Bells and Whistles Checklist for grading 
 (submit ONLY if you have implemented any of the B&Ws below)
 
-HKUST login(s):
+HKUST login(s): hchloi, ykkok
 
 Delete yes/no when appropriate
 
