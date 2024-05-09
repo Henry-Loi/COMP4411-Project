@@ -210,7 +210,7 @@ void RobotModel::draw() {
         sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
              direction[0] * direction[0]) -
         1.5;
-    // float angle3 = atan2(direction[2], direction[1]);
+    // float angle3 = atan2(direction[2], direction[1]
 
     if (sqrt(direction[2] * direction[2] + direction[1] * direction[1] +
              direction[0] * direction[0]) -
@@ -275,8 +275,6 @@ void RobotModel::draw() {
   float sideRightFeetangle = -VAL(RIGHTSIDEFEET_ROTATE);
   float frontLegangle = VAL(FRONTLEG_ROTATE);
   float torsoAngle = VAL(BODY_PITCH);
-  std::cout << "initialvalue" << sideLeftLegangle << " " << sideRightLegangle
-            << " " << std::endl;
   // draw torso and waist (root)
   //------------------------------------------------//
   setAmbientColor(0.8f, 0.8f, 0.8f);

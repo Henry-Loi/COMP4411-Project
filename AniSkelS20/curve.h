@@ -8,6 +8,8 @@
 #include <string>
 
 #include "Point.h"
+#include "mat.h"
+#include "vec.h"
 
 class CurveEvaluator;
 

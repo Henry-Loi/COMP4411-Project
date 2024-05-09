@@ -1,6 +1,5 @@
 #ifndef INCLUDED_LINEAR_CURVE_EVALUATOR_H
 #define INCLUDED_LINEAR_CURVE_EVALUATOR_H
-
 #pragma warning(disable : 4786)  
 
 #include "CurveEvaluator.h"
