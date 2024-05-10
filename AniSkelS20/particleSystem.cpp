@@ -14,9 +14,14 @@
  * Constructors
  ***************/
 
-ParticleSystem::ParticleSystem() 
+ParticleSystem::ParticleSystem(double gravity, double viscous) 
 {
+	srand(time(0));
+	curT = 0;
+	forces.push_back(new Gravity(Vec3d(0.0, -gravity,0.0)));
+	forces.push_back(new Viscous(viscous));
 	// TODO
+
 
 }
 
@@ -86,13 +91,38 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
 
 	// TODO
+	float deltaT = t - curT;
+	curT= t;
+	//if (isSimulate())
+	//{
+		//if (!isBakedAt(t))
+		//{
+			for (int i = 0; i<particles.size();++i)
+			{
+				particles[i]->nextPos(deltaT);
+			}
+			//bakeParticles(t);
+			//printf("not baked\n");
+		//}
+		//else
+		//{
+		//	particles = bakeInfo[t];
+		//	printf("baked\n");
+		//}
+	//}
 }
 
 
 /** Render particles */
 void ParticleSystem::drawParticles(float t)
 {
-
+	if (isSimulate())
+	{
+		for (int i = 0; i < particles.size(); ++i)
+		{
+			particles[i]->draw();
+		}
+	}
 	// TODO
 }
 
@@ -118,4 +148,29 @@ void ParticleSystem::clearBaked()
 
 
 
+void ParticleSystem::createParticles(Vec3d pos, int num) {
+	if (simulate)
+	{
+		for (int i = 0; i < num; ++i)
+		{
+			double mass = rand() % 10 + 0.2;
+			Particle p = Particle(pos, mass);
+			double F = rand() % 10 / 10.0 + 0.2;
+			double theta = rand() % 360 / 57.3;
+
+			double zSpeed = -(rand() % 10 / 10.0 + 5);
+
+			double ySpeed = 0;
+			double xSpeed = -(rand() % 10 / 10.0) + 0.5;
+			p.setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));
+			for (std::vector<Force*>::iterator it = forces.begin(); it != forces.end(); it++)
+			{
+				p.add_force(*it);
+			}
+			particles.push_back(&p);
+
+		}
+
+	}
+}
 

@@ -17,6 +17,10 @@
 #define __PARTICLE_SYSTEM_H__
 
 #include "vec.h"
+#include "particle.h"
+#include <vector>
+
+using namespace std;
 
 
 
@@ -28,7 +32,7 @@ public:
 
 	/** Constructor **/
 	ParticleSystem();
-
+	ParticleSystem(double gravity, double viscous);
 
 	/** Destructor **/
 	virtual ~ParticleSystem();
@@ -71,12 +75,14 @@ public:
 	bool isSimulate() { return simulate; }
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
+	void ParticleSystem::createParticles(Vec3d pos,int num);
 
 
 
 protected:
-	
-
+	vector<Particle*> particles;
+	vector<Force*> forces;
+	float curT;
 
 	/** Some baking-related state **/
 	float bake_fps;						// frame rate at which simulation was baked

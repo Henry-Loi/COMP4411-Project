@@ -4,7 +4,8 @@
 #include <GL/glu.h>
 #include <cstdio>
 #include <math.h>
-
+#include "vec.h"
+#include "mat.h"
 #include "modelerapp.h"
 #include "modelerglobals.h"
 
@@ -573,3 +574,4 @@ void setDiffuseColorwithAlpha(float r, float g, float b, float opacity) {
     glColor4f(r, g, b, opacity); // Use glColor4f for setting color with opacity
   }
 }
+

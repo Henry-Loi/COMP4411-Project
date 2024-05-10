@@ -543,6 +543,7 @@ void ModelerUI::cb_loop(Fl_Light_Button* o, void* v)
 
 inline void ModelerUI::cb_simulate_i(Fl_Light_Button* o, void*) 
 {
+	
 }
 
 void ModelerUI::cb_simulate(Fl_Light_Button* o, void* v) 
