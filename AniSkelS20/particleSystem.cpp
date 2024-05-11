@@ -74,6 +74,8 @@ void ParticleSystem::resetSimulation(float t) {
 void ParticleSystem::computeForcesAndUpdateParticles(float t) {
 
   // TODO
+   bake_fps = t - curT;
+  
   float deltaT = t - curT;
   curT = t;
   if (isSimulate()) {
@@ -125,10 +127,10 @@ void ParticleSystem::createParticles(Vec3d pos, int num) {
         Particle p = Particle(pos, mass);
         double F = rand() % 10 / 10.0 + 0.2;
         double theta = rand() % 360 / 57.3;
-        Force* gen_force = new Force(Vec3d(0.0, F, 0.0));
-        forces.push_back(gen_force);
+        //Force* gen_force = new Force(Vec3d(0.0, F, 0.0));
+        //forces.push_back(gen_force);
         double zSpeed = -(rand() % 10 / 10.0 + 5);
-
+        
         double ySpeed = 0;
         double xSpeed = -(rand() % 10 / 10.0) + 0.5;
         p.setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));

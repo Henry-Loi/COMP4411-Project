@@ -10,12 +10,16 @@
 #include <stdio.h>
 
 void Particle::add_force(Force *f) {
+    Vec3d temp;
+    temp = f->force;
+    if (Gravity* g = dynamic_cast<Gravity*>(f)) {
+        temp = prod((g->g), Vec3d(0.0, mass, 0.0));
+    }
 
-  // if (Gravity* g = dynamic_cast<Gravity*>(f)) {
-  //	g->force = prod((g->g),Vec3d(0.0, mass, 0.0));
-  // }
-  forces.push_back(f);
-  printf("Added force %f %f %f\n", f->force[0], f->force[1], f->force[2]);
+        
+   Force* force = new Force(temp);
+  forces.push_back(force);
+  printf("Added force %f %f %f\n", force->force[0], force->force[1], force->force[2]);
   printf("Force %f %f %f\n", forces[0]->force[0], forces[0]->force[1],
          forces[0]->force[2]);
   std::cout << "Size: " << forces.size() << std::endl;
@@ -28,6 +32,9 @@ void Particle::nextPos(float deltaT) {
     printf("No forces\n");
     return;
   }
+  for (Force* force : forces)
+      if(force!=nullptr)
+        force->addForce(this);
   //for (std::vector<Force *>::iterator it = forces.begin(); it != forces.end();
   //     it++) {
   //  printf("Force %f %f %f\n", (*it)->force[0], (*it)->force[1],

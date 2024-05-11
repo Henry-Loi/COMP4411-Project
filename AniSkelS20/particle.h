@@ -22,19 +22,19 @@ public:
   Gravity(Vec3d v) : Force(Vec3d(0.0, 0.0, 0.0)), g(v) {}
   Vec3d g; // gravity
 
-  virtual void addForce(Particle *p);
+  void addForce(Particle *p);
 };
 
 class Viscous : public Force {
 public:
   Viscous(double m) : K(m), Force(Vec3d(0.0, 0.0, 0.0)) {}
   double K; // k of the force
-  virtual void addForce(Particle *p);
+  void addForce(Particle *p);
 };
 
 class Particle {
 public:
-  Particle(Vec3d p, double m) : position(p), mass(m) {}
+	Particle(Vec3d p, double m) : position(p), mass(m) { forces.clear(); }
 
   inline void setPos(Vec3d p) { position = p; }
   inline void setSpeed(Vec3d s) { speed = s; }
