@@ -115,7 +115,9 @@ public:
 	Point gridToWindow( Point p ) ;
 	CurveEvaluator** m_ppceCurveEvaluators;
 	void setTension(float tension);
+	float m_GWtension = 2.0;
 
+	void currCurveTension(float tension);
 protected:
 	int m_iEventToDo;
 	bool m_bHasEvent;

@@ -143,7 +143,7 @@ int GraphWidget::addCurve(const float fStartVal, const float fMinY, const float 
 {
 	Curve* pcrv = new Curve(m_fEndTime, fStartVal);
 	pcrv->setEvaluator(m_ppceCurveEvaluators[CURVE_TYPE_LINEAR]);
-
+	m_ppceCurveEvaluators[CURVE_TYPE_LINEAR]->tension = m_GWtension;
 	m_pcrvvCurves.push_back(pcrv);
 	m_cdvCurveDomains.push_back(CurveDomain(fMinY, fMaxY));
 	m_ivCurveTypes.push_back(CURVE_TYPE_LINEAR);
@@ -849,6 +849,12 @@ void GraphWidget::currCurveWrap(bool bWrap)
 		m_pcrvvCurves[m_iCurrCurve]->wrap(bWrap);
 	}
 }
+void GraphWidget::currCurveTension(float tension)
+{
+	if (m_iCurrCurve >= 0) {
+		m_pcrvvCurves[m_iCurrCurve]->GWTension(tension);
+	}
+}
 
 void GraphWidget::wrapCurve(int iCurve, bool bWrap)
 {
@@ -1140,6 +1146,6 @@ Point GraphWidget::gridToWindow( Point p ) {
 	return val;
 }
 void  GraphWidget::setTension(float tension) {
-	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM];
+	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM]->tension=tension;
 }
 

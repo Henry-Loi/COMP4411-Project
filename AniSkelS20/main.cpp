@@ -573,11 +573,9 @@ int main() {
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
 
-  controls[TENSION] = ModelerControl("Tension (1/n)", 1.0, 10.0, 0.1f, 0);
-
   ParticleSystem* ps = new ParticleSystem(5, 0.1);
   ModelerApplication::Instance()->SetParticleSystem(ps);
-  ModelerApplication::Instance()->SetTension(VAL(TENSION));
+  
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
   return ModelerApplication::Instance()->Run();

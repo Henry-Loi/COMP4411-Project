@@ -54,7 +54,6 @@ enum SampleModelControls {
   CHARACTER,
   MOOD,
   ANIMATION,
-  TENSION,
   NUMCONTROLS,
 };
 
