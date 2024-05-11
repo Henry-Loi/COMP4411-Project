@@ -118,7 +118,7 @@ void ParticleSystem::clearBaked() {
 }
 
 void ParticleSystem::createParticles(Vec3d pos, int num) {
-  if (simulate) {
+  if (isSimulate()) {
     if (!isBakedAt(curT + bake_fps)) {
       for (int i = 0; i < num; ++i) {
         double mass = rand() % 10 + 0.2;

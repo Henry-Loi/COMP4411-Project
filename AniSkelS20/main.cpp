@@ -115,7 +115,7 @@ void RobotModel::set_mood(int state) {
 }
 void RobotModel::drawParticles(Mat4d CameraMatrix, int num) {
   Mat4d WorldMatrix = CameraMatrix.inverse() * getModelViewMatrix();
-  Vec4d pos = WorldMatrix * Vec4d(0.5, 1, -2, 1);
+  Vec4d pos = WorldMatrix * Vec4d(3, 3, 3, 1);
   ParticleSystem *ps = ModelerApplication::Instance()->GetParticleSystem();
   ps->createParticles(Vec3d(pos[0], pos[1], pos[2]), num);
 }
