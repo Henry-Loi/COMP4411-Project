@@ -12,7 +12,7 @@ class Force {
 public:
   Vec3d force;
   Force(Vec3d input) : force(input) {}
-  ~Force() {}
+  ~Force() { cout << "force deleted" << endl; }
   virtual void addForce(Particle* p) {
   
   };
@@ -21,20 +21,22 @@ class Gravity : public Force {
 public:
   Gravity(Vec3d v) : Force(Vec3d(0.0, 0.0, 0.0)), g(v) {}
   Vec3d g; // gravity
+  void addForce(Particle* p); 
 
-  void addForce(Particle *p);
+
 };
 
 class Viscous : public Force {
 public:
   Viscous(double m) : K(m), Force(Vec3d(0.0, 0.0, 0.0)) {}
   double K; // k of the force
-  void addForce(Particle *p);
+  void addForce(Particle* p); 
+
 };
 
 class Particle {
 public:
-	Particle(Vec3d p, double m) : position(p), mass(m) { forces.clear(); }
+	Particle(Vec3d p, double m) : position(p), mass(m) { p_forces.clear(); }
 
   inline void setPos(Vec3d p) { position = p; }
   inline void setSpeed(Vec3d s) { speed = s; }
@@ -53,7 +55,7 @@ private:
   Vec3d position;
   Vec3d speed;
   Vec3d netForce;
-  std::vector<Force *> forces;
+  std::vector<Force *> p_forces;
 };
 
 #endif

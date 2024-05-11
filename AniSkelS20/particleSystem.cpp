@@ -124,7 +124,7 @@ void ParticleSystem::createParticles(Vec3d pos, int num) {
     if (!isBakedAt(curT + bake_fps)) {
       for (int i = 0; i < num; ++i) {
         double mass = rand() % 10 + 0.2;
-        Particle p = Particle(pos, mass);
+        Particle* p = new Particle(pos, mass);
         double F = rand() % 10 / 10.0 + 0.2;
         double theta = rand() % 360 / 57.3;
         //Force* gen_force = new Force(Vec3d(0.0, F, 0.0));
@@ -133,12 +133,12 @@ void ParticleSystem::createParticles(Vec3d pos, int num) {
         
         double ySpeed = 0;
         double xSpeed = -(rand() % 10 / 10.0) + 0.5;
-        p.setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));
+        p->setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));
         for (std::vector<Force *>::iterator it = forces.begin();
              it != forces.end(); it++) {
-          p.add_force(*it);
+          p->add_force(*it);
         }
-        particles.push_back(&p);
+        particles.push_back(p);
       }
     }
   }
