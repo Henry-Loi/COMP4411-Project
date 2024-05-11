@@ -28,14 +28,14 @@ void Particle::nextPos(float deltaT) {
     printf("No forces\n");
     return;
   }
-  for (std::vector<Force *>::iterator it = forces.begin(); it != forces.end();
-       it++) {
-    printf("Force %f %f %f\n", (*it)->force[0], (*it)->force[1],
-           (*it)->force[2]);
-    if (*it != nullptr) {
-      (*it)->addForce(this);
-    }
-  }
+  //for (std::vector<Force *>::iterator it = forces.begin(); it != forces.end();
+  //     it++) {
+  //  printf("Force %f %f %f\n", (*it)->force[0], (*it)->force[1],
+  //         (*it)->force[2]);
+  //  if (*it != nullptr) {
+  //    (*it)->addForce(this);
+  //  }
+  //}
   speed += netForce / mass * deltaT;
   position += speed * deltaT;
 }

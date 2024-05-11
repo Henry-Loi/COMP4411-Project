@@ -351,7 +351,7 @@ void RobotModel::draw() {
   glEnd();
   glPopMatrix();
 
-  drawParticles(getModelViewMatrix(), 100);
+  drawParticles(getModelViewMatrix(), 10);
 
   glPopMatrix();
   //------------------------------------------------//

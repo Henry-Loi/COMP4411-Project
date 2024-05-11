@@ -93,27 +93,8 @@ ModelerApplication::~ModelerApplication() {
   delete m_ui;
 }
 
-int ModelerApplication::Run() {
-  if (m_numControls == -1) {
-    fprintf(stderr,
-            "ERROR: ModelerApplication must be initialized before Run()!\n");
-    return -1;
-  }
 
-  // Just tell FLTK to go for it.
-  Fl::visual(FL_RGB | FL_DOUBLE);
-  m_ui->show();
-  Fl::add_timeout(0, ModelerApplication::RedrawLoop, NULL);
 
-  // Automatically load animator.ani and animator.ani.cam if they exist
-  m_ui->autoLoadNPlay();
-
-  return Fl::run();
-}
-
-double ModelerApplication::GetControlValue(int controlNumber) {
-  return m_ui->controlValue(controlNumber);
-}
 
 void ModelerApplication::SetControlValue(int controlNumber, double value) {
   m_ui->controlValue(controlNumber, value);
@@ -123,57 +104,56 @@ ParticleSystem *ModelerApplication::GetParticleSystem() { return ps; }
 
 void ModelerApplication::SetParticleSystem(ParticleSystem *s) { ps = s; }
 
-float ModelerApplication::GetTime() { return m_ui->currTime(); }
 
-int ModelerApplication::GetFps() { return m_ui->fps(); }
+
 
 bool ModelerApplication::Animating() { return m_animating; }
 
-void ModelerApplication::ValueChangedCallback() {
-
-  ModelerApplication *m_app = ModelerApplication::Instance();
-
-  ModelerUI *m_ui = m_app->m_ui;
-  float currTime = m_ui->currTime();
-  float endTime = m_ui->endTime();
-  float playEndTime = m_ui->playEndTime();
-
-  ParticleSystem *ps = m_app->GetParticleSystem();
-
-  if (ps != NULL) {
-    bool simulating = ps->isSimulate();
-
-    // stop simulation if we're at endTime
-    double TIME_EPSILON = 0.05;
-    if (simulating && (currTime >= (playEndTime - TIME_EPSILON))) {
-      ps->stopSimulation(currTime);
-    }
-
-    // check to see if we're simulating still
-    simulating = ps->isSimulate();
-    if (simulating != m_ui->simulate()) {
-      // if the psystem is dirty,
-      // we need to sync to it
-      if (ps->isDirty()) {
-        m_ui->simulate(simulating == true);
-      }
-      // otherwise, we sync the psystem
-      // to the ui
-      else if (m_ui->simulate()) {
-        ps->startSimulation(currTime);
-        printf("start simulation\n");
-      } else {
-        ps->stopSimulation(currTime);
-      }
-    }
-    ps->setDirty(false);
-  }
-
-  // update camera position
-  m_ui->m_pwndModelerView->m_camera->update(currTime);
-
-  m_ui->redrawModelerView();
-}
+//void ModelerApplication::ValueChangedCallback() {
+//
+//  ModelerApplication *m_app = ModelerApplication::Instance();
+//
+//  ModelerUI *m_ui = m_app->m_ui;
+//  float currTime = m_ui->currTime();
+//  float endTime = m_ui->endTime();
+//  float playEndTime = m_ui->playEndTime();
+//
+//  ParticleSystem *ps = m_app->GetParticleSystem();
+//
+//  if (ps != NULL) {
+//    bool simulating = ps->isSimulate();
+//
+//    // stop simulation if we're at endTime
+//    double TIME_EPSILON = 0.05;
+//    if (simulating && (currTime >= (playEndTime - TIME_EPSILON))) {
+//      ps->stopSimulation(currTime);
+//    }
+//
+//    // check to see if we're simulating still
+//    simulating = ps->isSimulate();
+//    if (simulating != m_ui->simulate()) {
+//      // if the psystem is dirty,
+//      // we need to sync to it
+//      if (ps->isDirty()) {
+//        m_ui->simulate(simulating == true);
+//      }
+//      // otherwise, we sync the psystem
+//      // to the ui
+//      else if (m_ui->simulate()) {
+//        ps->startSimulation(currTime);
+//        printf("start simulation\n");
+//      } else {
+//        ps->stopSimulation(currTime);
+//      }
+//    }
+//    ps->setDirty(false);
+//  }
+//
+//  // update camera position
+//  m_ui->m_pwndModelerView->m_camera->update(currTime);
+//
+//  m_ui->redrawModelerView();
+//}
 
 void ModelerApplication::RedrawLoop(void *) {
   if (ModelerApplication::Instance()->m_animating)
@@ -205,13 +185,12 @@ double ModelerApplication::GetControlValue(int controlNumber) {
   return m_ui->controlValue(controlNumber);
 }
 
-void ModelerApplication::SetControlValue(int controlNumber, double value) {
-  m_ui->controlValue(controlNumber, value);
-}
+//void ModelerApplication::SetControlValue(int controlNumber, double value) {
+//  m_ui->controlValue(controlNumber, value);
+//}
 
-ParticleSystem *ModelerApplication::GetParticleSystem() { return ps; }
 
-void ModelerApplication::SetParticleSystem(ParticleSystem *s) { ps = s; }
+
 void ModelerApplication::SetTension(float tension) {
   m_ui->m_pwndGraphWidget->setTension(tension);
 }
@@ -220,7 +199,7 @@ float ModelerApplication::GetTime() { return m_ui->currTime(); }
 
 int ModelerApplication::GetFps() { return m_ui->fps(); }
 
-bool ModelerApplication::Animating() { return m_animating; }
+
 
 void ModelerApplication::ValueChangedCallback() {
 
@@ -267,10 +246,10 @@ void ModelerApplication::ValueChangedCallback() {
   m_ui->redrawModelerView();
 }
 
-void ModelerApplication::RedrawLoop(void *) {
-  if (ModelerApplication::Instance()->m_animating)
-    ModelerApplication::Instance()->m_ui->redrawModelerView();
-
-  // 1/50 second update is good enough
-  Fl::add_timeout(0.025, ModelerApplication::RedrawLoop, NULL);
-}
+//void ModelerApplication::RedrawLoop(void *) {
+//  if (ModelerApplication::Instance()->m_animating)
+//    ModelerApplication::Instance()->m_ui->redrawModelerView();
+//
+//  // 1/50 second update is good enough
+//  Fl::add_timeout(0.025, ModelerApplication::RedrawLoop, NULL);
+//}

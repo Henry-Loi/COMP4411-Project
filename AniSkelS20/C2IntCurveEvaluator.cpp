@@ -6,16 +6,16 @@
 #define SAMPLE 150
 
 
-void C2InterpolatingCurveEvaluator::evaluateCurve(const std::vector<Point>& controlPoints,
-	std::vector<Point>& evaluatedPoints,
-	const float& animationLength,
+void C2InterpolatingCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
+	std::vector<Point>& ptvEvaluatedCurvePts,
+	const float& fAniLength,
 	const bool& bWrap, const float in_tension, const int continuous) const
 {
-	evaluatedPoints.clear();
+	ptvEvaluatedCurvePts.clear();
 
 	vector<Point> curve;
-	curve.insert(curve.end(), controlPoints.begin(), controlPoints.end());
-	curve.push_back(Point(curve[0].x + animationLength, curve[0].y));
+	curve.insert(curve.end(), ptvCtrlPts.begin(), ptvCtrlPts.end());
+	curve.push_back(Point(curve[0].x + fAniLength, curve[0].y));
 
 
 	//think of each cubic segment as a hermite curve, for which we get to set the position and deriavative of the endpoints
@@ -24,7 +24,7 @@ void C2InterpolatingCurveEvaluator::evaluateCurve(const std::vector<Point>& cont
 
 	vector<float> D(curve.size(), 0.0);
 
-	int N = controlPoints.size();
+	int N = ptvCtrlPts.size();
 	if (bWrap == false)
 		N = N - 1;
 
@@ -203,18 +203,18 @@ void C2InterpolatingCurveEvaluator::evaluateCurve(const std::vector<Point>& cont
 			Vec4d T(interval * interval * interval, interval * interval, interval, 1);
 			float length_x = curve[i + 1].x - curve[i].x;
 			if (length_x < 0)
-				length_x = length_x + animationLength;
+				length_x = length_x + fAniLength;
 			float py = T * vec;
 			float px = curve[i].x + interval * length_x;
-			px = fmod(px, animationLength);
-			evaluatedPoints.push_back(Point(px, py));
+			px = fmod(px, fAniLength);
+			ptvEvaluatedCurvePts .push_back(Point(px, py));
 		}
 	}
 
 
 	if (bWrap == false)
 	{
-		evaluatedPoints.push_back(Point(0, controlPoints[0].y));
-		evaluatedPoints.push_back(Point(animationLength, controlPoints[controlPoints.size()-1].y));
+		ptvEvaluatedCurvePts.push_back(Point(0, ptvCtrlPts [0].y));
+		ptvEvaluatedCurvePts.push_back(Point(fAniLength, ptvCtrlPts[ptvCtrlPts.size()-1].y));
 	}
 }

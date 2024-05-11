@@ -125,7 +125,8 @@ void ParticleSystem::createParticles(Vec3d pos, int num) {
         Particle p = Particle(pos, mass);
         double F = rand() % 10 / 10.0 + 0.2;
         double theta = rand() % 360 / 57.3;
-
+        Force* gen_force = new Force(Vec3d(0.0, F, 0.0));
+        forces.push_back(gen_force);
         double zSpeed = -(rand() % 10 / 10.0 + 5);
 
         double ySpeed = 0;
@@ -145,3 +146,4 @@ bool ParticleSystem::isBakedAt(float t) {
   map<float, std::vector<Particle *>>::iterator it = bakeInfo.find(t);
   return (it != bakeInfo.end());
 }
+

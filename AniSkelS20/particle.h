@@ -13,7 +13,9 @@ public:
   Vec3d force;
   Force(Vec3d input) : force(input) {}
   ~Force() {}
-  virtual void addForce(Particle *p) = 0;
+  virtual void addForce(Particle* p) {
+  
+  };
 };
 class Gravity : public Force {
 public:
