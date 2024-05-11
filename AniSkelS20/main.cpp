@@ -340,7 +340,18 @@ void RobotModel::draw() {
   glTranslated(1.0, 0, 0);
 
   // particle system
-  drawParticles(getModelViewMatrix(), 10);
+  glTranslated(1, 1, 1);
+
+  // draw point to represent the particle system
+  setDiffuseColor(COLOR_RED);
+  glPushMatrix();
+  glPointSize(5);
+  glBegin(GL_POINTS);
+  glVertex3f(0, 0, 0);
+  glEnd();
+  glPopMatrix();
+
+  drawParticles(getModelViewMatrix(), 100);
 
   glPopMatrix();
   //------------------------------------------------//
