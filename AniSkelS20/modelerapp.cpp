@@ -141,6 +141,10 @@ void ModelerApplication::SetParticleSystem(ParticleSystem *s)
 {
 	ps = s;
 }
+void ModelerApplication::SetTension(float tension)
+{
+	m_ui->m_pwndGraphWidget->setTension(tension);
+}
 
 float ModelerApplication::GetTime()
 {

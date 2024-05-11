@@ -17,6 +17,7 @@ public:
 							   const bool& wrap_control_points) const = 0;
 	static float s_fFlatnessEpsilon;
 	static int s_iSegCount;
+	float tension = 0.0;
 };
 
 

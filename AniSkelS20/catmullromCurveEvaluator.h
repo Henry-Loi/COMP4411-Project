@@ -11,6 +11,9 @@ using namespace std;
 class CatmullromCurveEvaluator : public CurveEvaluator
 {
 public:
+	CatmullromCurveEvaluator() {
+		tension = 2.0;
+	}
 	void evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 		std::vector<Point>& ptvEvaluatedCurvePts,
 		const float& fAniLength,

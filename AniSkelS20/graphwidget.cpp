@@ -1139,4 +1139,7 @@ Point GraphWidget::gridToWindow( Point p ) {
 
 	return val;
 }
+void  GraphWidget::setTension(float tension) {
+	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM];
+}
 
