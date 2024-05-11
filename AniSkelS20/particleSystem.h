@@ -71,7 +71,7 @@ public:
   bool isSimulate() { return simulate; }
   bool isDirty() { return dirty; }
   void setDirty(bool d) { dirty = d; }
-  void ParticleSystem::createParticles(Vec3d pos, int num);
+  void createParticles(Vec3d pos, int num);
 
 protected:
   vector<Particle *> particles;

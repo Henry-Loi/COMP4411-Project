@@ -15,11 +15,14 @@ void Particle::add_force(Force *f) {
   //	g->force = prod((g->g),Vec3d(0.0, mass, 0.0));
   // }
   forces.push_back(f);
-  std::cout << forces.size() << std::endl;
+  printf("Added force %f %f %f\n", f->force[0], f->force[1], f->force[2]);
+  printf("Force %f %f %f\n", forces[0]->force[0], forces[0]->force[1],
+         forces[0]->force[2]);
+  std::cout << "Size: " << forces.size() << std::endl;
 }
 
 void Particle::nextPos(float deltaT) {
-  netForce = Vec3d(0.0, 0.0, 0.0);
+  //   netForce = Vec3d(0.0, 0.0, 0.0);
 
   if (forces.size() == 0) {
     printf("No forces\n");
@@ -27,9 +30,8 @@ void Particle::nextPos(float deltaT) {
   }
   for (std::vector<Force *>::iterator it = forces.begin(); it != forces.end();
        it++) {
-    // if (Viscous* g = dynamic_cast<Viscous*>(*it)) {
-    //	g->force = -(g->K)*speed;
-    // }
+    printf("Force %f %f %f\n", (*it)->force[0], (*it)->force[1],
+           (*it)->force[2]);
     if (*it != nullptr) {
       (*it)->addForce(this);
     }
@@ -51,8 +53,12 @@ void Particle::draw() {
 
 void Gravity::addForce(Particle *p) {
   p->setNetForce(p->getNetForce() + g * p->getMass());
+  printf("Gravity %f %f %f\n", p->getNetForce()[0], p->getNetForce()[1],
+         p->getNetForce()[2]);
 }
 
 void Viscous::addForce(Particle *p) {
   p->setNetForce(p->getNetForce() - K * p->getSpeed());
+  printf("Viscous %f %f %f\n", p->getNetForce()[0], p->getNetForce()[1],
+         p->getNetForce()[2]);
 }

@@ -119,22 +119,24 @@ void ParticleSystem::clearBaked() {
 
 void ParticleSystem::createParticles(Vec3d pos, int num) {
   if (simulate) {
-    for (int i = 0; i < num; ++i) {
-      double mass = rand() % 10 + 0.2;
-      Particle p = Particle(pos, mass);
-      double F = rand() % 10 / 10.0 + 0.2;
-      double theta = rand() % 360 / 57.3;
+    if (!isBakedAt(curT + bake_fps)) {
+      for (int i = 0; i < num; ++i) {
+        double mass = rand() % 10 + 0.2;
+        Particle p = Particle(pos, mass);
+        double F = rand() % 10 / 10.0 + 0.2;
+        double theta = rand() % 360 / 57.3;
 
-      double zSpeed = -(rand() % 10 / 10.0 + 5);
+        double zSpeed = -(rand() % 10 / 10.0 + 5);
 
-      double ySpeed = 0;
-      double xSpeed = -(rand() % 10 / 10.0) + 0.5;
-      p.setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));
-      for (std::vector<Force *>::iterator it = forces.begin();
-           it != forces.end(); it++) {
-        p.add_force(*it);
+        double ySpeed = 0;
+        double xSpeed = -(rand() % 10 / 10.0) + 0.5;
+        p.setSpeed(Vec3d(xSpeed, ySpeed, zSpeed));
+        for (std::vector<Force *>::iterator it = forces.begin();
+             it != forces.end(); it++) {
+          p.add_force(*it);
+        }
+        particles.push_back(&p);
       }
-      particles.push_back(&p);
     }
   }
 }
