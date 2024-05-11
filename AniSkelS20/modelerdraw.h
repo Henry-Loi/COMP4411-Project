@@ -5,10 +5,11 @@
 #ifndef MODELERDRAW_H
 #define MODELERDRAW_H
 
+#include "mat.h"
+#include "vec.h"
 #include <FL/gl.h>
 #include <cstdio>
-#include "vec.h"
-#include "mat.h"
+
 
 enum DrawModeSetting_t {
   NONE = 0,
@@ -39,7 +40,7 @@ public:
   GLfloat m_diffuseColor[4];
   GLfloat m_specularColor[4];
   GLfloat m_shininess;
- 
+
 private:
   ModelerDrawState();
   ModelerDrawState(const ModelerDrawState &) {}
@@ -101,8 +102,6 @@ void drawTriangle(double x1, double y1, double z1, double x2, double y2,
 void drawTorus(double, double);
 
 void drawMetaBall(void);
-
-
 
 #include <string>
 class LSystem {
@@ -177,4 +176,7 @@ public:
 void drawLSystemTree(float angle, float distance, float radius);
 void drawComplexShape();
 void setDiffuseColorwithAlpha(float r, float g, float b, float opacity);
+
+Mat4d getModelViewMatrix();
+
 #endif

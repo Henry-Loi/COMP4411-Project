@@ -2,17 +2,12 @@
 // very similar to this for when you make your model.
 #include "main.h"
 #include "modelerview.h"
-#include "modelerdraw.h"
-#include "modelerapp.h"
-#include "texturedraw.h"
 #include "particleSystem.h"
 #include "vec.h"
 #include <GL/gl.h>
 #include <array>
 #include <cmath>
 #include <iostream>
-
-
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -118,12 +113,11 @@ void RobotModel::set_mood(int state) {
     break;
   }
 }
-void drawParticles(Mat4d CameraMatrix, int num)
-{
-
-    Vec3d pos = Vec3d(1, 1, 1);
-    ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
-    ps->createParticles(Vec3d(pos[0], pos[1], pos[2]), num);
+void RobotModel::drawParticles(Mat4d CameraMatrix, int num) {
+  Mat4d WorldMatrix = CameraMatrix.inverse() * getModelViewMatrix();
+  Vec4d pos = WorldMatrix * Vec4d(0.5, 1, -2, 1);
+  ParticleSystem *ps = ModelerApplication::Instance()->GetParticleSystem();
+  ps->createParticles(Vec3d(pos[0], pos[1], pos[2]), num);
 }
 
 void RobotModel::initTextureMap() {
@@ -343,7 +337,10 @@ void RobotModel::draw() {
   glTranslated(0, 0.1, 1.5);
   if (VAL(LEVELOF_DETAILS) > 2)
     drawCylinder(0.8, 0.2, 0.2);
-  glTranslated(1.0, 0,0);
+  glTranslated(1.0, 0, 0);
+
+  // particle system
+  drawParticles(getModelViewMatrix(), 10);
 
   glPopMatrix();
   //------------------------------------------------//
@@ -573,7 +570,7 @@ int main() {
   controls[GOAL_Y] = ModelerControl("Goal Y", -8, 8, 0.1f, 0);
   controls[GOAL_Z] = ModelerControl("Goal Z", -8, 8, 0.1f, 0);
 
-  ParticleSystem* ps = new ParticleSystem(5, 0.1);
+  ParticleSystem *ps = new ParticleSystem(5, 0.1);
   ModelerApplication::Instance()->SetParticleSystem(ps);
 
   ModelerApplication::Instance()->Init(&createRobotModel, controls,

@@ -17,85 +17,79 @@
 #define __PARTICLE_SYSTEM_H__
 
 #include "vec.h"
+
 #include "particle.h"
 #include <vector>
 
 using namespace std;
 
-
-
 class ParticleSystem {
 
 public:
+  /** Constructor **/
+  ParticleSystem();
+  ParticleSystem(double gravity, double viscous);
 
+  /** Destructor **/
+  virtual ~ParticleSystem();
 
+  /** Simulation fxns **/
+  // This fxn should render all particles in the system,
+  // at current time t.
+  virtual void drawParticles(float t);
 
-	/** Constructor **/
-	ParticleSystem();
-	ParticleSystem(double gravity, double viscous);
+  // This fxn should save the configuration of all particles
+  // at current time t.
+  virtual void bakeParticles(float t);
 
-	/** Destructor **/
-	virtual ~ParticleSystem();
+  // This function should compute forces acting on all particles
+  // and update their state (pos and vel) appropriately.
+  virtual void computeForcesAndUpdateParticles(float t);
 
-	/** Simulation fxns **/
-	// This fxn should render all particles in the system,
-	// at current time t.
-	virtual void drawParticles(float t);
+  // This function should reset the system to its initial state.
+  // When you need to reset your simulation, PLEASE USE THIS FXN.
+  // It sets some state variables that the UI requires to properly
+  // update the display.  Ditto for the following two functions.
+  virtual void resetSimulation(float t);
 
-	// This fxn should save the configuration of all particles
-	// at current time t.
-	virtual void bakeParticles(float t);
+  // This function should start the simulation
+  virtual void startSimulation(float t);
 
-	// This function should compute forces acting on all particles
-	// and update their state (pos and vel) appropriately.
-	virtual void computeForcesAndUpdateParticles(float t);
+  // This function should stop the simulation
+  virtual void stopSimulation(float t);
 
-	// This function should reset the system to its initial state.
-	// When you need to reset your simulation, PLEASE USE THIS FXN.
-	// It sets some state variables that the UI requires to properly
-	// update the display.  Ditto for the following two functions.
-	virtual void resetSimulation(float t);
+  // This function should clear out your data structure
+  // of baked particles (without leaking memory).
+  virtual void clearBaked();
 
-	// This function should start the simulation
-	virtual void startSimulation(float t);
+  virtual bool isBakedAt(float t);
 
-	// This function should stop the simulation
-	virtual void stopSimulation(float t);
-
-	// This function should clear out your data structure
-	// of baked particles (without leaking memory).
-	virtual void clearBaked();	
-
-
-
-	// These accessor fxns are implemented for you
-	float getBakeStartTime() { return bake_start_time; }
-	float getBakeEndTime() { return bake_end_time; }
-	float getBakeFps() { return bake_fps; }
-	bool isSimulate() { return simulate; }
-	bool isDirty() { return dirty; }
-	void setDirty(bool d) { dirty = d; }
-	void ParticleSystem::createParticles(Vec3d pos,int num);
-
-
+  // These accessor fxns are implemented for you
+  float getBakeStartTime() { return bake_start_time; }
+  float getBakeEndTime() { return bake_end_time; }
+  float getBakeFps() { return bake_fps; }
+  bool isSimulate() { return simulate; }
+  bool isDirty() { return dirty; }
+  void setDirty(bool d) { dirty = d; }
+  void ParticleSystem::createParticles(Vec3d pos, int num);
 
 protected:
-	vector<Particle*> particles;
-	vector<Force*> forces;
-	float curT;
+  vector<Particle *> particles;
+  vector<Force *> forces;
 
-	/** Some baking-related state **/
-	float bake_fps;						// frame rate at which simulation was baked
-	float bake_start_time;				// time at which baking started 
-										// These 2 variables are used by the UI for
-										// updating the grey indicator 
-	float bake_end_time;				// time at which baking ended
+  map<float, vector<Particle *>> bakeInfo;
+  float curT;
 
-	/** General state variables **/
-	bool simulate;						// flag for simulation mode
-	bool dirty;							// flag for updating ui (don't worry about this)
+  /** Some baking-related state **/
+  float bake_fps;        // frame rate at which simulation was baked
+  float bake_start_time; // time at which baking started
+                         // These 2 variables are used by the UI for
+                         // updating the grey indicator
+  float bake_end_time;   // time at which baking ended
 
+  /** General state variables **/
+  bool simulate; // flag for simulation mode
+  bool dirty;    // flag for updating ui (don't worry about this)
 };
 
-
-#endif	// __PARTICLE_SYSTEM_H__
+#endif // __PARTICLE_SYSTEM_H__
