@@ -117,6 +117,12 @@
     <ClCompile Include="BsplineCurveEvaluator.cpp">
       <Filter>Source Files\Curves</Filter>
     </ClCompile>
+    <ClCompile Include="C2IntCurveEvaluator.h">
+      <Filter>Header Files\Curves.</Filter>
+    </ClCompile>
+    <ClCompile Include="C2IntCurveEvaluator.cpp">
+      <Filter>Source Files\Curves</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="curve.h">
