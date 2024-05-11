@@ -64,6 +64,7 @@ public:
 
 	// Returns animating flag
 	bool Animating();
+	void SetTension(float tension);
 
 private:
 	// Private for singleton

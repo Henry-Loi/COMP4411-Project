@@ -8,7 +8,7 @@
 void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	std::vector<Point>& ptvEvaluatedCurvePts,
 	const float& fAniLength,
-	const bool& bWrap) const
+	const bool& bWrap, const float in_tension, const int continuous) const
 {
 	ptvEvaluatedCurvePts.clear();
 	vector<Point> ctrlPt;
@@ -40,7 +40,7 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 			ctrlPt[cnt + 2].x, ctrlPt[cnt + 3].x);
 		Vec4f param_y(ctrlPt[cnt].y, ctrlPt[cnt + 1].y,
 			ctrlPt[cnt + 2].y, ctrlPt[cnt + 3].y);
-
+		cout << "ctrlPt[cnt].x" << ctrlPt[cnt].x << " ctrlPt[cnt + 1].x" << ctrlPt[cnt + 1].x << "  " << ctrlPt[cnt + 2].x << "  " << ctrlPt[cnt + 3].x << endl;
 		for (int i = 0; i <= SEGMENT; ++i)
 		{
 			double t = i / (double)SEGMENT;

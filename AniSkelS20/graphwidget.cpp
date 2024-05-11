@@ -28,6 +28,7 @@
 #include "catmullromCurveEvaluator.h"
 #include "bezierCurveEvaluator.h"
 #include "BsplineCurveEvaluator.h"
+#include "C2IntCurveEvaluator.h"
  
 
 #define LEFT		1
@@ -123,7 +124,7 @@ m_flcCurrCurve(FL_BLACK)
 	m_ppceCurveEvaluators[CURVE_TYPE_BEZIER] = new BezierCurveEvaluator();
 	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM] = new CatmullromCurveEvaluator();
 	// Note that C2-Interpolating curve is not a requirement
-	m_ppceCurveEvaluators[CURVE_TYPE_C2INTERPOLATING] = new LinearCurveEvaluator();
+	m_ppceCurveEvaluators[CURVE_TYPE_C2INTERPOLATING] = new C2InterpolatingCurveEvaluator();
 
 }
 
@@ -143,7 +144,7 @@ int GraphWidget::addCurve(const float fStartVal, const float fMinY, const float 
 {
 	Curve* pcrv = new Curve(m_fEndTime, fStartVal);
 	pcrv->setEvaluator(m_ppceCurveEvaluators[CURVE_TYPE_LINEAR]);
-
+	m_ppceCurveEvaluators[CURVE_TYPE_LINEAR]->tension = m_GWtension;
 	m_pcrvvCurves.push_back(pcrv);
 	m_cdvCurveDomains.push_back(CurveDomain(fMinY, fMaxY));
 	m_ivCurveTypes.push_back(CURVE_TYPE_LINEAR);
@@ -849,6 +850,12 @@ void GraphWidget::currCurveWrap(bool bWrap)
 		m_pcrvvCurves[m_iCurrCurve]->wrap(bWrap);
 	}
 }
+void GraphWidget::currCurveTension(float tension)
+{
+	if (m_iCurrCurve >= 0) {
+		m_pcrvvCurves[m_iCurrCurve]->GWTension(tension);
+	}
+}
 
 void GraphWidget::wrapCurve(int iCurve, bool bWrap)
 {
@@ -1138,5 +1145,8 @@ Point GraphWidget::gridToWindow( Point p ) {
 	val.y = (int)(((double)p.y * dLongMarkLengthY - leftTime()) / dRange * (double)iWindowHeight + 0.5);
 
 	return val;
+}
+void  GraphWidget::setTension(float tension) {
+	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM]->tension=tension;
 }
 

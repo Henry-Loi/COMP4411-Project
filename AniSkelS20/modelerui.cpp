@@ -251,6 +251,13 @@ void ModelerUI::cb_fps(Fl_Slider* o, void* v)
 	((ModelerUI*)(o->user_data()))->cb_fps_i(o,v);
 }
 
+
+
+void ModelerUI::cb_tension(Fl_Slider* o, void* v)
+{
+	((ModelerUI*)(o->user_data()))->cb_tension_i(o, v);
+}
+
 void ModelerUI::cb_sliders(Fl_Widget* o, void* v)
 {
 	ModelerUI* pui = (ModelerUI*)o->user_data();
@@ -377,6 +384,16 @@ inline void ModelerUI::cb_wrap_i(Fl_Light_Button*, void*)
 	}
 	m_pwndGraphWidget->redraw();
 }
+
+
+inline void ModelerUI::cb_tension_i(Fl_Slider*, void*)
+{
+
+	m_pwndGraphWidget->currCurveTension(m_tension->value());
+
+	m_pwndGraphWidget->redraw();
+}
+
 
 void ModelerUI::cb_wrap(Fl_Light_Button* o, void* v) 
 {
@@ -916,7 +933,7 @@ m_bSaveMovie(false)
 	m_poutTime->value("0.00");
 	m_poutPlayStart->value("0.00");
 	m_poutPlayEnd->value("20.00");
-
+	m_tension->callback((Fl_Callback*)cb_tension);
 	endTime(20.0f);
 }
 

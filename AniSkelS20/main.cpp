@@ -583,7 +583,7 @@ int main() {
 
   ParticleSystem *ps = new ParticleSystem(5, 0.1);
   ModelerApplication::Instance()->SetParticleSystem(ps);
-
+  
   ModelerApplication::Instance()->Init(&createRobotModel, controls,
                                        NUMCONTROLS);
   return ModelerApplication::Instance()->Run();

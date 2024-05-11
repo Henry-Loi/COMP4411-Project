@@ -55,9 +55,10 @@ public:
 	void toStream(std::ostream& output_stream) const;
 	void fromStream(std::istream& input_stream);
 
+	void GWTension(float tension);
 protected:
 	void init(const float fStartYValue = 0.0f);
-	void reevaluate(void) const;
+	void reevaluate() const;
 	// this must be called when a control point is added
 	void sortControlPoints(void) const;
 
@@ -70,6 +71,8 @@ protected:
 	float m_fMaxX;
 	bool m_bWrap;
 	static float s_fCtrlPtXEpsilon;
+	float c_tension=2.0;
+	int continuous=0;
 };
 
 std::ostream& operator<<(std::ostream& output_stream, const Curve& curve_data);

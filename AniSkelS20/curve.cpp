@@ -21,7 +21,9 @@ Curve::Curve() :
 	m_pceEvaluator(NULL),
 	m_bWrap(false),
 	m_bDirty(true),
-	m_fMaxX(1.0f)
+	m_fMaxX(1.0f),
+	c_tension(2.0),
+	continuous(0)
 {
 	init();
 }
@@ -30,7 +32,9 @@ Curve::Curve(const float fMaxX, const Point& point) :
 	m_pceEvaluator(NULL),
 	m_bWrap(false),
 	m_bDirty(true),
-	m_fMaxX(fMaxX)
+	m_fMaxX(fMaxX),
+	c_tension(2.0),
+	continuous(0)
 {
 	addControlPoint(point);
 }
@@ -39,7 +43,9 @@ Curve::Curve(const float fMaxX, const float fStartYValue) :
 	m_pceEvaluator(NULL),
 	m_bWrap(false),
 	m_bDirty(true),
-	m_fMaxX(fMaxX)
+	m_fMaxX(fMaxX),
+	c_tension(2.0),
+	continuous(0)
 {
 	init(fStartYValue);
 }
@@ -104,6 +110,11 @@ void Curve::wrap(bool bWrap)
 {
 	m_bWrap = bWrap;
 	m_bDirty = true;
+}
+
+void Curve::GWTension(float tension )
+{
+	c_tension = tension;
 }
 
 bool Curve::wrap() const
@@ -417,7 +428,7 @@ void Curve::reevaluate() const
 			m_pceEvaluator->evaluateCurve(m_ptvCtrlPts, 
 				m_ptvEvaluatedCurvePts, 
 				m_fMaxX, 
-				m_bWrap);
+				m_bWrap,c_tension,continuous);
 
 			std::sort(m_ptvEvaluatedCurvePts.begin(),
 				m_ptvEvaluatedCurvePts.end(),

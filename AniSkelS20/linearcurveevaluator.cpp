@@ -1,10 +1,10 @@
 #include "LinearCurveEvaluator.h"
 #include <assert.h>
 
-void LinearCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts, 
-										 std::vector<Point>& ptvEvaluatedCurvePts, 
-										 const float& fAniLength, 
-										 const bool& bWrap) const
+void LinearCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
+	std::vector<Point>& ptvEvaluatedCurvePts,
+	const float& fAniLength,
+	const bool& bWrap, const float in_tension, const int continuous) const
 {
 	int iCtrlPtCount = ptvCtrlPts.size();
 

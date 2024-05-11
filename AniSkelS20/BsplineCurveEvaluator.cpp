@@ -8,7 +8,7 @@
 void BsplineCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	std::vector<Point>& ptvEvaluatedCurvePts,
 	const float& fAniLength,
-	const bool& bWrap) const
+	const bool& bWrap, const float in_tension, const int continuous) const
 {
 	ptvEvaluatedCurvePts.clear();
 	vector<Point> ctrlPt;
