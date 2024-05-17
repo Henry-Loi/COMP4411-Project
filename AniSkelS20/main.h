@@ -25,7 +25,7 @@ public:
   enum MoodType { NONE, NORMAL, HAPPY, SAD, ANGRY, NUM_OF_MOODS };
 
   void initTextureMap(void);
-  void drawParticles(Mat4d CameraMatrix, int num);
+  void drawParticles(Mat4d CameraMatrix, int num, double rotate);
 
   TextureMap *textureMaps[NUM_OF_TEXTURES];
 

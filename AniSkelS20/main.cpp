@@ -113,10 +113,11 @@ void RobotModel::set_mood(int state) {
     break;
   }
 }
-void RobotModel::drawParticles(Mat4d CameraMatrix, int num) {
+void RobotModel::drawParticles(Mat4d CameraMatrix, int num, double rotate) {
   Mat4d WorldMatrix = CameraMatrix.inverse() * getModelViewMatrix();
   Vec4d pos = WorldMatrix * Vec4d(3, 3, 3, 1);
   ParticleSystem *ps = ModelerApplication::Instance()->GetParticleSystem();
+ 
   ps->createParticles(Vec3d(pos[0], pos[1], pos[2]), num);
 }
 
@@ -338,7 +339,9 @@ void RobotModel::draw() {
   if (VAL(LEVELOF_DETAILS) > 2)
     drawCylinder(0.8, 0.2, 0.2);
   glTranslated(1.0, 0, 0);
-
+  glTranslated(1, 1, 1);
+  glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
+  drawParticles(getModelViewMatrix(), 10,0);
   // particle system
   glTranslated(1, 1, 1);
 
@@ -348,10 +351,10 @@ void RobotModel::draw() {
   glPointSize(5);
   glBegin(GL_POINTS);
   glVertex3f(0, 0, 0);
+
   glEnd();
   glPopMatrix();
 
-  drawParticles(getModelViewMatrix(), 10);
 
   glPopMatrix();
   //------------------------------------------------//
